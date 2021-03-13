@@ -1,5 +1,6 @@
 import React, { Component } from "react";
-import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
+// import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
+import { HashRouter, Route } from "react-router-dom";
 import "./App.css";
 import Web3 from "web3";
 import CryptoBoys from "../abis/CryptoBoys.json";
@@ -299,17 +300,19 @@ class App extends Component {
 
   render() {
     return (
-      <div className="container">
-        {!this.state.metamaskConnected ? (
-          <ConnectToMetamask connectToMetamask={this.connectToMetamask} />
-        ) : !this.state.contractDetected ? (
-          <ContractNotDeployed />
-        ) : this.state.loading ? (
-          <Loading />
-        ) : (
-          <Router>
-            <Navbar />
-            <Switch>
+      <HashRouter basename="/">
+        <div className="container">
+          {!this.state.metamaskConnected ? (
+            <ConnectToMetamask connectToMetamask={this.connectToMetamask} />
+          ) : !this.state.contractDetected ? (
+            <ContractNotDeployed />
+          ) : this.state.loading ? (
+            <Loading />
+          ) : (
+            <>
+              {/* <Router> */}
+              <Navbar />
+              {/* <Switch> */}
               <Route
                 path="/"
                 exact
@@ -363,10 +366,12 @@ class App extends Component {
                   <Queries cryptoBoysContract={this.state.cryptoBoysContract} />
                 )}
               />
-            </Switch>
-          </Router>
-        )}
-      </div>
+              {/* </Switch> */}
+              {/* </Router> */}
+            </>
+          )}
+        </div>
+      </HashRouter>
     );
   }
 }
