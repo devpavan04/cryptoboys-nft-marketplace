@@ -23641,12 +23641,6 @@
       "links": {},
       "address": "0x420d2a6e87d87992eb01e5bfe762b3f437dbfd85",
       "transactionHash": "0x25f92d062cc1ee642685e3dd44e144b0d323872a73d67c6680fecc40771e8a41"
-    },
-    "1615642927363": {
-      "events": {},
-      "links": {},
-      "address": "0x0c33c4EDD26c6E61EEda46D78122A358eF86B880",
-      "transactionHash": "0x9e19b67a0210f131e8b4a623f501cd83cef0c4e3bdaee4918383a9a8d94ec5eb"
     }
   },
   "schemaVersion": "3.3.4",
