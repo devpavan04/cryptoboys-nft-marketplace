@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 // import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
-import { HashRouter, Route } from "react-router-dom";
+import { HashRouter, Route, Link } from "react-router-dom";
 import "./App.css";
 import Web3 from "web3";
 import CryptoBoys from "../abis/CryptoBoys.json";
@@ -300,19 +300,77 @@ class App extends Component {
 
   render() {
     return (
-      <HashRouter basename="/">
-        <div className="container">
-          {!this.state.metamaskConnected ? (
-            <ConnectToMetamask connectToMetamask={this.connectToMetamask} />
-          ) : !this.state.contractDetected ? (
-            <ContractNotDeployed />
-          ) : this.state.loading ? (
-            <Loading />
-          ) : (
-            <>
-              {/* <Router> */}
+      <div className="container">
+        {!this.state.metamaskConnected ? (
+          <ConnectToMetamask connectToMetamask={this.connectToMetamask} />
+        ) : !this.state.contractDetected ? (
+          <ContractNotDeployed />
+        ) : this.state.loading ? (
+          <Loading />
+        ) : (
+          <>
+            {/* <Router>
               <Navbar />
-              {/* <Switch> */}
+              <Switch>
+                <Route
+                  path="/"
+                  exact
+                  render={() => (
+                    <AccountDetails
+                      accountAddress={this.state.accountAddress}
+                      accountBalance={this.state.accountBalance}
+                    />
+                  )}
+                />
+                <Route
+                  path="/mint"
+                  render={() => (
+                    <FormAndPreview
+                      mintMyNFT={this.mintMyNFT}
+                      nameIsUsed={this.state.nameIsUsed}
+                      colorIsUsed={this.state.colorIsUsed}
+                      colorsUsed={this.state.colorsUsed}
+                      setMintBtnTimer={this.setMintBtnTimer}
+                    />
+                  )}
+                />
+                <Route
+                  path="/marketplace"
+                  render={() => (
+                    <AllCryptoBoys
+                      accountAddress={this.state.accountAddress}
+                      cryptoBoys={this.state.cryptoBoys}
+                      totalTokensMinted={this.state.totalTokensMinted}
+                      changeTokenPrice={this.changeTokenPrice}
+                      toggleForSale={this.toggleForSale}
+                      buyCryptoBoy={this.buyCryptoBoy}
+                    />
+                  )}
+                />
+                <Route
+                  path="/my-tokens"
+                  render={() => (
+                    <MyCryptoBoys
+                      accountAddress={this.state.accountAddress}
+                      cryptoBoys={this.state.cryptoBoys}
+                      totalTokensOwnedByAccount={
+                        this.state.totalTokensOwnedByAccount
+                      }
+                    />
+                  )}
+                />
+                <Route
+                  path="/queries"
+                  render={() => (
+                    <Queries
+                      cryptoBoysContract={this.state.cryptoBoysContract}
+                    />
+                  )}
+                />
+              </Switch>
+            </Router> */}
+            <HashRouter basename="/">
+              <Navbar />
               <Route
                 path="/"
                 exact
@@ -366,12 +424,10 @@ class App extends Component {
                   <Queries cryptoBoysContract={this.state.cryptoBoysContract} />
                 )}
               />
-              {/* </Switch> */}
-              {/* </Router> */}
-            </>
-          )}
-        </div>
-      </HashRouter>
+            </HashRouter>
+          </>
+        )}
+      </div>
     );
   }
 }
