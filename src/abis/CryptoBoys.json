@@ -10165,20 +10165,48 @@
   "ast": {
     "absolutePath": "/home/pavansoratur/Github/cryptoboys-NFT-marketplace/src/contracts/CryptoBoys.sol",
     "exportedSymbols": {
-      "Address": [1430],
-      "Context": [530],
-      "CryptoBoys": [507],
-      "ERC165": [781],
-      "ERC721": [3498],
-      "EnumerableMap": [2480],
-      "EnumerableSet": [1921],
-      "IERC165": [541],
-      "IERC721": [655],
-      "IERC721Enumerable": [709],
-      "IERC721Metadata": [680],
-      "IERC721Receiver": [726],
-      "SafeMath": [1135],
-      "Strings": [2566]
+      "Address": [
+        1430
+      ],
+      "Context": [
+        530
+      ],
+      "CryptoBoys": [
+        507
+      ],
+      "ERC165": [
+        781
+      ],
+      "ERC721": [
+        3498
+      ],
+      "EnumerableMap": [
+        2480
+      ],
+      "EnumerableSet": [
+        1921
+      ],
+      "IERC165": [
+        541
+      ],
+      "IERC721": [
+        655
+      ],
+      "IERC721Enumerable": [
+        709
+      ],
+      "IERC721Metadata": [
+        680
+      ],
+      "IERC721Receiver": [
+        726
+      ],
+      "SafeMath": [
+        1135
+      ],
+      "Strings": [
+        2566
+      ]
     },
     "id": 508,
     "license": "MIT",
@@ -10186,13 +10214,24 @@
     "nodes": [
       {
         "id": 1,
-        "literals": ["solidity", ">=", "0.4", ".21", "<", "0.8", ".0"],
+        "literals": [
+          "solidity",
+          ">=",
+          "0.4",
+          ".21",
+          "<",
+          "0.8",
+          ".0"
+        ],
         "nodeType": "PragmaDirective",
         "src": "32:32:0"
       },
       {
         "id": 2,
-        "literals": ["abicoder", "v2"],
+        "literals": [
+          "abicoder",
+          "v2"
+        ],
         "nodeType": "PragmaDirective",
         "src": "65:19:0"
       },
@@ -10227,11 +10266,28 @@
             "src": "133:6:0"
           }
         ],
-        "contractDependencies": [530, 541, 655, 680, 709, 781, 3498],
+        "contractDependencies": [
+          530,
+          541,
+          655,
+          680,
+          709,
+          781,
+          3498
+        ],
         "contractKind": "contract",
         "fullyImplemented": true,
         "id": 507,
-        "linearizedBaseContracts": [507, 3498, 709, 680, 655, 781, 541, 530],
+        "linearizedBaseContracts": [
+          507,
+          3498,
+          709,
+          680,
+          655,
+          781,
+          541,
+          530
+        ],
         "name": "CryptoBoys",
         "nodeType": "ContractDefinition",
         "nodes": [
@@ -11079,7 +11135,10 @@
                       "id": 76,
                       "name": "require",
                       "nodeType": "Identifier",
-                      "overloadedDeclarations": [4294967278, 4294967278],
+                      "overloadedDeclarations": [
+                        4294967278,
+                        4294967278
+                      ],
                       "referencedDeclaration": 4294967278,
                       "src": "967:7:0",
                       "typeDescriptions": {
@@ -11215,7 +11274,10 @@
                       "id": 89,
                       "name": "require",
                       "nodeType": "Identifier",
-                      "overloadedDeclarations": [4294967278, 4294967278],
+                      "overloadedDeclarations": [
+                        4294967278,
+                        4294967278
+                      ],
                       "referencedDeclaration": 4294967278,
                       "src": "1031:7:0",
                       "typeDescriptions": {
@@ -11339,7 +11401,10 @@
                             "id": 107,
                             "name": "require",
                             "nodeType": "Identifier",
-                            "overloadedDeclarations": [4294967278, 4294967278],
+                            "overloadedDeclarations": [
+                              4294967278,
+                              4294967278
+                            ],
                             "referencedDeclaration": 4294967278,
                             "src": "1118:7:0",
                             "typeDescriptions": {
@@ -11426,7 +11491,9 @@
                   },
                   "id": 117,
                   "initializationExpression": {
-                    "assignments": [97],
+                    "assignments": [
+                      97
+                    ],
                     "declarations": [
                       {
                         "constant": false,
@@ -11576,7 +11643,10 @@
                       "id": 118,
                       "name": "require",
                       "nodeType": "Identifier",
-                      "overloadedDeclarations": [4294967278, 4294967278],
+                      "overloadedDeclarations": [
+                        4294967278,
+                        4294967278
+                      ],
                       "referencedDeclaration": 4294967278,
                       "src": "1163:7:0",
                       "typeDescriptions": {
@@ -11669,7 +11739,10 @@
                       "id": 125,
                       "name": "require",
                       "nodeType": "Identifier",
-                      "overloadedDeclarations": [4294967278, 4294967278],
+                      "overloadedDeclarations": [
+                        4294967278,
+                        4294967278
+                      ],
                       "referencedDeclaration": 4294967278,
                       "src": "1204:7:0",
                       "typeDescriptions": {
@@ -12011,7 +12084,9 @@
                   },
                   "id": 163,
                   "initializationExpression": {
-                    "assignments": [144],
+                    "assignments": [
+                      144
+                    ],
                     "declarations": [
                       {
                         "constant": false,
@@ -12240,7 +12315,9 @@
                   "src": "1458:29:0"
                 },
                 {
-                  "assignments": [177],
+                  "assignments": [
+                    177
+                  ],
                   "declarations": [
                     {
                       "constant": false,
@@ -12750,7 +12827,9 @@
               "src": "1792:74:0",
               "statements": [
                 {
-                  "assignments": [210],
+                  "assignments": [
+                    210
+                  ],
                   "declarations": [
                     {
                       "constant": false,
@@ -12939,7 +13018,9 @@
               "src": "1946:85:0",
               "statements": [
                 {
-                  "assignments": [226],
+                  "assignments": [
+                    226
+                  ],
                   "declarations": [
                     {
                       "constant": false,
@@ -13126,7 +13207,9 @@
               "src": "2099:98:0",
               "statements": [
                 {
-                  "assignments": [240],
+                  "assignments": [
+                    240
+                  ],
                   "declarations": [
                     {
                       "constant": false,
@@ -13268,7 +13351,9 @@
               "src": "2294:100:0",
               "statements": [
                 {
-                  "assignments": [255],
+                  "assignments": [
+                    255
+                  ],
                   "declarations": [
                     {
                       "constant": false,
@@ -13456,7 +13541,9 @@
               "src": "2466:71:0",
               "statements": [
                 {
-                  "assignments": [271],
+                  "assignments": [
+                    271
+                  ],
                   "declarations": [
                     {
                       "constant": false,
@@ -13760,7 +13847,10 @@
                       "id": 284,
                       "name": "require",
                       "nodeType": "Identifier",
-                      "overloadedDeclarations": [4294967278, 4294967278],
+                      "overloadedDeclarations": [
+                        4294967278,
+                        4294967278
+                      ],
                       "referencedDeclaration": 4294967278,
                       "src": "2598:7:0",
                       "typeDescriptions": {
@@ -13849,7 +13939,10 @@
                       "id": 294,
                       "name": "require",
                       "nodeType": "Identifier",
-                      "overloadedDeclarations": [4294967278, 4294967278],
+                      "overloadedDeclarations": [
+                        4294967278,
+                        4294967278
+                      ],
                       "referencedDeclaration": 4294967278,
                       "src": "2637:7:0",
                       "typeDescriptions": {
@@ -13877,7 +13970,9 @@
                   "src": "2637:26:0"
                 },
                 {
-                  "assignments": [301],
+                  "assignments": [
+                    301
+                  ],
                   "declarations": [
                     {
                       "constant": false,
@@ -14063,7 +14158,10 @@
                       "id": 306,
                       "name": "require",
                       "nodeType": "Identifier",
-                      "overloadedDeclarations": [4294967278, 4294967278],
+                      "overloadedDeclarations": [
+                        4294967278,
+                        4294967278
+                      ],
                       "referencedDeclaration": 4294967278,
                       "src": "2713:7:0",
                       "typeDescriptions": {
@@ -14160,7 +14258,10 @@
                       "id": 315,
                       "name": "require",
                       "nodeType": "Identifier",
-                      "overloadedDeclarations": [4294967278, 4294967278],
+                      "overloadedDeclarations": [
+                        4294967278,
+                        4294967278
+                      ],
                       "referencedDeclaration": 4294967278,
                       "src": "2752:7:0",
                       "typeDescriptions": {
@@ -14188,7 +14289,9 @@
                   "src": "2752:33:0"
                 },
                 {
-                  "assignments": [323],
+                  "assignments": [
+                    323
+                  ],
                   "declarations": [
                     {
                       "constant": false,
@@ -14344,7 +14447,10 @@
                       "id": 328,
                       "name": "require",
                       "nodeType": "Identifier",
-                      "overloadedDeclarations": [4294967278, 4294967278],
+                      "overloadedDeclarations": [
+                        4294967278,
+                        4294967278
+                      ],
                       "referencedDeclaration": 4294967278,
                       "src": "2849:7:0",
                       "typeDescriptions": {
@@ -14412,7 +14518,10 @@
                       "id": 336,
                       "name": "require",
                       "nodeType": "Identifier",
-                      "overloadedDeclarations": [4294967278, 4294967278],
+                      "overloadedDeclarations": [
+                        4294967278,
+                        4294967278
+                      ],
                       "referencedDeclaration": 4294967278,
                       "src": "2892:7:0",
                       "typeDescriptions": {
@@ -14539,7 +14648,9 @@
                   "src": "2924:43:0"
                 },
                 {
-                  "assignments": [349],
+                  "assignments": [
+                    349
+                  ],
                   "declarations": [
                     {
                       "constant": false,
@@ -15134,7 +15245,10 @@
                       "id": 394,
                       "name": "require",
                       "nodeType": "Identifier",
-                      "overloadedDeclarations": [4294967278, 4294967278],
+                      "overloadedDeclarations": [
+                        4294967278,
+                        4294967278
+                      ],
                       "referencedDeclaration": 4294967278,
                       "src": "3311:7:0",
                       "typeDescriptions": {
@@ -15223,7 +15337,10 @@
                       "id": 404,
                       "name": "require",
                       "nodeType": "Identifier",
-                      "overloadedDeclarations": [4294967278, 4294967278],
+                      "overloadedDeclarations": [
+                        4294967278,
+                        4294967278
+                      ],
                       "referencedDeclaration": 4294967278,
                       "src": "3350:7:0",
                       "typeDescriptions": {
@@ -15251,7 +15368,9 @@
                   "src": "3350:26:0"
                 },
                 {
-                  "assignments": [411],
+                  "assignments": [
+                    411
+                  ],
                   "declarations": [
                     {
                       "constant": false,
@@ -15403,7 +15522,10 @@
                       "id": 416,
                       "name": "require",
                       "nodeType": "Identifier",
-                      "overloadedDeclarations": [4294967278, 4294967278],
+                      "overloadedDeclarations": [
+                        4294967278,
+                        4294967278
+                      ],
                       "referencedDeclaration": 4294967278,
                       "src": "3426:7:0",
                       "typeDescriptions": {
@@ -15431,7 +15553,9 @@
                   "src": "3426:33:0"
                 },
                 {
-                  "assignments": [424],
+                  "assignments": [
+                    424
+                  ],
                   "declarations": [
                     {
                       "constant": false,
@@ -15832,7 +15956,10 @@
                       "id": 447,
                       "name": "require",
                       "nodeType": "Identifier",
-                      "overloadedDeclarations": [4294967278, 4294967278],
+                      "overloadedDeclarations": [
+                        4294967278,
+                        4294967278
+                      ],
                       "referencedDeclaration": 4294967278,
                       "src": "3654:7:0",
                       "typeDescriptions": {
@@ -15921,7 +16048,10 @@
                       "id": 457,
                       "name": "require",
                       "nodeType": "Identifier",
-                      "overloadedDeclarations": [4294967278, 4294967278],
+                      "overloadedDeclarations": [
+                        4294967278,
+                        4294967278
+                      ],
                       "referencedDeclaration": 4294967278,
                       "src": "3693:7:0",
                       "typeDescriptions": {
@@ -15949,7 +16079,9 @@
                   "src": "3693:26:0"
                 },
                 {
-                  "assignments": [464],
+                  "assignments": [
+                    464
+                  ],
                   "declarations": [
                     {
                       "constant": false,
@@ -16101,7 +16233,10 @@
                       "id": 469,
                       "name": "require",
                       "nodeType": "Identifier",
-                      "overloadedDeclarations": [4294967278, 4294967278],
+                      "overloadedDeclarations": [
+                        4294967278,
+                        4294967278
+                      ],
                       "referencedDeclaration": 4294967278,
                       "src": "3769:7:0",
                       "typeDescriptions": {
@@ -16129,7 +16264,9 @@
                   "src": "3769:33:0"
                 },
                 {
-                  "assignments": [477],
+                  "assignments": [
+                    477
+                  ],
                   "declarations": [
                     {
                       "constant": false,
@@ -16503,27 +16640,63 @@
     "attributes": {
       "absolutePath": "/home/pavansoratur/Github/cryptoboys-NFT-marketplace/src/contracts/CryptoBoys.sol",
       "exportedSymbols": {
-        "Address": [1430],
-        "Context": [530],
-        "CryptoBoys": [507],
-        "ERC165": [781],
-        "ERC721": [3498],
-        "EnumerableMap": [2480],
-        "EnumerableSet": [1921],
-        "IERC165": [541],
-        "IERC721": [655],
-        "IERC721Enumerable": [709],
-        "IERC721Metadata": [680],
-        "IERC721Receiver": [726],
-        "SafeMath": [1135],
-        "Strings": [2566]
+        "Address": [
+          1430
+        ],
+        "Context": [
+          530
+        ],
+        "CryptoBoys": [
+          507
+        ],
+        "ERC165": [
+          781
+        ],
+        "ERC721": [
+          3498
+        ],
+        "EnumerableMap": [
+          2480
+        ],
+        "EnumerableSet": [
+          1921
+        ],
+        "IERC165": [
+          541
+        ],
+        "IERC721": [
+          655
+        ],
+        "IERC721Enumerable": [
+          709
+        ],
+        "IERC721Metadata": [
+          680
+        ],
+        "IERC721Receiver": [
+          726
+        ],
+        "SafeMath": [
+          1135
+        ],
+        "Strings": [
+          2566
+        ]
       },
       "license": "MIT"
     },
     "children": [
       {
         "attributes": {
-          "literals": ["solidity", ">=", "0.4", ".21", "<", "0.8", ".0"]
+          "literals": [
+            "solidity",
+            ">=",
+            "0.4",
+            ".21",
+            "<",
+            "0.8",
+            ".0"
+          ]
         },
         "id": 1,
         "name": "PragmaDirective",
@@ -16531,7 +16704,10 @@
       },
       {
         "attributes": {
-          "literals": ["abicoder", "v2"]
+          "literals": [
+            "abicoder",
+            "v2"
+          ]
         },
         "id": 2,
         "name": "PragmaDirective",
@@ -16543,7 +16719,9 @@
           "absolutePath": "/home/pavansoratur/Github/cryptoboys-NFT-marketplace/src/contracts/ERC721.sol",
           "file": "./ERC721.sol",
           "scope": 508,
-          "symbolAliases": [null],
+          "symbolAliases": [
+            null
+          ],
           "unitAlias": ""
         },
         "id": 3,
@@ -16553,10 +16731,27 @@
       {
         "attributes": {
           "abstract": false,
-          "contractDependencies": [530, 541, 655, 680, 709, 781, 3498],
+          "contractDependencies": [
+            530,
+            541,
+            655,
+            680,
+            709,
+            781,
+            3498
+          ],
           "contractKind": "contract",
           "fullyImplemented": true,
-          "linearizedBaseContracts": [507, 3498, 709, 680, 655, 781, 541, 530],
+          "linearizedBaseContracts": [
+            507,
+            3498,
+            709,
+            680,
+            655,
+            781,
+            541,
+            530
+          ],
           "name": "CryptoBoys",
           "scope": 508
         },
@@ -17109,7 +17304,9 @@
             "children": [
               {
                 "attributes": {
-                  "parameters": [null]
+                  "parameters": [
+                    null
+                  ]
                 },
                 "children": [],
                 "id": 47,
@@ -17118,7 +17315,9 @@
               },
               {
                 "attributes": {
-                  "parameters": [null]
+                  "parameters": [
+                    null
+                  ]
                 },
                 "children": [],
                 "id": 52,
@@ -17129,7 +17328,9 @@
                 "children": [
                   {
                     "attributes": {
-                      "overloadedDeclarations": [null],
+                      "overloadedDeclarations": [
+                        null
+                      ],
                       "referencedDeclaration": 3498,
                       "type": "type(contract ERC721)",
                       "value": "ERC721"
@@ -17189,7 +17390,9 @@
                         "children": [
                           {
                             "attributes": {
-                              "overloadedDeclarations": [null],
+                              "overloadedDeclarations": [
+                                null
+                              ],
                               "referencedDeclaration": 7,
                               "type": "string storage ref",
                               "value": "collectionName"
@@ -17200,13 +17403,17 @@
                           },
                           {
                             "attributes": {
-                              "arguments": [null],
+                              "arguments": [
+                                null
+                              ],
                               "isConstant": false,
                               "isLValue": false,
                               "isPure": false,
                               "isStructConstructorCall": false,
                               "lValueRequested": false,
-                              "names": [null],
+                              "names": [
+                                null
+                              ],
                               "tryCall": false,
                               "type": "string memory",
                               "type_conversion": false
@@ -17214,8 +17421,12 @@
                             "children": [
                               {
                                 "attributes": {
-                                  "argumentTypes": [null],
-                                  "overloadedDeclarations": [null],
+                                  "argumentTypes": [
+                                    null
+                                  ],
+                                  "overloadedDeclarations": [
+                                    null
+                                  ],
                                   "referencedDeclaration": 2712,
                                   "type": "function () view returns (string memory)",
                                   "value": "name"
@@ -17253,7 +17464,9 @@
                         "children": [
                           {
                             "attributes": {
-                              "overloadedDeclarations": [null],
+                              "overloadedDeclarations": [
+                                null
+                              ],
                               "referencedDeclaration": 9,
                               "type": "string storage ref",
                               "value": "collectionNameSymbol"
@@ -17264,13 +17477,17 @@
                           },
                           {
                             "attributes": {
-                              "arguments": [null],
+                              "arguments": [
+                                null
+                              ],
                               "isConstant": false,
                               "isLValue": false,
                               "isPure": false,
                               "isStructConstructorCall": false,
                               "lValueRequested": false,
-                              "names": [null],
+                              "names": [
+                                null
+                              ],
                               "tryCall": false,
                               "type": "string memory",
                               "type_conversion": false
@@ -17278,8 +17495,12 @@
                             "children": [
                               {
                                 "attributes": {
-                                  "argumentTypes": [null],
-                                  "overloadedDeclarations": [null],
+                                  "argumentTypes": [
+                                    null
+                                  ],
+                                  "overloadedDeclarations": [
+                                    null
+                                  ],
                                   "referencedDeclaration": 2722,
                                   "type": "function () view returns (string memory)",
                                   "value": "symbol"
@@ -17319,7 +17540,9 @@
               "implemented": true,
               "isConstructor": false,
               "kind": "function",
-              "modifiers": [null],
+              "modifiers": [
+                null
+              ],
               "name": "mintCryptoBoy",
               "scope": 507,
               "stateMutability": "nonpayable",
@@ -17450,7 +17673,9 @@
               },
               {
                 "attributes": {
-                  "parameters": [null]
+                  "parameters": [
+                    null
+                  ]
                 },
                 "children": [],
                 "id": 75,
@@ -17468,7 +17693,9 @@
                           "isPure": false,
                           "isStructConstructorCall": false,
                           "lValueRequested": false,
-                          "names": [null],
+                          "names": [
+                            null
+                          ],
                           "tryCall": false,
                           "type": "tuple()",
                           "type_conversion": false
@@ -17520,7 +17747,9 @@
                                 "children": [
                                   {
                                     "attributes": {
-                                      "overloadedDeclarations": [null],
+                                      "overloadedDeclarations": [
+                                        null
+                                      ],
                                       "referencedDeclaration": 4294967281,
                                       "type": "msg",
                                       "value": "msg"
@@ -17541,7 +17770,9 @@
                                   "isPure": true,
                                   "isStructConstructorCall": false,
                                   "lValueRequested": false,
-                                  "names": [null],
+                                  "names": [
+                                    null
+                                  ],
                                   "tryCall": false,
                                   "type": "address payable",
                                   "type_conversion": true
@@ -17625,7 +17856,9 @@
                         "children": [
                           {
                             "attributes": {
-                              "overloadedDeclarations": [null],
+                              "overloadedDeclarations": [
+                                null
+                              ],
                               "referencedDeclaration": 11,
                               "type": "uint256",
                               "value": "cryptoBoyCounter"
@@ -17653,7 +17886,9 @@
                           "isPure": false,
                           "isStructConstructorCall": false,
                           "lValueRequested": false,
-                          "names": [null],
+                          "names": [
+                            null
+                          ],
                           "tryCall": false,
                           "type": "tuple()",
                           "type_conversion": false
@@ -17697,7 +17932,9 @@
                                   "isPure": false,
                                   "isStructConstructorCall": false,
                                   "lValueRequested": false,
-                                  "names": [null],
+                                  "names": [
+                                    null
+                                  ],
                                   "tryCall": false,
                                   "type": "bool",
                                   "type_conversion": false
@@ -17711,7 +17948,9 @@
                                           "typeString": "uint256"
                                         }
                                       ],
-                                      "overloadedDeclarations": [null],
+                                      "overloadedDeclarations": [
+                                        null
+                                      ],
                                       "referencedDeclaration": 3085,
                                       "type": "function (uint256) view returns (bool)",
                                       "value": "_exists"
@@ -17722,7 +17961,9 @@
                                   },
                                   {
                                     "attributes": {
-                                      "overloadedDeclarations": [null],
+                                      "overloadedDeclarations": [
+                                        null
+                                      ],
                                       "referencedDeclaration": 11,
                                       "type": "uint256",
                                       "value": "cryptoBoyCounter"
@@ -17755,7 +17996,9 @@
                     "children": [
                       {
                         "attributes": {
-                          "assignments": [97]
+                          "assignments": [
+                            97
+                          ]
                         },
                         "children": [
                           {
@@ -17820,7 +18063,9 @@
                         "children": [
                           {
                             "attributes": {
-                              "overloadedDeclarations": [null],
+                              "overloadedDeclarations": [
+                                null
+                              ],
                               "referencedDeclaration": 97,
                               "type": "uint256",
                               "value": "i"
@@ -17841,7 +18086,9 @@
                             "children": [
                               {
                                 "attributes": {
-                                  "overloadedDeclarations": [null],
+                                  "overloadedDeclarations": [
+                                    null
+                                  ],
                                   "referencedDeclaration": 73,
                                   "type": "string calldata[] calldata",
                                   "value": "_colors"
@@ -17875,7 +18122,9 @@
                             "children": [
                               {
                                 "attributes": {
-                                  "overloadedDeclarations": [null],
+                                  "overloadedDeclarations": [
+                                    null
+                                  ],
                                   "referencedDeclaration": 97,
                                   "type": "uint256",
                                   "value": "i"
@@ -17905,7 +18154,9 @@
                                   "isPure": false,
                                   "isStructConstructorCall": false,
                                   "lValueRequested": false,
-                                  "names": [null],
+                                  "names": [
+                                    null
+                                  ],
                                   "tryCall": false,
                                   "type": "tuple()",
                                   "type_conversion": false
@@ -17953,7 +18204,9 @@
                                         "children": [
                                           {
                                             "attributes": {
-                                              "overloadedDeclarations": [null],
+                                              "overloadedDeclarations": [
+                                                null
+                                              ],
                                               "referencedDeclaration": 42,
                                               "type": "mapping(string memory => bool)",
                                               "value": "colorExists"
@@ -18041,7 +18294,9 @@
                           "isPure": false,
                           "isStructConstructorCall": false,
                           "lValueRequested": false,
-                          "names": [null],
+                          "names": [
+                            null
+                          ],
                           "tryCall": false,
                           "type": "tuple()",
                           "type_conversion": false
@@ -18089,7 +18344,9 @@
                                 "children": [
                                   {
                                     "attributes": {
-                                      "overloadedDeclarations": [null],
+                                      "overloadedDeclarations": [
+                                        null
+                                      ],
                                       "referencedDeclaration": 46,
                                       "type": "mapping(string memory => bool)",
                                       "value": "tokenURIExists"
@@ -18100,7 +18357,9 @@
                                   },
                                   {
                                     "attributes": {
-                                      "overloadedDeclarations": [null],
+                                      "overloadedDeclarations": [
+                                        null
+                                      ],
                                       "referencedDeclaration": 68,
                                       "type": "string memory",
                                       "value": "_tokenURI"
@@ -18138,7 +18397,9 @@
                           "isPure": false,
                           "isStructConstructorCall": false,
                           "lValueRequested": false,
-                          "names": [null],
+                          "names": [
+                            null
+                          ],
                           "tryCall": false,
                           "type": "tuple()",
                           "type_conversion": false
@@ -18186,7 +18447,9 @@
                                 "children": [
                                   {
                                     "attributes": {
-                                      "overloadedDeclarations": [null],
+                                      "overloadedDeclarations": [
+                                        null
+                                      ],
                                       "referencedDeclaration": 38,
                                       "type": "mapping(string memory => bool)",
                                       "value": "tokenNameExists"
@@ -18197,7 +18460,9 @@
                                   },
                                   {
                                     "attributes": {
-                                      "overloadedDeclarations": [null],
+                                      "overloadedDeclarations": [
+                                        null
+                                      ],
                                       "referencedDeclaration": 66,
                                       "type": "string memory",
                                       "value": "_name"
@@ -18235,7 +18500,9 @@
                           "isPure": false,
                           "isStructConstructorCall": false,
                           "lValueRequested": false,
-                          "names": [null],
+                          "names": [
+                            null
+                          ],
                           "tryCall": false,
                           "type": "tuple()",
                           "type_conversion": false
@@ -18253,7 +18520,9 @@
                                   "typeString": "uint256"
                                 }
                               ],
-                              "overloadedDeclarations": [null],
+                              "overloadedDeclarations": [
+                                null
+                              ],
                               "referencedDeclaration": 3230,
                               "type": "function (address,uint256)",
                               "value": "_mint"
@@ -18274,7 +18543,9 @@
                             "children": [
                               {
                                 "attributes": {
-                                  "overloadedDeclarations": [null],
+                                  "overloadedDeclarations": [
+                                    null
+                                  ],
                                   "referencedDeclaration": 4294967281,
                                   "type": "msg",
                                   "value": "msg"
@@ -18290,7 +18561,9 @@
                           },
                           {
                             "attributes": {
-                              "overloadedDeclarations": [null],
+                              "overloadedDeclarations": [
+                                null
+                              ],
                               "referencedDeclaration": 11,
                               "type": "uint256",
                               "value": "cryptoBoyCounter"
@@ -18318,7 +18591,9 @@
                           "isPure": false,
                           "isStructConstructorCall": false,
                           "lValueRequested": false,
-                          "names": [null],
+                          "names": [
+                            null
+                          ],
                           "tryCall": false,
                           "type": "tuple()",
                           "type_conversion": false
@@ -18336,7 +18611,9 @@
                                   "typeString": "string memory"
                                 }
                               ],
-                              "overloadedDeclarations": [null],
+                              "overloadedDeclarations": [
+                                null
+                              ],
                               "referencedDeclaration": 3393,
                               "type": "function (uint256,string memory)",
                               "value": "_setTokenURI"
@@ -18347,7 +18624,9 @@
                           },
                           {
                             "attributes": {
-                              "overloadedDeclarations": [null],
+                              "overloadedDeclarations": [
+                                null
+                              ],
                               "referencedDeclaration": 11,
                               "type": "uint256",
                               "value": "cryptoBoyCounter"
@@ -18358,7 +18637,9 @@
                           },
                           {
                             "attributes": {
-                              "overloadedDeclarations": [null],
+                              "overloadedDeclarations": [
+                                null
+                              ],
                               "referencedDeclaration": 68,
                               "type": "string memory",
                               "value": "_tokenURI"
@@ -18381,7 +18662,9 @@
                     "children": [
                       {
                         "attributes": {
-                          "assignments": [144]
+                          "assignments": [
+                            144
+                          ]
                         },
                         "children": [
                           {
@@ -18446,7 +18729,9 @@
                         "children": [
                           {
                             "attributes": {
-                              "overloadedDeclarations": [null],
+                              "overloadedDeclarations": [
+                                null
+                              ],
                               "referencedDeclaration": 144,
                               "type": "uint256",
                               "value": "i"
@@ -18467,7 +18752,9 @@
                             "children": [
                               {
                                 "attributes": {
-                                  "overloadedDeclarations": [null],
+                                  "overloadedDeclarations": [
+                                    null
+                                  ],
                                   "referencedDeclaration": 73,
                                   "type": "string calldata[] calldata",
                                   "value": "_colors"
@@ -18501,7 +18788,9 @@
                             "children": [
                               {
                                 "attributes": {
-                                  "overloadedDeclarations": [null],
+                                  "overloadedDeclarations": [
+                                    null
+                                  ],
                                   "referencedDeclaration": 144,
                                   "type": "uint256",
                                   "value": "i"
@@ -18545,7 +18834,9 @@
                                     "children": [
                                       {
                                         "attributes": {
-                                          "overloadedDeclarations": [null],
+                                          "overloadedDeclarations": [
+                                            null
+                                          ],
                                           "referencedDeclaration": 42,
                                           "type": "mapping(string memory => bool)",
                                           "value": "colorExists"
@@ -18565,7 +18856,9 @@
                                         "children": [
                                           {
                                             "attributes": {
-                                              "overloadedDeclarations": [null],
+                                              "overloadedDeclarations": [
+                                                null
+                                              ],
                                               "referencedDeclaration": 73,
                                               "type": "string calldata[] calldata",
                                               "value": "_colors"
@@ -18576,7 +18869,9 @@
                                           },
                                           {
                                             "attributes": {
-                                              "overloadedDeclarations": [null],
+                                              "overloadedDeclarations": [
+                                                null
+                                              ],
                                               "referencedDeclaration": 144,
                                               "type": "uint256",
                                               "value": "i"
@@ -18653,7 +18948,9 @@
                             "children": [
                               {
                                 "attributes": {
-                                  "overloadedDeclarations": [null],
+                                  "overloadedDeclarations": [
+                                    null
+                                  ],
                                   "referencedDeclaration": 46,
                                   "type": "mapping(string memory => bool)",
                                   "value": "tokenURIExists"
@@ -18664,7 +18961,9 @@
                               },
                               {
                                 "attributes": {
-                                  "overloadedDeclarations": [null],
+                                  "overloadedDeclarations": [
+                                    null
+                                  ],
                                   "referencedDeclaration": 68,
                                   "type": "string memory",
                                   "value": "_tokenURI"
@@ -18726,7 +19025,9 @@
                             "children": [
                               {
                                 "attributes": {
-                                  "overloadedDeclarations": [null],
+                                  "overloadedDeclarations": [
+                                    null
+                                  ],
                                   "referencedDeclaration": 38,
                                   "type": "mapping(string memory => bool)",
                                   "value": "tokenNameExists"
@@ -18737,7 +19038,9 @@
                               },
                               {
                                 "attributes": {
-                                  "overloadedDeclarations": [null],
+                                  "overloadedDeclarations": [
+                                    null
+                                  ],
                                   "referencedDeclaration": 66,
                                   "type": "string memory",
                                   "value": "_name"
@@ -18778,7 +19081,9 @@
                   },
                   {
                     "attributes": {
-                      "assignments": [177]
+                      "assignments": [
+                        177
+                      ]
                     },
                     "children": [
                       {
@@ -18815,7 +19120,9 @@
                           "isPure": false,
                           "isStructConstructorCall": true,
                           "lValueRequested": false,
-                          "names": [null],
+                          "names": [
+                            null
+                          ],
                           "tryCall": false,
                           "type": "struct CryptoBoys.CryptoBoy memory",
                           "type_conversion": false
@@ -18861,7 +19168,9 @@
                                   "typeString": "bool"
                                 }
                               ],
-                              "overloadedDeclarations": [null],
+                              "overloadedDeclarations": [
+                                null
+                              ],
                               "referencedDeclaration": 30,
                               "type": "type(struct CryptoBoys.CryptoBoy storage pointer)",
                               "value": "CryptoBoy"
@@ -18872,7 +19181,9 @@
                           },
                           {
                             "attributes": {
-                              "overloadedDeclarations": [null],
+                              "overloadedDeclarations": [
+                                null
+                              ],
                               "referencedDeclaration": 11,
                               "type": "uint256",
                               "value": "cryptoBoyCounter"
@@ -18883,7 +19194,9 @@
                           },
                           {
                             "attributes": {
-                              "overloadedDeclarations": [null],
+                              "overloadedDeclarations": [
+                                null
+                              ],
                               "referencedDeclaration": 66,
                               "type": "string memory",
                               "value": "_name"
@@ -18894,7 +19207,9 @@
                           },
                           {
                             "attributes": {
-                              "overloadedDeclarations": [null],
+                              "overloadedDeclarations": [
+                                null
+                              ],
                               "referencedDeclaration": 68,
                               "type": "string memory",
                               "value": "_tokenURI"
@@ -18915,7 +19230,9 @@
                             "children": [
                               {
                                 "attributes": {
-                                  "overloadedDeclarations": [null],
+                                  "overloadedDeclarations": [
+                                    null
+                                  ],
                                   "referencedDeclaration": 4294967281,
                                   "type": "msg",
                                   "value": "msg"
@@ -18941,7 +19258,9 @@
                             "children": [
                               {
                                 "attributes": {
-                                  "overloadedDeclarations": [null],
+                                  "overloadedDeclarations": [
+                                    null
+                                  ],
                                   "referencedDeclaration": 4294967281,
                                   "type": "msg",
                                   "value": "msg"
@@ -18962,7 +19281,9 @@
                               "isPure": true,
                               "isStructConstructorCall": false,
                               "lValueRequested": false,
-                              "names": [null],
+                              "names": [
+                                null
+                              ],
                               "tryCall": false,
                               "type": "address payable",
                               "type_conversion": true
@@ -19018,7 +19339,9 @@
                           },
                           {
                             "attributes": {
-                              "overloadedDeclarations": [null],
+                              "overloadedDeclarations": [
+                                null
+                              ],
                               "referencedDeclaration": 70,
                               "type": "uint256",
                               "value": "_price"
@@ -19090,7 +19413,9 @@
                             "children": [
                               {
                                 "attributes": {
-                                  "overloadedDeclarations": [null],
+                                  "overloadedDeclarations": [
+                                    null
+                                  ],
                                   "referencedDeclaration": 34,
                                   "type": "mapping(uint256 => struct CryptoBoys.CryptoBoy storage ref)",
                                   "value": "allCryptoBoys"
@@ -19101,7 +19426,9 @@
                               },
                               {
                                 "attributes": {
-                                  "overloadedDeclarations": [null],
+                                  "overloadedDeclarations": [
+                                    null
+                                  ],
                                   "referencedDeclaration": 11,
                                   "type": "uint256",
                                   "value": "cryptoBoyCounter"
@@ -19117,7 +19444,9 @@
                           },
                           {
                             "attributes": {
-                              "overloadedDeclarations": [null],
+                              "overloadedDeclarations": [
+                                null
+                              ],
                               "referencedDeclaration": 177,
                               "type": "struct CryptoBoys.CryptoBoy memory",
                               "value": "newCryptoBoy"
@@ -19152,7 +19481,9 @@
               "implemented": true,
               "isConstructor": false,
               "kind": "function",
-              "modifiers": [null],
+              "modifiers": [
+                null
+              ],
               "name": "getTokenOwner",
               "scope": 507,
               "stateMutability": "view",
@@ -19231,7 +19562,9 @@
                 "children": [
                   {
                     "attributes": {
-                      "assignments": [210]
+                      "assignments": [
+                        210
+                      ]
                     },
                     "children": [
                       {
@@ -19268,7 +19601,9 @@
                           "isPure": false,
                           "isStructConstructorCall": false,
                           "lValueRequested": false,
-                          "names": [null],
+                          "names": [
+                            null
+                          ],
                           "tryCall": false,
                           "type": "address",
                           "type_conversion": false
@@ -19282,7 +19617,9 @@
                                   "typeString": "uint256"
                                 }
                               ],
-                              "overloadedDeclarations": [null],
+                              "overloadedDeclarations": [
+                                null
+                              ],
                               "referencedDeclaration": 2702,
                               "type": "function (uint256) view returns (address)",
                               "value": "ownerOf"
@@ -19293,7 +19630,9 @@
                           },
                           {
                             "attributes": {
-                              "overloadedDeclarations": [null],
+                              "overloadedDeclarations": [
+                                null
+                              ],
                               "referencedDeclaration": 204,
                               "type": "uint256",
                               "value": "_tokenId"
@@ -19319,7 +19658,9 @@
                     "children": [
                       {
                         "attributes": {
-                          "overloadedDeclarations": [null],
+                          "overloadedDeclarations": [
+                            null
+                          ],
                           "referencedDeclaration": 210,
                           "type": "address",
                           "value": "_tokenOwner"
@@ -19349,7 +19690,9 @@
               "implemented": true,
               "isConstructor": false,
               "kind": "function",
-              "modifiers": [null],
+              "modifiers": [
+                null
+              ],
               "name": "getTokenMetaData",
               "scope": 507,
               "stateMutability": "view",
@@ -19427,7 +19770,9 @@
                 "children": [
                   {
                     "attributes": {
-                      "assignments": [226]
+                      "assignments": [
+                        226
+                      ]
                     },
                     "children": [
                       {
@@ -19463,7 +19808,9 @@
                           "isPure": false,
                           "isStructConstructorCall": false,
                           "lValueRequested": false,
-                          "names": [null],
+                          "names": [
+                            null
+                          ],
                           "tryCall": false,
                           "type": "string memory",
                           "type_conversion": false
@@ -19477,7 +19824,9 @@
                                   "typeString": "uint256"
                                 }
                               ],
-                              "overloadedDeclarations": [null],
+                              "overloadedDeclarations": [
+                                null
+                              ],
                               "referencedDeclaration": 2790,
                               "type": "function (uint256) view returns (string memory)",
                               "value": "tokenURI"
@@ -19488,7 +19837,9 @@
                           },
                           {
                             "attributes": {
-                              "overloadedDeclarations": [null],
+                              "overloadedDeclarations": [
+                                null
+                              ],
                               "referencedDeclaration": 220,
                               "type": "uint256",
                               "value": "_tokenId"
@@ -19514,7 +19865,9 @@
                     "children": [
                       {
                         "attributes": {
-                          "overloadedDeclarations": [null],
+                          "overloadedDeclarations": [
+                            null
+                          ],
                           "referencedDeclaration": 226,
                           "type": "string memory",
                           "value": "tokenMetaData"
@@ -19544,7 +19897,9 @@
               "implemented": true,
               "isConstructor": false,
               "kind": "function",
-              "modifiers": [null],
+              "modifiers": [
+                null
+              ],
               "name": "getNumberOfTokensMinted",
               "scope": 507,
               "stateMutability": "view",
@@ -19554,7 +19909,9 @@
             "children": [
               {
                 "attributes": {
-                  "parameters": [null]
+                  "parameters": [
+                    null
+                  ]
                 },
                 "children": [],
                 "id": 235,
@@ -19598,7 +19955,9 @@
                 "children": [
                   {
                     "attributes": {
-                      "assignments": [240]
+                      "assignments": [
+                        240
+                      ]
                     },
                     "children": [
                       {
@@ -19629,13 +19988,17 @@
                       },
                       {
                         "attributes": {
-                          "arguments": [null],
+                          "arguments": [
+                            null
+                          ],
                           "isConstant": false,
                           "isLValue": false,
                           "isPure": false,
                           "isStructConstructorCall": false,
                           "lValueRequested": false,
-                          "names": [null],
+                          "names": [
+                            null
+                          ],
                           "tryCall": false,
                           "type": "uint256",
                           "type_conversion": false
@@ -19643,8 +20006,12 @@
                         "children": [
                           {
                             "attributes": {
-                              "argumentTypes": [null],
-                              "overloadedDeclarations": [null],
+                              "argumentTypes": [
+                                null
+                              ],
+                              "overloadedDeclarations": [
+                                null
+                              ],
                               "referencedDeclaration": 2830,
                               "type": "function () view returns (uint256)",
                               "value": "totalSupply"
@@ -19670,7 +20037,9 @@
                     "children": [
                       {
                         "attributes": {
-                          "overloadedDeclarations": [null],
+                          "overloadedDeclarations": [
+                            null
+                          ],
                           "referencedDeclaration": 240,
                           "type": "uint256",
                           "value": "totalNumberOfTokensMinted"
@@ -19700,7 +20069,9 @@
               "implemented": true,
               "isConstructor": false,
               "kind": "function",
-              "modifiers": [null],
+              "modifiers": [
+                null
+              ],
               "name": "getTotalNumberOfTokensOwnedByAnAddress",
               "scope": 507,
               "stateMutability": "view",
@@ -19779,7 +20150,9 @@
                 "children": [
                   {
                     "attributes": {
-                      "assignments": [255]
+                      "assignments": [
+                        255
+                      ]
                     },
                     "children": [
                       {
@@ -19815,7 +20188,9 @@
                           "isPure": false,
                           "isStructConstructorCall": false,
                           "lValueRequested": false,
-                          "names": [null],
+                          "names": [
+                            null
+                          ],
                           "tryCall": false,
                           "type": "uint256",
                           "type_conversion": false
@@ -19829,7 +20204,9 @@
                                   "typeString": "address"
                                 }
                               ],
-                              "overloadedDeclarations": [null],
+                              "overloadedDeclarations": [
+                                null
+                              ],
                               "referencedDeclaration": 2686,
                               "type": "function (address) view returns (uint256)",
                               "value": "balanceOf"
@@ -19840,7 +20217,9 @@
                           },
                           {
                             "attributes": {
-                              "overloadedDeclarations": [null],
+                              "overloadedDeclarations": [
+                                null
+                              ],
                               "referencedDeclaration": 249,
                               "type": "address",
                               "value": "_owner"
@@ -19866,7 +20245,9 @@
                     "children": [
                       {
                         "attributes": {
-                          "overloadedDeclarations": [null],
+                          "overloadedDeclarations": [
+                            null
+                          ],
                           "referencedDeclaration": 255,
                           "type": "uint256",
                           "value": "totalNumberOfTokensOwned"
@@ -19896,7 +20277,9 @@
               "implemented": true,
               "isConstructor": false,
               "kind": "function",
-              "modifiers": [null],
+              "modifiers": [
+                null
+              ],
               "name": "getTokenExists",
               "scope": 507,
               "stateMutability": "view",
@@ -19974,7 +20357,9 @@
                 "children": [
                   {
                     "attributes": {
-                      "assignments": [271]
+                      "assignments": [
+                        271
+                      ]
                     },
                     "children": [
                       {
@@ -20010,7 +20395,9 @@
                           "isPure": false,
                           "isStructConstructorCall": false,
                           "lValueRequested": false,
-                          "names": [null],
+                          "names": [
+                            null
+                          ],
                           "tryCall": false,
                           "type": "bool",
                           "type_conversion": false
@@ -20024,7 +20411,9 @@
                                   "typeString": "uint256"
                                 }
                               ],
-                              "overloadedDeclarations": [null],
+                              "overloadedDeclarations": [
+                                null
+                              ],
                               "referencedDeclaration": 3085,
                               "type": "function (uint256) view returns (bool)",
                               "value": "_exists"
@@ -20035,7 +20424,9 @@
                           },
                           {
                             "attributes": {
-                              "overloadedDeclarations": [null],
+                              "overloadedDeclarations": [
+                                null
+                              ],
                               "referencedDeclaration": 265,
                               "type": "uint256",
                               "value": "_tokenId"
@@ -20061,7 +20452,9 @@
                     "children": [
                       {
                         "attributes": {
-                          "overloadedDeclarations": [null],
+                          "overloadedDeclarations": [
+                            null
+                          ],
                           "referencedDeclaration": 271,
                           "type": "bool",
                           "value": "tokenExists"
@@ -20091,7 +20484,9 @@
               "implemented": true,
               "isConstructor": false,
               "kind": "function",
-              "modifiers": [null],
+              "modifiers": [
+                null
+              ],
               "name": "buyToken",
               "scope": 507,
               "stateMutability": "payable",
@@ -20134,7 +20529,9 @@
               },
               {
                 "attributes": {
-                  "parameters": [null]
+                  "parameters": [
+                    null
+                  ]
                 },
                 "children": [],
                 "id": 283,
@@ -20152,7 +20549,9 @@
                           "isPure": false,
                           "isStructConstructorCall": false,
                           "lValueRequested": false,
-                          "names": [null],
+                          "names": [
+                            null
+                          ],
                           "tryCall": false,
                           "type": "tuple()",
                           "type_conversion": false
@@ -20204,7 +20603,9 @@
                                 "children": [
                                   {
                                     "attributes": {
-                                      "overloadedDeclarations": [null],
+                                      "overloadedDeclarations": [
+                                        null
+                                      ],
                                       "referencedDeclaration": 4294967281,
                                       "type": "msg",
                                       "value": "msg"
@@ -20225,7 +20626,9 @@
                                   "isPure": true,
                                   "isStructConstructorCall": false,
                                   "lValueRequested": false,
-                                  "names": [null],
+                                  "names": [
+                                    null
+                                  ],
                                   "tryCall": false,
                                   "type": "address payable",
                                   "type_conversion": true
@@ -20303,7 +20706,9 @@
                           "isPure": false,
                           "isStructConstructorCall": false,
                           "lValueRequested": false,
-                          "names": [null],
+                          "names": [
+                            null
+                          ],
                           "tryCall": false,
                           "type": "tuple()",
                           "type_conversion": false
@@ -20336,7 +20741,9 @@
                               "isPure": false,
                               "isStructConstructorCall": false,
                               "lValueRequested": false,
-                              "names": [null],
+                              "names": [
+                                null
+                              ],
                               "tryCall": false,
                               "type": "bool",
                               "type_conversion": false
@@ -20350,7 +20757,9 @@
                                       "typeString": "uint256"
                                     }
                                   ],
-                                  "overloadedDeclarations": [null],
+                                  "overloadedDeclarations": [
+                                    null
+                                  ],
                                   "referencedDeclaration": 3085,
                                   "type": "function (uint256) view returns (bool)",
                                   "value": "_exists"
@@ -20361,7 +20770,9 @@
                               },
                               {
                                 "attributes": {
-                                  "overloadedDeclarations": [null],
+                                  "overloadedDeclarations": [
+                                    null
+                                  ],
                                   "referencedDeclaration": 281,
                                   "type": "uint256",
                                   "value": "_tokenId"
@@ -20387,7 +20798,9 @@
                   },
                   {
                     "attributes": {
-                      "assignments": [301]
+                      "assignments": [
+                        301
+                      ]
                     },
                     "children": [
                       {
@@ -20424,7 +20837,9 @@
                           "isPure": false,
                           "isStructConstructorCall": false,
                           "lValueRequested": false,
-                          "names": [null],
+                          "names": [
+                            null
+                          ],
                           "tryCall": false,
                           "type": "address",
                           "type_conversion": false
@@ -20438,7 +20853,9 @@
                                   "typeString": "uint256"
                                 }
                               ],
-                              "overloadedDeclarations": [null],
+                              "overloadedDeclarations": [
+                                null
+                              ],
                               "referencedDeclaration": 2702,
                               "type": "function (uint256) view returns (address)",
                               "value": "ownerOf"
@@ -20449,7 +20866,9 @@
                           },
                           {
                             "attributes": {
-                              "overloadedDeclarations": [null],
+                              "overloadedDeclarations": [
+                                null
+                              ],
                               "referencedDeclaration": 281,
                               "type": "uint256",
                               "value": "_tokenId"
@@ -20477,7 +20896,9 @@
                           "isPure": false,
                           "isStructConstructorCall": false,
                           "lValueRequested": false,
-                          "names": [null],
+                          "names": [
+                            null
+                          ],
                           "tryCall": false,
                           "type": "tuple()",
                           "type_conversion": false
@@ -20519,7 +20940,9 @@
                             "children": [
                               {
                                 "attributes": {
-                                  "overloadedDeclarations": [null],
+                                  "overloadedDeclarations": [
+                                    null
+                                  ],
                                   "referencedDeclaration": 301,
                                   "type": "address",
                                   "value": "tokenOwner"
@@ -20535,7 +20958,9 @@
                                   "isPure": true,
                                   "isStructConstructorCall": false,
                                   "lValueRequested": false,
-                                  "names": [null],
+                                  "names": [
+                                    null
+                                  ],
                                   "tryCall": false,
                                   "type": "address payable",
                                   "type_conversion": true
@@ -20613,7 +21038,9 @@
                           "isPure": false,
                           "isStructConstructorCall": false,
                           "lValueRequested": false,
-                          "names": [null],
+                          "names": [
+                            null
+                          ],
                           "tryCall": false,
                           "type": "tuple()",
                           "type_conversion": false
@@ -20655,7 +21082,9 @@
                             "children": [
                               {
                                 "attributes": {
-                                  "overloadedDeclarations": [null],
+                                  "overloadedDeclarations": [
+                                    null
+                                  ],
                                   "referencedDeclaration": 301,
                                   "type": "address",
                                   "value": "tokenOwner"
@@ -20676,7 +21105,9 @@
                                 "children": [
                                   {
                                     "attributes": {
-                                      "overloadedDeclarations": [null],
+                                      "overloadedDeclarations": [
+                                        null
+                                      ],
                                       "referencedDeclaration": 4294967281,
                                       "type": "msg",
                                       "value": "msg"
@@ -20707,7 +21138,9 @@
                   },
                   {
                     "attributes": {
-                      "assignments": [323]
+                      "assignments": [
+                        323
+                      ]
                     },
                     "children": [
                       {
@@ -20748,7 +21181,9 @@
                         "children": [
                           {
                             "attributes": {
-                              "overloadedDeclarations": [null],
+                              "overloadedDeclarations": [
+                                null
+                              ],
                               "referencedDeclaration": 34,
                               "type": "mapping(uint256 => struct CryptoBoys.CryptoBoy storage ref)",
                               "value": "allCryptoBoys"
@@ -20759,7 +21194,9 @@
                           },
                           {
                             "attributes": {
-                              "overloadedDeclarations": [null],
+                              "overloadedDeclarations": [
+                                null
+                              ],
                               "referencedDeclaration": 281,
                               "type": "uint256",
                               "value": "_tokenId"
@@ -20787,7 +21224,9 @@
                           "isPure": false,
                           "isStructConstructorCall": false,
                           "lValueRequested": false,
-                          "names": [null],
+                          "names": [
+                            null
+                          ],
                           "tryCall": false,
                           "type": "tuple()",
                           "type_conversion": false
@@ -20839,7 +21278,9 @@
                                 "children": [
                                   {
                                     "attributes": {
-                                      "overloadedDeclarations": [null],
+                                      "overloadedDeclarations": [
+                                        null
+                                      ],
                                       "referencedDeclaration": 4294967281,
                                       "type": "msg",
                                       "value": "msg"
@@ -20866,7 +21307,9 @@
                                 "children": [
                                   {
                                     "attributes": {
-                                      "overloadedDeclarations": [null],
+                                      "overloadedDeclarations": [
+                                        null
+                                      ],
                                       "referencedDeclaration": 323,
                                       "type": "struct CryptoBoys.CryptoBoy memory",
                                       "value": "cryptoboy"
@@ -20904,7 +21347,9 @@
                           "isPure": false,
                           "isStructConstructorCall": false,
                           "lValueRequested": false,
-                          "names": [null],
+                          "names": [
+                            null
+                          ],
                           "tryCall": false,
                           "type": "tuple()",
                           "type_conversion": false
@@ -20943,7 +21388,9 @@
                             "children": [
                               {
                                 "attributes": {
-                                  "overloadedDeclarations": [null],
+                                  "overloadedDeclarations": [
+                                    null
+                                  ],
                                   "referencedDeclaration": 323,
                                   "type": "struct CryptoBoys.CryptoBoy memory",
                                   "value": "cryptoboy"
@@ -20976,7 +21423,9 @@
                           "isPure": false,
                           "isStructConstructorCall": false,
                           "lValueRequested": false,
-                          "names": [null],
+                          "names": [
+                            null
+                          ],
                           "tryCall": false,
                           "type": "tuple()",
                           "type_conversion": false
@@ -20998,7 +21447,9 @@
                                   "typeString": "uint256"
                                 }
                               ],
-                              "overloadedDeclarations": [null],
+                              "overloadedDeclarations": [
+                                null
+                              ],
                               "referencedDeclaration": 3371,
                               "type": "function (address,address,uint256)",
                               "value": "_transfer"
@@ -21009,7 +21460,9 @@
                           },
                           {
                             "attributes": {
-                              "overloadedDeclarations": [null],
+                              "overloadedDeclarations": [
+                                null
+                              ],
                               "referencedDeclaration": 301,
                               "type": "address",
                               "value": "tokenOwner"
@@ -21030,7 +21483,9 @@
                             "children": [
                               {
                                 "attributes": {
-                                  "overloadedDeclarations": [null],
+                                  "overloadedDeclarations": [
+                                    null
+                                  ],
                                   "referencedDeclaration": 4294967281,
                                   "type": "msg",
                                   "value": "msg"
@@ -21046,7 +21501,9 @@
                           },
                           {
                             "attributes": {
-                              "overloadedDeclarations": [null],
+                              "overloadedDeclarations": [
+                                null
+                              ],
                               "referencedDeclaration": 281,
                               "type": "uint256",
                               "value": "_tokenId"
@@ -21067,7 +21524,9 @@
                   },
                   {
                     "attributes": {
-                      "assignments": [349]
+                      "assignments": [
+                        349
+                      ]
                     },
                     "children": [
                       {
@@ -21110,7 +21569,9 @@
                         "children": [
                           {
                             "attributes": {
-                              "overloadedDeclarations": [null],
+                              "overloadedDeclarations": [
+                                null
+                              ],
                               "referencedDeclaration": 323,
                               "type": "struct CryptoBoys.CryptoBoy memory",
                               "value": "cryptoboy"
@@ -21138,7 +21599,9 @@
                           "isPure": false,
                           "isStructConstructorCall": false,
                           "lValueRequested": false,
-                          "names": [null],
+                          "names": [
+                            null
+                          ],
                           "tryCall": false,
                           "type": "tuple()",
                           "type_conversion": false
@@ -21162,7 +21625,9 @@
                             "children": [
                               {
                                 "attributes": {
-                                  "overloadedDeclarations": [null],
+                                  "overloadedDeclarations": [
+                                    null
+                                  ],
                                   "referencedDeclaration": 349,
                                   "type": "address payable",
                                   "value": "sendTo"
@@ -21188,7 +21653,9 @@
                             "children": [
                               {
                                 "attributes": {
-                                  "overloadedDeclarations": [null],
+                                  "overloadedDeclarations": [
+                                    null
+                                  ],
                                   "referencedDeclaration": 4294967281,
                                   "type": "msg",
                                   "value": "msg"
@@ -21237,7 +21704,9 @@
                             "children": [
                               {
                                 "attributes": {
-                                  "overloadedDeclarations": [null],
+                                  "overloadedDeclarations": [
+                                    null
+                                  ],
                                   "referencedDeclaration": 323,
                                   "type": "struct CryptoBoys.CryptoBoy memory",
                                   "value": "cryptoboy"
@@ -21264,7 +21733,9 @@
                             "children": [
                               {
                                 "attributes": {
-                                  "overloadedDeclarations": [null],
+                                  "overloadedDeclarations": [
+                                    null
+                                  ],
                                   "referencedDeclaration": 323,
                                   "type": "struct CryptoBoys.CryptoBoy memory",
                                   "value": "cryptoboy"
@@ -21313,7 +21784,9 @@
                             "children": [
                               {
                                 "attributes": {
-                                  "overloadedDeclarations": [null],
+                                  "overloadedDeclarations": [
+                                    null
+                                  ],
                                   "referencedDeclaration": 323,
                                   "type": "struct CryptoBoys.CryptoBoy memory",
                                   "value": "cryptoboy"
@@ -21339,7 +21812,9 @@
                             "children": [
                               {
                                 "attributes": {
-                                  "overloadedDeclarations": [null],
+                                  "overloadedDeclarations": [
+                                    null
+                                  ],
                                   "referencedDeclaration": 4294967281,
                                   "type": "msg",
                                   "value": "msg"
@@ -21388,7 +21863,9 @@
                             "children": [
                               {
                                 "attributes": {
-                                  "overloadedDeclarations": [null],
+                                  "overloadedDeclarations": [
+                                    null
+                                  ],
                                   "referencedDeclaration": 323,
                                   "type": "struct CryptoBoys.CryptoBoy memory",
                                   "value": "cryptoboy"
@@ -21450,7 +21927,9 @@
                             "children": [
                               {
                                 "attributes": {
-                                  "overloadedDeclarations": [null],
+                                  "overloadedDeclarations": [
+                                    null
+                                  ],
                                   "referencedDeclaration": 34,
                                   "type": "mapping(uint256 => struct CryptoBoys.CryptoBoy storage ref)",
                                   "value": "allCryptoBoys"
@@ -21461,7 +21940,9 @@
                               },
                               {
                                 "attributes": {
-                                  "overloadedDeclarations": [null],
+                                  "overloadedDeclarations": [
+                                    null
+                                  ],
                                   "referencedDeclaration": 281,
                                   "type": "uint256",
                                   "value": "_tokenId"
@@ -21477,7 +21958,9 @@
                           },
                           {
                             "attributes": {
-                              "overloadedDeclarations": [null],
+                              "overloadedDeclarations": [
+                                null
+                              ],
                               "referencedDeclaration": 323,
                               "type": "struct CryptoBoys.CryptoBoy memory",
                               "value": "cryptoboy"
@@ -21512,7 +21995,9 @@
               "implemented": true,
               "isConstructor": false,
               "kind": "function",
-              "modifiers": [null],
+              "modifiers": [
+                null
+              ],
               "name": "changeTokenPrice",
               "scope": 507,
               "stateMutability": "nonpayable",
@@ -21581,7 +22066,9 @@
               },
               {
                 "attributes": {
-                  "parameters": [null]
+                  "parameters": [
+                    null
+                  ]
                 },
                 "children": [],
                 "id": 393,
@@ -21599,7 +22086,9 @@
                           "isPure": false,
                           "isStructConstructorCall": false,
                           "lValueRequested": false,
-                          "names": [null],
+                          "names": [
+                            null
+                          ],
                           "tryCall": false,
                           "type": "tuple()",
                           "type_conversion": false
@@ -21651,7 +22140,9 @@
                                 "children": [
                                   {
                                     "attributes": {
-                                      "overloadedDeclarations": [null],
+                                      "overloadedDeclarations": [
+                                        null
+                                      ],
                                       "referencedDeclaration": 4294967281,
                                       "type": "msg",
                                       "value": "msg"
@@ -21672,7 +22163,9 @@
                                   "isPure": true,
                                   "isStructConstructorCall": false,
                                   "lValueRequested": false,
-                                  "names": [null],
+                                  "names": [
+                                    null
+                                  ],
                                   "tryCall": false,
                                   "type": "address payable",
                                   "type_conversion": true
@@ -21750,7 +22243,9 @@
                           "isPure": false,
                           "isStructConstructorCall": false,
                           "lValueRequested": false,
-                          "names": [null],
+                          "names": [
+                            null
+                          ],
                           "tryCall": false,
                           "type": "tuple()",
                           "type_conversion": false
@@ -21783,7 +22278,9 @@
                               "isPure": false,
                               "isStructConstructorCall": false,
                               "lValueRequested": false,
-                              "names": [null],
+                              "names": [
+                                null
+                              ],
                               "tryCall": false,
                               "type": "bool",
                               "type_conversion": false
@@ -21797,7 +22294,9 @@
                                       "typeString": "uint256"
                                     }
                                   ],
-                                  "overloadedDeclarations": [null],
+                                  "overloadedDeclarations": [
+                                    null
+                                  ],
                                   "referencedDeclaration": 3085,
                                   "type": "function (uint256) view returns (bool)",
                                   "value": "_exists"
@@ -21808,7 +22307,9 @@
                               },
                               {
                                 "attributes": {
-                                  "overloadedDeclarations": [null],
+                                  "overloadedDeclarations": [
+                                    null
+                                  ],
                                   "referencedDeclaration": 389,
                                   "type": "uint256",
                                   "value": "_tokenId"
@@ -21834,7 +22335,9 @@
                   },
                   {
                     "attributes": {
-                      "assignments": [411]
+                      "assignments": [
+                        411
+                      ]
                     },
                     "children": [
                       {
@@ -21871,7 +22374,9 @@
                           "isPure": false,
                           "isStructConstructorCall": false,
                           "lValueRequested": false,
-                          "names": [null],
+                          "names": [
+                            null
+                          ],
                           "tryCall": false,
                           "type": "address",
                           "type_conversion": false
@@ -21885,7 +22390,9 @@
                                   "typeString": "uint256"
                                 }
                               ],
-                              "overloadedDeclarations": [null],
+                              "overloadedDeclarations": [
+                                null
+                              ],
                               "referencedDeclaration": 2702,
                               "type": "function (uint256) view returns (address)",
                               "value": "ownerOf"
@@ -21896,7 +22403,9 @@
                           },
                           {
                             "attributes": {
-                              "overloadedDeclarations": [null],
+                              "overloadedDeclarations": [
+                                null
+                              ],
                               "referencedDeclaration": 389,
                               "type": "uint256",
                               "value": "_tokenId"
@@ -21924,7 +22433,9 @@
                           "isPure": false,
                           "isStructConstructorCall": false,
                           "lValueRequested": false,
-                          "names": [null],
+                          "names": [
+                            null
+                          ],
                           "tryCall": false,
                           "type": "tuple()",
                           "type_conversion": false
@@ -21966,7 +22477,9 @@
                             "children": [
                               {
                                 "attributes": {
-                                  "overloadedDeclarations": [null],
+                                  "overloadedDeclarations": [
+                                    null
+                                  ],
                                   "referencedDeclaration": 411,
                                   "type": "address",
                                   "value": "tokenOwner"
@@ -21987,7 +22500,9 @@
                                 "children": [
                                   {
                                     "attributes": {
-                                      "overloadedDeclarations": [null],
+                                      "overloadedDeclarations": [
+                                        null
+                                      ],
                                       "referencedDeclaration": 4294967281,
                                       "type": "msg",
                                       "value": "msg"
@@ -22018,7 +22533,9 @@
                   },
                   {
                     "attributes": {
-                      "assignments": [424]
+                      "assignments": [
+                        424
+                      ]
                     },
                     "children": [
                       {
@@ -22059,7 +22576,9 @@
                         "children": [
                           {
                             "attributes": {
-                              "overloadedDeclarations": [null],
+                              "overloadedDeclarations": [
+                                null
+                              ],
                               "referencedDeclaration": 34,
                               "type": "mapping(uint256 => struct CryptoBoys.CryptoBoy storage ref)",
                               "value": "allCryptoBoys"
@@ -22070,7 +22589,9 @@
                           },
                           {
                             "attributes": {
-                              "overloadedDeclarations": [null],
+                              "overloadedDeclarations": [
+                                null
+                              ],
                               "referencedDeclaration": 389,
                               "type": "uint256",
                               "value": "_tokenId"
@@ -22114,7 +22635,9 @@
                             "children": [
                               {
                                 "attributes": {
-                                  "overloadedDeclarations": [null],
+                                  "overloadedDeclarations": [
+                                    null
+                                  ],
                                   "referencedDeclaration": 424,
                                   "type": "struct CryptoBoys.CryptoBoy memory",
                                   "value": "cryptoboy"
@@ -22130,7 +22653,9 @@
                           },
                           {
                             "attributes": {
-                              "overloadedDeclarations": [null],
+                              "overloadedDeclarations": [
+                                null
+                              ],
                               "referencedDeclaration": 391,
                               "type": "uint256",
                               "value": "_newPrice"
@@ -22172,7 +22697,9 @@
                             "children": [
                               {
                                 "attributes": {
-                                  "overloadedDeclarations": [null],
+                                  "overloadedDeclarations": [
+                                    null
+                                  ],
                                   "referencedDeclaration": 34,
                                   "type": "mapping(uint256 => struct CryptoBoys.CryptoBoy storage ref)",
                                   "value": "allCryptoBoys"
@@ -22183,7 +22710,9 @@
                               },
                               {
                                 "attributes": {
-                                  "overloadedDeclarations": [null],
+                                  "overloadedDeclarations": [
+                                    null
+                                  ],
                                   "referencedDeclaration": 389,
                                   "type": "uint256",
                                   "value": "_tokenId"
@@ -22199,7 +22728,9 @@
                           },
                           {
                             "attributes": {
-                              "overloadedDeclarations": [null],
+                              "overloadedDeclarations": [
+                                null
+                              ],
                               "referencedDeclaration": 424,
                               "type": "struct CryptoBoys.CryptoBoy memory",
                               "value": "cryptoboy"
@@ -22234,7 +22765,9 @@
               "implemented": true,
               "isConstructor": false,
               "kind": "function",
-              "modifiers": [null],
+              "modifiers": [
+                null
+              ],
               "name": "toggleForSale",
               "scope": 507,
               "stateMutability": "nonpayable",
@@ -22277,7 +22810,9 @@
               },
               {
                 "attributes": {
-                  "parameters": [null]
+                  "parameters": [
+                    null
+                  ]
                 },
                 "children": [],
                 "id": 446,
@@ -22295,7 +22830,9 @@
                           "isPure": false,
                           "isStructConstructorCall": false,
                           "lValueRequested": false,
-                          "names": [null],
+                          "names": [
+                            null
+                          ],
                           "tryCall": false,
                           "type": "tuple()",
                           "type_conversion": false
@@ -22347,7 +22884,9 @@
                                 "children": [
                                   {
                                     "attributes": {
-                                      "overloadedDeclarations": [null],
+                                      "overloadedDeclarations": [
+                                        null
+                                      ],
                                       "referencedDeclaration": 4294967281,
                                       "type": "msg",
                                       "value": "msg"
@@ -22368,7 +22907,9 @@
                                   "isPure": true,
                                   "isStructConstructorCall": false,
                                   "lValueRequested": false,
-                                  "names": [null],
+                                  "names": [
+                                    null
+                                  ],
                                   "tryCall": false,
                                   "type": "address payable",
                                   "type_conversion": true
@@ -22446,7 +22987,9 @@
                           "isPure": false,
                           "isStructConstructorCall": false,
                           "lValueRequested": false,
-                          "names": [null],
+                          "names": [
+                            null
+                          ],
                           "tryCall": false,
                           "type": "tuple()",
                           "type_conversion": false
@@ -22479,7 +23022,9 @@
                               "isPure": false,
                               "isStructConstructorCall": false,
                               "lValueRequested": false,
-                              "names": [null],
+                              "names": [
+                                null
+                              ],
                               "tryCall": false,
                               "type": "bool",
                               "type_conversion": false
@@ -22493,7 +23038,9 @@
                                       "typeString": "uint256"
                                     }
                                   ],
-                                  "overloadedDeclarations": [null],
+                                  "overloadedDeclarations": [
+                                    null
+                                  ],
                                   "referencedDeclaration": 3085,
                                   "type": "function (uint256) view returns (bool)",
                                   "value": "_exists"
@@ -22504,7 +23051,9 @@
                               },
                               {
                                 "attributes": {
-                                  "overloadedDeclarations": [null],
+                                  "overloadedDeclarations": [
+                                    null
+                                  ],
                                   "referencedDeclaration": 444,
                                   "type": "uint256",
                                   "value": "_tokenId"
@@ -22530,7 +23079,9 @@
                   },
                   {
                     "attributes": {
-                      "assignments": [464]
+                      "assignments": [
+                        464
+                      ]
                     },
                     "children": [
                       {
@@ -22567,7 +23118,9 @@
                           "isPure": false,
                           "isStructConstructorCall": false,
                           "lValueRequested": false,
-                          "names": [null],
+                          "names": [
+                            null
+                          ],
                           "tryCall": false,
                           "type": "address",
                           "type_conversion": false
@@ -22581,7 +23134,9 @@
                                   "typeString": "uint256"
                                 }
                               ],
-                              "overloadedDeclarations": [null],
+                              "overloadedDeclarations": [
+                                null
+                              ],
                               "referencedDeclaration": 2702,
                               "type": "function (uint256) view returns (address)",
                               "value": "ownerOf"
@@ -22592,7 +23147,9 @@
                           },
                           {
                             "attributes": {
-                              "overloadedDeclarations": [null],
+                              "overloadedDeclarations": [
+                                null
+                              ],
                               "referencedDeclaration": 444,
                               "type": "uint256",
                               "value": "_tokenId"
@@ -22620,7 +23177,9 @@
                           "isPure": false,
                           "isStructConstructorCall": false,
                           "lValueRequested": false,
-                          "names": [null],
+                          "names": [
+                            null
+                          ],
                           "tryCall": false,
                           "type": "tuple()",
                           "type_conversion": false
@@ -22662,7 +23221,9 @@
                             "children": [
                               {
                                 "attributes": {
-                                  "overloadedDeclarations": [null],
+                                  "overloadedDeclarations": [
+                                    null
+                                  ],
                                   "referencedDeclaration": 464,
                                   "type": "address",
                                   "value": "tokenOwner"
@@ -22683,7 +23244,9 @@
                                 "children": [
                                   {
                                     "attributes": {
-                                      "overloadedDeclarations": [null],
+                                      "overloadedDeclarations": [
+                                        null
+                                      ],
                                       "referencedDeclaration": 4294967281,
                                       "type": "msg",
                                       "value": "msg"
@@ -22714,7 +23277,9 @@
                   },
                   {
                     "attributes": {
-                      "assignments": [477]
+                      "assignments": [
+                        477
+                      ]
                     },
                     "children": [
                       {
@@ -22755,7 +23320,9 @@
                         "children": [
                           {
                             "attributes": {
-                              "overloadedDeclarations": [null],
+                              "overloadedDeclarations": [
+                                null
+                              ],
                               "referencedDeclaration": 34,
                               "type": "mapping(uint256 => struct CryptoBoys.CryptoBoy storage ref)",
                               "value": "allCryptoBoys"
@@ -22766,7 +23333,9 @@
                           },
                           {
                             "attributes": {
-                              "overloadedDeclarations": [null],
+                              "overloadedDeclarations": [
+                                null
+                              ],
                               "referencedDeclaration": 444,
                               "type": "uint256",
                               "value": "_tokenId"
@@ -22800,7 +23369,9 @@
                         "children": [
                           {
                             "attributes": {
-                              "overloadedDeclarations": [null],
+                              "overloadedDeclarations": [
+                                null
+                              ],
                               "referencedDeclaration": 477,
                               "type": "struct CryptoBoys.CryptoBoy memory",
                               "value": "cryptoboy"
@@ -22841,7 +23412,9 @@
                                     "children": [
                                       {
                                         "attributes": {
-                                          "overloadedDeclarations": [null],
+                                          "overloadedDeclarations": [
+                                            null
+                                          ],
                                           "referencedDeclaration": 477,
                                           "type": "struct CryptoBoys.CryptoBoy memory",
                                           "value": "cryptoboy"
@@ -22912,7 +23485,9 @@
                                     "children": [
                                       {
                                         "attributes": {
-                                          "overloadedDeclarations": [null],
+                                          "overloadedDeclarations": [
+                                            null
+                                          ],
                                           "referencedDeclaration": 477,
                                           "type": "struct CryptoBoys.CryptoBoy memory",
                                           "value": "cryptoboy"
@@ -22984,7 +23559,9 @@
                             "children": [
                               {
                                 "attributes": {
-                                  "overloadedDeclarations": [null],
+                                  "overloadedDeclarations": [
+                                    null
+                                  ],
                                   "referencedDeclaration": 34,
                                   "type": "mapping(uint256 => struct CryptoBoys.CryptoBoy storage ref)",
                                   "value": "allCryptoBoys"
@@ -22995,7 +23572,9 @@
                               },
                               {
                                 "attributes": {
-                                  "overloadedDeclarations": [null],
+                                  "overloadedDeclarations": [
+                                    null
+                                  ],
                                   "referencedDeclaration": 444,
                                   "type": "uint256",
                                   "value": "_tokenId"
@@ -23011,7 +23590,9 @@
                           },
                           {
                             "attributes": {
-                              "overloadedDeclarations": [null],
+                              "overloadedDeclarations": [
+                                null
+                              ],
                               "referencedDeclaration": 477,
                               "type": "struct CryptoBoys.CryptoBoy memory",
                               "value": "cryptoboy"
@@ -23060,10 +23641,16 @@
       "links": {},
       "address": "0x420d2a6e87d87992eb01e5bfe762b3f437dbfd85",
       "transactionHash": "0x25f92d062cc1ee642685e3dd44e144b0d323872a73d67c6680fecc40771e8a41"
+    },
+    "1615642927363": {
+      "events": {},
+      "links": {},
+      "address": "0x0c33c4EDD26c6E61EEda46D78122A358eF86B880",
+      "transactionHash": "0x9e19b67a0210f131e8b4a623f501cd83cef0c4e3bdaee4918383a9a8d94ec5eb"
     }
   },
   "schemaVersion": "3.3.4",
-  "updatedAt": "2021-03-13T11:24:06.141Z",
+  "updatedAt": "2021-03-13T13:42:33.721Z",
   "networkType": "ethereum",
   "devdoc": {
     "kind": "dev",

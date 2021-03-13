@@ -468,9 +468,9 @@ class FormAndPreview extends Component {
                         <span>&times;</span>
                       </button>
                       {this.props.colorsUsed.length > 1 ? (
-                        <strong>These colors are used!</strong>
+                        <strong>These colors are taken!</strong>
                       ) : (
-                        <strong>This color is used!</strong>
+                        <strong>This color is taken!</strong>
                       )}
                     </div>
                     <div
