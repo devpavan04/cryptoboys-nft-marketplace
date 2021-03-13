@@ -8,6 +8,7 @@
 - Toggle between keeping the token for sale and not for sale.
 - Keeps track of all the tokens owned by an account - minted and bought.
 - Query blockchain for token owner and token metadata.
+- User can mint a token only after every 5 minutes.
 #
 ## Stack
 - [Solidity](https://docs.soliditylang.org/en/v0.7.6/) - Object-oriented, high-level language for implementing smart contracts.
