@@ -1,7 +1,7 @@
 # Crypto Boy NFT Marketplace
 ### NFT marketplace where users mint ERC721 implemented Crypto Boy NFTs and manage them on the Ethereum Blockchain.
 #
-#### Features
+### Features
 - Mint custom ERC721 implemented Crypto Boy Tokens.
 - Sell Crypto Boy tokens on the marketplace.
 - Set desired token price.
@@ -10,7 +10,7 @@
 - Query blockchain for token owner and token metadata.
 - User can mint a token only after every 5 minutes.
 #
-#### Stack
+### Stack
 - [Solidity](https://docs.soliditylang.org/en/v0.7.6/) - Object-oriented, high-level language for implementing smart contracts.
 - [Bootstrap 4](https://getbootstrap.com/) - CSS framework for faster and easier web development.
 - [React.js](https://reactjs.org/) - JavaScript library for building user interfaces.
@@ -38,7 +38,7 @@ npm i ganache-cli
 ```
 ganache-cli --port 7545 --quiet
 ```
-### Open new terminal window and clone this repository
+#### Open new terminal window and clone this repository
 ```
 git clone https://github.com/devpavan04/cryptoboys-NFT-marketplace.git
 ```
@@ -63,5 +63,5 @@ truffle test
 ```
 npm start
 ```
-### Open metamask browser wallet and connect network to Localhost 7545.
-### Import accounts from ganache-cli into the metamask browser wallet to make transactions on the DApp.
+#### Open metamask browser wallet and connect network to Localhost 7545.
+#### Import accounts from ganache-cli into the metamask browser wallet to make transactions on the DApp.
