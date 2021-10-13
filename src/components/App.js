@@ -2,16 +2,16 @@ import React, { Component } from "react";
 import { HashRouter, Route } from "react-router-dom";
 import "./App.css";
 import Web3 from "web3";
-import CryptoBoys from "../abis/CryptoBoys.json";
+import BscBoys from "../abis/BscBoys.json";
 
 import FormAndPreview from "../components/FormAndPreview/FormAndPreview";
-import AllCryptoBoys from "./AllCryptoBoys/AllCryptoBoys";
+import AllBscBoys from "./AllBscBoys/AllBscBoys";
 import AccountDetails from "./AccountDetails/AccountDetails";
 import ContractNotDeployed from "./ContractNotDeployed/ContractNotDeployed";
 import ConnectToMetamask from "./ConnectMetamask/ConnectToMetamask";
 import Loading from "./Loading/Loading";
 import Navbar from "./Navbar/Navbar";
-import MyCryptoBoys from "./MyCryptoBoys/MyCryptoBoys";
+import MyBscBoys from "./MyBscBoys/MyBscBoys";
 import Queries from "./Queries/Queries";
 
 const ipfsClient = require("ipfs-http-client");
@@ -27,9 +27,9 @@ class App extends Component {
     this.state = {
       accountAddress: "",
       accountBalance: "",
-      cryptoBoysContract: null,
-      cryptoBoysCount: 0,
-      cryptoBoys: [],
+      BscBoysContract: null,
+      BscBoysCount: 0,
+      BscBoys: [],
       loading: true,
       metamaskConnected: false,
       contractDetected: false,
@@ -108,33 +108,33 @@ class App extends Component {
       this.setState({ accountBalance });
       this.setState({ loading: false });
       const networkId = await web3.eth.net.getId();
-      const networkData = CryptoBoys.networks[networkId];
+      const networkData = BscBoys.networks[networkId];
       if (networkData) {
         this.setState({ loading: true });
-        const cryptoBoysContract = web3.eth.Contract(
-          CryptoBoys.abi,
+        const BscBoysContract = web3.eth.Contract(
+          BscBoys.abi,
           networkData.address
         );
-        this.setState({ cryptoBoysContract });
+        this.setState({ BscBoysContract });
         this.setState({ contractDetected: true });
-        const cryptoBoysCount = await cryptoBoysContract.methods
+        const BscBoysCount = await BscBoysContract.methods
           .cryptoBoyCounter()
           .call();
-        this.setState({ cryptoBoysCount });
-        for (var i = 1; i <= cryptoBoysCount; i++) {
-          const cryptoBoy = await cryptoBoysContract.methods
-            .allCryptoBoys(i)
+        this.setState({ BscBoysCount });
+        for (var i = 1; i <= BscBoysCount; i++) {
+          const cryptoBoy = await BscBoysContract.methods
+            .allBscBoys(i)
             .call();
           this.setState({
-            cryptoBoys: [...this.state.cryptoBoys, cryptoBoy],
+            BscBoys: [...this.state.BscBoys, BscBoys],
           });
         }
-        let totalTokensMinted = await cryptoBoysContract.methods
+        let totalTokensMinted = await BscBoysContract.methods
           .getNumberOfTokensMinted()
           .call();
         totalTokensMinted = totalTokensMinted.toNumber();
         this.setState({ totalTokensMinted });
-        let totalTokensOwnedByAccount = await cryptoBoysContract.methods
+        let totalTokensOwnedByAccount = await BscBoysContract.methods
           .getTotalNumberOfTokensOwnedByAnAddress(this.state.accountAddress)
           .call();
         totalTokensOwnedByAccount = totalTokensOwnedByAccount.toNumber();
@@ -153,12 +153,12 @@ class App extends Component {
   };
 
   setMetaData = async () => {
-    if (this.state.cryptoBoys.length !== 0) {
-      this.state.cryptoBoys.map(async (cryptoboy) => {
+    if (this.state.BscBoys.length !== 0) {
+      this.state.BscBoys.map(async (cryptoboy) => {
         const result = await fetch(cryptoboy.tokenURI);
         const metaData = await result.json();
         this.setState({
-          cryptoBoys: this.state.cryptoBoys.map((cryptoboy) =>
+          BscBoys: this.state.BscBoys.map((cryptoboy) =>
             cryptoboy.tokenId.toNumber() === Number(metaData.tokenId)
               ? {
                   ...cryptoboy,
@@ -177,7 +177,7 @@ class App extends Component {
     let colorsUsed = [];
     for (let i = 0; i < colorsArray.length; i++) {
       if (colorsArray[i] !== "") {
-        let colorIsUsed = await this.state.cryptoBoysContract.methods
+        let colorIsUsed = await this.state.BscBoysContract.methods
           .colorExists(colorsArray[i])
           .call();
         if (colorIsUsed) {
@@ -187,7 +187,7 @@ class App extends Component {
         }
       }
     }
-    const nameIsUsed = await this.state.cryptoBoysContract.methods
+    const nameIsUsed = await this.state.BscBoysContract.methods
       .tokenNameExists(name)
       .call();
     if (colorsUsed.length === 0 && !nameIsUsed) {
@@ -209,7 +209,7 @@ class App extends Component {
         bodyBorderColor,
       } = colors;
       let previousTokenId;
-      previousTokenId = await this.state.cryptoBoysContract.methods
+      previousTokenId = await this.state.BscBoysContract.methods
         .cryptoBoyCounter()
         .call();
       previousTokenId = previousTokenId.toNumber();
@@ -243,7 +243,7 @@ class App extends Component {
       const cid = await ipfs.add(JSON.stringify(tokenObject));
       let tokenURI = `https://ipfs.infura.io/ipfs/${cid.path}`;
       const price = window.web3.utils.toWei(tokenPrice.toString(), "Ether");
-      this.state.cryptoBoysContract.methods
+      this.state.BscBoysContract.methods
         .mintCryptoBoy(name, tokenURI, price, colorsArray)
         .send({ from: this.state.accountAddress })
         .on("confirmation", () => {
@@ -265,7 +265,7 @@ class App extends Component {
 
   toggleForSale = (tokenId) => {
     this.setState({ loading: true });
-    this.state.cryptoBoysContract.methods
+    this.state.BscBoysContract.methods
       .toggleForSale(tokenId)
       .send({ from: this.state.accountAddress })
       .on("confirmation", () => {
@@ -277,7 +277,7 @@ class App extends Component {
   changeTokenPrice = (tokenId, newPrice) => {
     this.setState({ loading: true });
     const newTokenPrice = window.web3.utils.toWei(newPrice, "Ether");
-    this.state.cryptoBoysContract.methods
+    this.state.BscBoysContract.methods
       .changeTokenPrice(tokenId, newTokenPrice)
       .send({ from: this.state.accountAddress })
       .on("confirmation", () => {
@@ -288,7 +288,7 @@ class App extends Component {
 
   buyCryptoBoy = (tokenId, price) => {
     this.setState({ loading: true });
-    this.state.cryptoBoysContract.methods
+    this.state.BscBoysContract.methods
       .buyToken(tokenId)
       .send({ from: this.state.accountAddress, value: price })
       .on("confirmation", () => {
@@ -335,9 +335,9 @@ class App extends Component {
               <Route
                 path="/marketplace"
                 render={() => (
-                  <AllCryptoBoys
+                  <AllBscBoys
                     accountAddress={this.state.accountAddress}
-                    cryptoBoys={this.state.cryptoBoys}
+                    BscBoys={this.state.BscBoys}
                     totalTokensMinted={this.state.totalTokensMinted}
                     changeTokenPrice={this.changeTokenPrice}
                     toggleForSale={this.toggleForSale}
@@ -348,9 +348,9 @@ class App extends Component {
               <Route
                 path="/my-tokens"
                 render={() => (
-                  <MyCryptoBoys
+                  <MyBscBoys
                     accountAddress={this.state.accountAddress}
-                    cryptoBoys={this.state.cryptoBoys}
+                    BscBoys={this.state.BscBoys}
                     totalTokensOwnedByAccount={
                       this.state.totalTokensOwnedByAccount
                     }
@@ -360,7 +360,7 @@ class App extends Component {
               <Route
                 path="/queries"
                 render={() => (
-                  <Queries cryptoBoysContract={this.state.cryptoBoysContract} />
+                  <Queries BscBoysContract={this.state.BscBoysContract} />
                 )}
               />
             </HashRouter>

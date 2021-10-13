@@ -1,9 +1,9 @@
 {
-  "name": "cryptoboys",
+  "name": "BscBoys",
   "version": "0.1.0",
   "description": "Crypto Boys NFT Marketplace",
   "author": "devpavan04",
-  "homepage": "https://devpavan04.github.io/cryptoboys-nft-marketplace",
+  "homepage": "https://devpavan04.github.io/BscBoys-nft-marketplace",
   "dependencies": {
     "@openzeppelin/contracts": "^3.4.1",
     "babel-polyfill": "6.26.0",
