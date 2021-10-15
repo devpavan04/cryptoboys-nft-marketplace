@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity >=0.4.21 <0.8.0;
+pragma solidity >=0.8.0;
 pragma abicoder v2;
 
 // import ERC721 iterface
@@ -14,6 +14,8 @@ contract CryptoBoys is ERC721 {
   string public collectionNameSymbol;
   // total number of crypto boys minted
   uint256 public cryptoBoyCounter;
+
+  uint256 public mintPrice = 20000000 gwei;
 
   // define crypto boy struct
    struct CryptoBoy {
@@ -44,22 +46,27 @@ contract CryptoBoys is ERC721 {
   }
 
   // mint a new crypto boy
-  function mintCryptoBoy(string memory _name, string memory _tokenURI, uint256 _price, string[] calldata _colors) external {
+  function mintCryptoBoy(string memory _name, string memory _tokenURI, uint256 _price, string[] calldata _colors) external payable{
     // check if thic fucntion caller is not an zero address account
-    require(msg.sender != address(0));
+    require(msg.sender != address(0), "nonzero address");
+
+    require(msg.value >= mintPrice, "You must pay the acutal mint price");
     // increment counter
     cryptoBoyCounter ++;
     // check if a token exists with the above token id => incremented counter
-    require(!_exists(cryptoBoyCounter));
+    require(!_exists(cryptoBoyCounter), "counter not exist");
 
-    // loop through the colors passed and check if each colors already exists or not
-    for(uint i=0; i<_colors.length; i++) {
-      require(!colorExists[_colors[i]]);
+    string memory colorstring;
+
+    for(uint i = 0; i < _colors.length; i++){
+      colorstring = string(abi.encodePacked(colorstring, _colors[i]));
     }
+    // loop through the colors passed and check if each colors already exists or not
+    require(!colorExists[colorstring], "bad colors");
     // check if the token URI already exists or not
-    require(!tokenURIExists[_tokenURI]);
+    require(!tokenURIExists[_tokenURI], "URI problems");
     // check if the token name already exists or not
-    require(!tokenNameExists[_name]);
+    require(!tokenNameExists[_name], "name problems");
 
     // mint the token
     _mint(msg.sender, cryptoBoyCounter);
@@ -67,9 +74,7 @@ contract CryptoBoys is ERC721 {
     _setTokenURI(cryptoBoyCounter, _tokenURI);
 
     // loop through the colors passed and make each of the colors as exists since the token is already minted
-    for (uint i=0; i<_colors.length; i++) {
-      colorExists[_colors[i]] = true;
-    }
+    colorExists[colorstring] = true;
     // make passed token URI as exists
     tokenURIExists[_tokenURI] = true;
     // make token name passed as exists
@@ -80,9 +85,9 @@ contract CryptoBoys is ERC721 {
     cryptoBoyCounter,
     _name,
     _tokenURI,
-    msg.sender,
-    msg.sender,
-    address(0),
+    payable(msg.sender),
+    payable(msg.sender),
+    payable(address(0)),
     _price,
     0,
     true);
@@ -147,7 +152,7 @@ contract CryptoBoys is ERC721 {
     // update the token's previous owner
     cryptoboy.previousOwner = cryptoboy.currentOwner;
     // update the token's current owner
-    cryptoboy.currentOwner = msg.sender;
+    cryptoboy.currentOwner = payable(msg.sender);
     // update the how many times this token was transfered
     cryptoboy.numberOfTransfers += 1;
     // set and update that token in the mapping

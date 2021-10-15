@@ -243,9 +243,11 @@ class App extends Component {
       const cid = await ipfs.add(JSON.stringify(tokenObject));
       let tokenURI = `https://ipfs.infura.io/ipfs/${cid.path}`;
       const price = window.web3.utils.toWei(tokenPrice.toString(), "Ether");
+      let mintPrice;
+      mintPrice = await this.state.cryptoBoysContract.methods.mintPrice.call();
       this.state.cryptoBoysContract.methods
         .mintCryptoBoy(name, tokenURI, price, colorsArray)
-        .send({ from: this.state.accountAddress })
+        .send({ from: this.state.accountAddress, value: mintPrice })
         .on("confirmation", () => {
           localStorage.setItem(this.state.accountAddress, new Date().getTime());
           this.setState({ loading: false });
