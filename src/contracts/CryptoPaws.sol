@@ -20,12 +20,19 @@ contract CryptoPaws is ERC721 {
 
     // define paw struct
     struct CryptoPaw {
+        //unique tokenid
         uint256 tokenId;
+        //string that specifies unique color combination
         string creationStr;
+        //string that holds URI that points to image file on ipfs
         string tokenURI;
+        //address of the account that minted the token
         address payable mintedBy;
+        //address of current token owner
         address payable currentOwner;
+        //set price of token
         uint256 price;
+        //tracks number of times token changed ownership
         uint256 timesTransferred;
         bool forSale;
     }
