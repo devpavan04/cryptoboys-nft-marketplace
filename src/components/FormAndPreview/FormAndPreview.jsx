@@ -1,27 +1,37 @@
 import React, { Component } from "react";
 import CryptoBoyNFTImage from "../CryptoBoyNFTImage/CryptoBoyNFTImage";
 
+// source: https://stackoverflow.com/questions/1484506/random-color-generator
+function getRandomColor() {
+  var letters = '0123456789ABCDEF';
+  var color = '#';
+  for (var i = 0; i < 6; i++) {
+    color += letters[Math.floor(Math.random() * 16)];
+  }
+  return color;
+}
+
 class FormAndPreview extends Component {
   constructor(props) {
     super(props);
     this.state = {
       userSelectedColors: [
         {
-          cardBorderColor: "",
-          cardBackgroundColor: "",
-          headBorderColor: "",
-          headBackgroundColor: "",
-          leftEyeBorderColor: "",
-          rightEyeBorderColor: "",
-          leftEyeBackgroundColor: "",
-          rightEyeBackgroundColor: "",
-          leftPupilBackgroundColor: "",
-          rightPupilBackgroundColor: "",
-          mouthColor: "",
-          neckBackgroundColor: "",
-          neckBorderColor: "",
-          bodyBackgroundColor: "",
-          bodyBorderColor: "",
+          cardBorderColor: getRandomColor(),
+          cardBackgroundColor: getRandomColor(),
+          headBorderColor: getRandomColor(),
+          headBackgroundColor: getRandomColor(),
+          leftEyeBorderColor: getRandomColor(),
+          rightEyeBorderColor: getRandomColor(),
+          leftEyeBackgroundColor: getRandomColor(),
+          rightEyeBackgroundColor: getRandomColor(),
+          leftPupilBackgroundColor: getRandomColor(),
+          rightPupilBackgroundColor: getRandomColor(),
+          mouthColor: getRandomColor(),
+          neckBackgroundColor: getRandomColor(),
+          neckBorderColor: getRandomColor(),
+          bodyBackgroundColor: getRandomColor(),
+          bodyBorderColor: getRandomColor(),
         },
       ],
       cryptoBoyName: "",
