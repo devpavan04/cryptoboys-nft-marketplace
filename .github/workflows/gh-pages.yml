@@ -1,0 +1,26 @@
+on: [push]
+
+name: CI
+
+jobs:
+  build_web_app:
+    name: Web App
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Use Node.js
+        uses: actions/setup-node@v1
+        with:
+          node-version: "14.x"
+      - name: Install node dependencies
+        run: npm install
+      - name: Build App
+        run: PUBLIC_URL=/cryptoboys-nft-marketplace npm run build
+
+      - name: Deploy App
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_branch: gh-pages
+          publish_dir: ./build
+          keep_files: true
