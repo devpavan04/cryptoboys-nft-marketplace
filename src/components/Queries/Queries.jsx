@@ -15,7 +15,7 @@ const Queries = (props) => {
   const getTokenOwner = async (e) => {
     e.preventDefault();
     try {
-      const owner = await props.cryptoBoysContract.methods
+      const owner = await props.BscBoysContract.methods
         .getTokenOwner(tokenIdForOwner)
         .call();
       setTokenOwner(owner);
@@ -32,7 +32,7 @@ const Queries = (props) => {
   const getTokenMetadata = async (e) => {
     e.preventDefault();
     try {
-      const metadata = await props.cryptoBoysContract.methods
+      const metadata = await props.BscBoysContract.methods
         .getTokenMetaData(tokenIdForMetadata)
         .call();
       setTokenMetadata(

@@ -3,27 +3,27 @@ import CryptoBoyNFTImage from "../CryptoBoyNFTImage/CryptoBoyNFTImage";
 import MyCryptoBoyNFTDetails from "../MyCryptoBoyNFTDetails/MyCryptoBoyNFTDetails";
 import Loading from "../Loading/Loading";
 
-const MyCryptoBoys = ({
+const MyBscBoys = ({
   accountAddress,
-  cryptoBoys,
+  BscBoys,
   totalTokensOwnedByAccount,
 }) => {
   const [loading, setLoading] = useState(false);
-  const [myCryptoBoys, setMyCryptoBoys] = useState([]);
+  const [myBscBoys, setMyBscBoys] = useState([]);
 
   useEffect(() => {
-    if (cryptoBoys.length !== 0) {
-      if (cryptoBoys[0].metaData !== undefined) {
+    if (BscBoys.length !== 0) {
+      if (BscBoys[0].metaData !== undefined) {
         setLoading(loading);
       } else {
         setLoading(false);
       }
     }
-    const my_crypto_boys = cryptoBoys.filter(
+    const my_crypto_boys = BscBoys.filter(
       (cryptoboy) => cryptoboy.currentOwner === accountAddress
     );
-    setMyCryptoBoys(my_crypto_boys);
-  }, [cryptoBoys]);
+    setMyBscBoys(my_crypto_boys);
+  }, [BscBoys]);
 
   return (
     <div>
@@ -35,7 +35,7 @@ const MyCryptoBoys = ({
         </div>
       </div>
       <div className="d-flex flex-wrap mb-2">
-        {myCryptoBoys.map((cryptoboy) => {
+        {myBscBoys.map((cryptoboy) => {
           return (
             <div
               key={cryptoboy.tokenId.toNumber()}
@@ -70,4 +70,4 @@ const MyCryptoBoys = ({
   );
 };
 
-export default MyCryptoBoys;
+export default MyBscBoys;
