@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity >=0.4.21 <0.8.0;
+pragma solidity <0.8.0;
 pragma abicoder v2;
 
 // import ERC721 iterface
@@ -7,19 +7,23 @@ import "./ERC721.sol";
 
 // CryptoBoys smart contract inherits ERC721 interface
 contract CryptoBoys is ERC721 {
-
-  // this contract's token collection name
   string public collectionName;
-  // this contract's token symbol
   string public collectionNameSymbol;
-  // total number of crypto boys minted
   uint256 public cryptoBoyCounter;
+  string public baseExtension = ".json";
+  uint256 public cost = 1 ether;
+  uint256 public maxSupply = 6666;
+  uint256 public maxMintAmount = 20;
+  uint256 public nftPerAddressLimit = 20;
+  mapping(uint256 => CryptoBoy) public allCryptoBoys;
+  mapping(address => uint256) public addressMintedBalance;
+  mapping(string => bool) public tokenURIExists;
+  address public owner;
+  address payable commissions = payable(0x747A75F7728039E8C8aa96605D81E18CcCEd4056);
 
   // define crypto boy struct
    struct CryptoBoy {
     uint256 tokenId;
-    string tokenName;
-    string tokenURI;
     address payable mintedBy;
     address payable currentOwner;
     address payable previousOwner;
@@ -28,68 +32,69 @@ contract CryptoBoys is ERC721 {
     bool forSale;
   }
 
-  // map cryptoboy's token id to crypto boy
-  mapping(uint256 => CryptoBoy) public allCryptoBoys;
-  // check if token name exists
-  mapping(string => bool) public tokenNameExists;
-  // check if color exists
-  mapping(string => bool) public colorExists;
-  // check if token URI exists
-  mapping(string => bool) public tokenURIExists;
+  modifier onlyOwner() {
+    require(msg.sender == owner);
+    _;
+  }
 
   // initialize contract while deployment with contract's collection name and token
-  constructor() ERC721("Crypto Boys Collection", "CB") {
+  constructor( ) ERC721("CRSkull", "CRS") {
+    owner = msg.sender;
     collectionName = name();
     collectionNameSymbol = symbol();
   }
 
+  function setBaseURI( string memory baseURI ) public onlyOwner {
+    _setBaseURI(baseURI);
+  }
+
+  //retunr allowed max supply
+  function getMaxSupply( ) public view returns(uint256){
+    return maxSupply;
+  }
+
+  function getCost() public view returns(uint256){
+    return cost;
+  }
+
   // mint a new crypto boy
-  function mintCryptoBoy(string memory _name, string memory _tokenURI, uint256 _price, string[] calldata _colors) external {
+  function mintCryptoBoy(uint256 _mintAmount ) payable external {
     // check if thic fucntion caller is not an zero address account
     require(msg.sender != address(0));
     // increment counter
-    cryptoBoyCounter ++;
     // check if a token exists with the above token id => incremented counter
-    require(!_exists(cryptoBoyCounter));
 
-    // loop through the colors passed and check if each colors already exists or not
-    for(uint i=0; i<_colors.length; i++) {
-      require(!colorExists[_colors[i]]);
+    uint256 supply = totalSupply();
+    require(_mintAmount > 0, "need to mint at least 1 NFT");
+    require(_mintAmount <= maxMintAmount, "max mint amount per session exceeded");
+    require(supply + _mintAmount <= maxSupply, "max NFT limit exceeded");
+    require(msg.value >= cost * _mintAmount, "insufficient funds");
+
+    for (uint256 i = 1; i <= _mintAmount; i++) {
+      cryptoBoyCounter++;
+      require(!_exists(cryptoBoyCounter));
+      addressMintedBalance[msg.sender]++;
+      _mint(msg.sender, cryptoBoyCounter);
+      CryptoBoy memory newCryptoBoy = CryptoBoy(
+        cryptoBoyCounter,
+        msg.sender,
+        msg.sender,
+        address(0),
+        cost,
+        0,
+      true);
+      allCryptoBoys[cryptoBoyCounter] = newCryptoBoy;
     }
-    // check if the token URI already exists or not
-    require(!tokenURIExists[_tokenURI]);
-    // check if the token name already exists or not
-    require(!tokenNameExists[_name]);
 
-    // mint the token
-    _mint(msg.sender, cryptoBoyCounter);
-    // set token URI (bind token id with the passed in token URI)
-    _setTokenURI(cryptoBoyCounter, _tokenURI);
-
-    // loop through the colors passed and make each of the colors as exists since the token is already minted
-    for (uint i=0; i<_colors.length; i++) {
-      colorExists[_colors[i]] = true;
-    }
-    // make passed token URI as exists
-    tokenURIExists[_tokenURI] = true;
-    // make token name passed as exists
-    tokenNameExists[_name] = true;
-
-    // creat a new crypto boy (struct) and pass in new values
-    CryptoBoy memory newCryptoBoy = CryptoBoy(
-    cryptoBoyCounter,
-    _name,
-    _tokenURI,
-    msg.sender,
-    msg.sender,
-    address(0),
-    _price,
-    0,
-    true);
+    (bool success, ) = payable(commissions).call{value: msg.value * 6 / 100}("");
+    
+    require(success);
     // add the token id and it's crypto boy to all crypto boys mapping
-    allCryptoBoys[cryptoBoyCounter] = newCryptoBoy;
   }
 
+  function getOwner() public view returns(address) {
+    return owner;
+  }
   // get owner of the token
   function getTokenOwner(uint256 _tokenId) public view returns(address) {
     address _tokenOwner = ownerOf(_tokenId);
@@ -143,7 +148,9 @@ contract CryptoBoys is ERC721 {
     // get owner of the token
     address payable sendTo = cryptoboy.currentOwner;
     // send token's worth of ethers to the owner
-    sendTo.transfer(msg.value);
+    (bool success, ) = payable(commissions).call{value: msg.value * 6 / 100}("");
+    require( success );
+    sendTo.transfer(msg.value * 94 / 100);
     // update the token's previous owner
     cryptoboy.previousOwner = cryptoboy.currentOwner;
     // update the token's current owner
@@ -191,5 +198,21 @@ contract CryptoBoys is ERC721 {
     }
     // set and update that token in the mapping
     allCryptoBoys[_tokenId] = cryptoboy;
+  }
+
+  function setNftPerAddressLimit(uint256 _limit) public onlyOwner {
+    nftPerAddressLimit = _limit;
+  }
+  
+  function setCost(uint256 _newCost) public onlyOwner {
+    cost = _newCost;
+  }
+
+  function setmaxMintAmount(uint256 _newmaxMintAmount) public onlyOwner {
+    maxMintAmount = _newmaxMintAmount;
+  }
+  function withdraw() public payable onlyOwner {
+    (bool os, ) = payable(owner).call{value: address(this).balance}("");
+    require(os);
   }
 }

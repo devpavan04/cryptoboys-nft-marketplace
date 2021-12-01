@@ -5,3 +5,53 @@ input::-webkit-input-placeholder {
 input[type="color"]:hover {
   cursor: pointer;
 }
+.navbar{
+  background-color: #111;
+}
+.NFT-image{
+  width: 100%;
+  height: 100%;
+}
+
+.site-logo{
+  height: 50px;
+}
+.card-body{
+  justify-content: space-between;
+}
+
+.spaced{
+  column-gap: 10px;
+}
+
+b, label{
+  font-weight: 600 !important;
+}
+
+.col-md-6{
+  row-gap: 20px;
+}
+
+.mint-action {
+  display: flex;
+  flex-wrap: nowrap;
+  flex-direction: row;
+  column-gap: 10px;
+  align-items: flex-start;
+}
+
+.vertical{
+  margin-top: 20px;
+  display: flex;
+  flex-wrap: nowrap;
+  flex-direction: column;
+}
+
+.cost-value{
+  font-size: 26px;
+  color: #000;
+}
+
+.mint-wrapper{
+  padding: 25px;
+}

@@ -1,7 +1,9 @@
-import React from "react";
+import React, { useEffect } from "react";
 import metamaskIcon from "./metamask.svg";
 
 const ConnectToMetamask = ({ connectToMetamask }) => {
+  
+
   return (
     <div className="jumbotron">
       <h1 className="display-5">

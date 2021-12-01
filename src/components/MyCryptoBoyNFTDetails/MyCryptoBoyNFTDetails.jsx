@@ -8,6 +8,7 @@ const MyCryptoBoyNFTDetails = (props) => {
     mintedBy,
     previousOwner,
     numberOfTransfers,
+    metaData
   } = props.cryptoboy;
   return (
     <div key={tokenId.toNumber()} className="mt-4 ml-3">

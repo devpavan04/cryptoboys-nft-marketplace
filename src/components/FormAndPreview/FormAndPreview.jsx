@@ -1,43 +1,23 @@
 import React, { Component } from "react";
 import CryptoBoyNFTImage from "../CryptoBoyNFTImage/CryptoBoyNFTImage";
-
-// source: https://stackoverflow.com/questions/1484506/random-color-generator
-function getRandomColor() {
-  var letters = '0123456789ABCDEF';
-  var color = '#';
-  for (var i = 0; i < 6; i++) {
-    color += letters[Math.floor(Math.random() * 16)];
-  }
-  return color;
-}
+import baseImage from "./1.png"
 
 class FormAndPreview extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      userSelectedColors: [
-        {
-          cardBorderColor: getRandomColor(),
-          cardBackgroundColor: getRandomColor(),
-          headBorderColor: getRandomColor(),
-          headBackgroundColor: getRandomColor(),
-          leftEyeBorderColor: getRandomColor(),
-          rightEyeBorderColor: getRandomColor(),
-          leftEyeBackgroundColor: getRandomColor(),
-          rightEyeBackgroundColor: getRandomColor(),
-          leftPupilBackgroundColor: getRandomColor(),
-          rightPupilBackgroundColor: getRandomColor(),
-          mouthColor: getRandomColor(),
-          neckBackgroundColor: getRandomColor(),
-          neckBorderColor: getRandomColor(),
-          bodyBackgroundColor: getRandomColor(),
-          bodyBorderColor: getRandomColor(),
-        },
-      ],
-      cryptoBoyName: "",
-      cryptoBoyPrice: "",
+      mintAmount: 1,
+      mintCost: 1,
+      cryptoBoysCount: this.props.cryptoBoysCount,
+      cryptoBoysMaxSupply: this.props.cryptoBoysMaxSupply,
+      cryptoBoysCost: this.props.cryptoBoysCost
     };
   }
+
+
+  totalCost = (_mintAmount) => { 
+    return this.state.cryptoBoysCost * _mintAmount
+  };
 
   componentDidMount = async () => {
     await this.props.setMintBtnTimer();
@@ -46,9 +26,7 @@ class FormAndPreview extends Component {
   callMintMyNFTFromApp = (e) => {
     e.preventDefault();
     this.props.mintMyNFT(
-      this.state.userSelectedColors[0],
-      this.state.cryptoBoyName,
-      this.state.cryptoBoyPrice
+      this.state.mintAmount
     );
   };
 
@@ -57,406 +35,60 @@ class FormAndPreview extends Component {
       <div>
         <div className="card mt-1">
           <div className="card-body align-items-center d-flex justify-content-center">
-            <h5>Color Your Crypto Boy As You Want It To be!</h5>
+            <h2>Mint your CRSkull NFT in just 3 Clicks</h2>
           </div>
         </div>
         <form onSubmit={this.callMintMyNFTFromApp} className="pt-4 mt-1">
           <div className="row">
-            <div className="col-md-3">
-              <div className="form-group">
-                <label htmlFor="cardBorderColor">Card Border Color</label>
-                <input
-                  required
-                  type="color"
-                  name="cardBorderColor"
-                  id="cardBorderColor"
-                  value={this.state.userSelectedColors[0].cardBorderColor}
-                  className="form-control"
-                  onChange={(e) =>
-                    this.setState({
-                      userSelectedColors: [
-                        {
-                          ...this.state.userSelectedColors[0],
-                          cardBorderColor: e.target.value,
-                        },
-                      ],
-                    })
-                  }
-                />
-              </div>
-              <div className="form-group">
-                <label htmlFor="cardBackgroundColor">
-                  Card Background Color
-                </label>
-                <input
-                  required
-                  type="color"
-                  name="cardBackgroundColor"
-                  id="cardBackgroundColor"
-                  value={this.state.userSelectedColors[0].cardBackgroundColor}
-                  className="form-control"
-                  onChange={(e) =>
-                    this.setState({
-                      userSelectedColors: [
-                        {
-                          ...this.state.userSelectedColors[0],
-                          cardBackgroundColor: e.target.value,
-                        },
-                      ],
-                    })
-                  }
-                />
-              </div>
-              <div className="form-group">
-                <label htmlFor="headBorderColor">Head Border Color</label>
-                <input
-                  required
-                  type="color"
-                  name="headBorderColor"
-                  id="headBorderColor"
-                  value={this.state.userSelectedColors[0].headBorderColor}
-                  className="form-control"
-                  onChange={(e) =>
-                    this.setState({
-                      userSelectedColors: [
-                        {
-                          ...this.state.userSelectedColors[0],
-                          headBorderColor: e.target.value,
-                        },
-                      ],
-                    })
-                  }
-                />
-              </div>
-              <div className="form-group">
-                <label htmlFor="headBackgroundColor">
-                  Head Background Color
-                </label>
-                <input
-                  required
-                  type="color"
-                  name="headBackgroundColor"
-                  id="headBackgroundColor"
-                  value={this.state.userSelectedColors[0].headBackgroundColor}
-                  className="form-control"
-                  onChange={(e) =>
-                    this.setState({
-                      userSelectedColors: [
-                        {
-                          ...this.state.userSelectedColors[0],
-                          headBackgroundColor: e.target.value,
-                        },
-                      ],
-                    })
-                  }
-                />
-              </div>
-            </div>
-            <div className="col-md-3">
-              <div className="form-group">
-                <label htmlFor="leftEyeBorderColor">
-                  Left Eye Border Color
-                </label>
-                <input
-                  required
-                  type="color"
-                  name="leftEyeBorderColor"
-                  id="leftEyeBorderColor"
-                  value={this.state.userSelectedColors[0].leftEyeBorderColor}
-                  className="form-control"
-                  onChange={(e) =>
-                    this.setState({
-                      userSelectedColors: [
-                        {
-                          ...this.state.userSelectedColors[0],
-                          leftEyeBorderColor: e.target.value,
-                        },
-                      ],
-                    })
-                  }
-                />
-              </div>
-              <div className="form-group">
-                <label htmlFor="rightEyeBorderColor">
-                  Right Eye Border Color
-                </label>
-                <input
-                  required
-                  type="color"
-                  name="rightEyeBorderColor"
-                  id="rightEyeBorderColor"
-                  value={this.state.userSelectedColors[0].rightEyeBorderColor}
-                  className="form-control"
-                  onChange={(e) =>
-                    this.setState({
-                      userSelectedColors: [
-                        {
-                          ...this.state.userSelectedColors[0],
-                          rightEyeBorderColor: e.target.value,
-                        },
-                      ],
-                    })
-                  }
-                />
-              </div>
-              <div className="form-group">
-                <label htmlFor="leftEyeBackgroundColor">
-                  Left Eye Background Color
-                </label>
-                <input
-                  required
-                  type="color"
-                  name="leftEyeBackgroundColor"
-                  id="leftEyeBackgroundColor"
-                  value={
-                    this.state.userSelectedColors[0].leftEyeBackgroundColor
-                  }
-                  className="form-control"
-                  onChange={(e) =>
-                    this.setState({
-                      userSelectedColors: [
-                        {
-                          ...this.state.userSelectedColors[0],
-                          leftEyeBackgroundColor: e.target.value,
-                        },
-                      ],
-                    })
-                  }
-                />
-              </div>
-              <div className="form-group">
-                <label htmlFor="rightEyeBackgroundColor">
-                  Right Eye Background Color
-                </label>
-                <input
-                  required
-                  type="color"
-                  name="rightEyeBackgroundColor"
-                  id="rightEyeBackgroundColor"
-                  value={
-                    this.state.userSelectedColors[0].rightEyeBackgroundColor
-                  }
-                  className="form-control"
-                  onChange={(e) =>
-                    this.setState({
-                      userSelectedColors: [
-                        {
-                          ...this.state.userSelectedColors[0],
-                          rightEyeBackgroundColor: e.target.value,
-                        },
-                      ],
-                    })
-                  }
-                />
-              </div>
-            </div>
-            <div className="col-md-6 d-flex justify-content-center align-items-center">
-              <CryptoBoyNFTImage colors={this.state.userSelectedColors[0]} />
-            </div>
-          </div>
-          <div className="row">
-            <div className="col-md-3">
-              <div className="form-group">
-                <label htmlFor="leftPupilBackgroundColor">
-                  Left Pupil Background Color
-                </label>
-                <input
-                  required
-                  type="color"
-                  name="leftPupilBackgroundColor"
-                  id="leftPupilBackgroundColor"
-                  value={
-                    this.state.userSelectedColors[0].leftPupilBackgroundColor
-                  }
-                  className="form-control"
-                  onChange={(e) =>
-                    this.setState({
-                      userSelectedColors: [
-                        {
-                          ...this.state.userSelectedColors[0],
-                          leftPupilBackgroundColor: e.target.value,
-                        },
-                      ],
-                    })
-                  }
-                />
-              </div>
-              <div className="form-group">
-                <label htmlFor="rightPupilBackgroundColor">
-                  Right Pupil Background Color
-                </label>
-                <input
-                  required
-                  type="color"
-                  name="rightPupilBackgroundColor"
-                  id="rightPupilBackgroundColor"
-                  value={
-                    this.state.userSelectedColors[0].rightPupilBackgroundColor
-                  }
-                  className="form-control"
-                  onChange={(e) =>
-                    this.setState({
-                      userSelectedColors: [
-                        {
-                          ...this.state.userSelectedColors[0],
-                          rightPupilBackgroundColor: e.target.value,
-                        },
-                      ],
-                    })
-                  }
-                />
-              </div>
-              <div className="form-group">
-                <label htmlFor="mouthColor">Mouth Color</label>
-                <input
-                  required
-                  type="color"
-                  name="mouthColor"
-                  id="mouthColor"
-                  value={this.state.userSelectedColors[0].mouthColor}
-                  className="form-control"
-                  onChange={(e) =>
-                    this.setState({
-                      userSelectedColors: [
-                        {
-                          ...this.state.userSelectedColors[0],
-                          mouthColor: e.target.value,
-                        },
-                      ],
-                    })
-                  }
-                />
-              </div>
-              <div className="form-group">
-                <label htmlFor="neckBackgroundColor">
-                  Neck Background Color
-                </label>
-                <input
-                  required
-                  type="color"
-                  name="neckBackgroundColor"
-                  id="neckBackgroundColor"
-                  value={this.state.userSelectedColors[0].neckBackgroundColor}
-                  className="form-control"
-                  onChange={(e) =>
-                    this.setState({
-                      userSelectedColors: [
-                        {
-                          ...this.state.userSelectedColors[0],
-                          neckBackgroundColor: e.target.value,
-                        },
-                      ],
-                    })
-                  }
-                />
-              </div>
-            </div>
-            <div className="col-md-3">
-              <div className="form-group">
-                <label htmlFor="neckBorderColor">Neck Border Color</label>
-                <input
-                  required
-                  type="color"
-                  name="neckBorderColor"
-                  id="neckBorderColor"
-                  value={this.state.userSelectedColors[0].neckBorderColor}
-                  className="form-control"
-                  onChange={(e) =>
-                    this.setState({
-                      userSelectedColors: [
-                        {
-                          ...this.state.userSelectedColors[0],
-                          neckBorderColor: e.target.value,
-                        },
-                      ],
-                    })
-                  }
-                />
-              </div>
-              <div className="form-group">
-                <label htmlFor="bodyBackgroundColor">
-                  Body Background Color
-                </label>
-                <input
-                  required
-                  type="color"
-                  name="bodyBackgroundColor"
-                  id="bodyBackgroundColor"
-                  value={this.state.userSelectedColors[0].bodyBackgroundColor}
-                  className="form-control"
-                  onChange={(e) =>
-                    this.setState({
-                      userSelectedColors: [
-                        {
-                          ...this.state.userSelectedColors[0],
-                          bodyBackgroundColor: e.target.value,
-                        },
-                      ],
-                    })
-                  }
-                />
-              </div>
-              <div className="form-group">
-                <label htmlFor="bodyBorderColor">Body Border Color</label>
-                <input
-                  required
-                  type="color"
-                  name="bodyBorderColor"
-                  id="bodyBorderColor"
-                  value={this.state.userSelectedColors[0].bodyBorderColor}
-                  className="form-control"
-                  onChange={(e) =>
-                    this.setState({
-                      userSelectedColors: [
-                        {
-                          ...this.state.userSelectedColors[0],
-                          bodyBorderColor: e.target.value,
-                        },
-                      ],
-                    })
-                  }
-                />
-              </div>
-            </div>
             <div className="col-md-6">
-              <div className="form-group">
-                <label htmlFor="cryptoBoyName">Name</label>
-                <input
-                  required
-                  type="text"
-                  value={this.state.cryptoBoyName}
-                  className="form-control"
-                  placeholder="Enter Your Crypto Boy's Name"
-                  onChange={(e) =>
-                    this.setState({ cryptoBoyName: e.target.value })
-                  }
-                />
+              <img src={baseImage} />
+            </div>
+            <div className="mint-wrapper col-md-6">
+                <h4>Mint your NFT</h4>
+                <p>Get now your <b>blockchain-unique CRSkull NFT</b> out of 6666 possibile Skulls with unique traits and dna.</p>
+                <p>Collet at least <b>3 CRSkulls</b> to be eligibility for the free-AirDrop of a <b>1/1 Potion Mystery Box</b>. <b>Mystery Box</b> will return you a <b>Potion</b>, you can use Potions to Mint CRSkull+ and revieve $SkullLP Token Rewards.</p>
+                <div className="mint-action">
+                  <div>
+                    <label htmlFor="amount">Mint amount</label>
+                    <input
+                      required
+                      type="number"
+                      name="amount"
+                      id="mintAmount"
+                      max="20"
+                      value={this.state.mintAmount || 1 }
+                      className="form-control"
+                      placeholder="Enter Amount"
+                      onChange={(e) =>
+                        this.setState({ mintAmount: e.target.value })
+                      }
+                    />
+                  </div>
+                    <button
+                      id="mintBt"
+                      style={{ fontSize: "0.9rem", letterSpacing: "0.14rem" }}
+                      type="submit"
+                      className="btn mt-4 btn-block btn-outline-primary"
+                    >
+                      Mint CRSkull
+                      { this.state.mintAmount > 1 ? 
+                      `s (${this.state.mintAmount})` : 
+                      ` (${this.state.mintAmount})`}
+                    </button>
+                </div>
+                <div className="vertical">
+                  <span className="cost-label">Mint Cost (excluded network fees) </span>
+                  <span className="cost-value">
+                    { this.state.mintAmount > 0 && this.state.cryptoBoysCost ? 
+                      `${this.totalCost(this.state.mintAmount)} Ξ` 
+                    : ``}
+                  </span>
               </div>
-              <div>
-                <label htmlFor="price">Price</label>
-                <input
-                  required
-                  type="number"
-                  name="price"
-                  id="cryptoBoyPrice"
-                  value={this.state.cryptoBoyPrice}
-                  className="form-control"
-                  placeholder="Enter Price In Ξ"
-                  onChange={(e) =>
-                    this.setState({ cryptoBoyPrice: e.target.value })
-                  }
-                />
-              </div>
-              <button
-                id="mintBtn"
-                style={{ fontSize: "0.9rem", letterSpacing: "0.14rem" }}
-                type="submit"
-                className="btn mt-4 btn-block btn-outline-primary"
-              >
-                Mint My Crypto Boy
-              </button>
               <div className="mt-4">
-                {this.props.nameIsUsed ? (
+                <div className="alert alert-info ">
+                    <strong>{ `${this.state.cryptoBoysCount} / ${this.state.cryptoBoysMaxSupply}` } CRSkull{ this.state.cryptoBoysCount > 1 ? 's' : '' } Minted</strong>
+                  </div>
+                { this.props.nameIsUsed ? (
                   <div className="alert alert-danger alert-dissmissible">
                     <button
                       type="button"

@@ -2,11 +2,13 @@ import React, { useState, useEffect } from "react";
 import CryptoBoyNFTImage from "../CryptoBoyNFTImage/CryptoBoyNFTImage";
 import MyCryptoBoyNFTDetails from "../MyCryptoBoyNFTDetails/MyCryptoBoyNFTDetails";
 import Loading from "../Loading/Loading";
+import { fetch } from "ipfs-utils/src/http/fetch.node";
 
 const MyCryptoBoys = ({
   accountAddress,
   cryptoBoys,
   totalTokensOwnedByAccount,
+  baseURI
 }) => {
   const [loading, setLoading] = useState(false);
   const [myCryptoBoys, setMyCryptoBoys] = useState([]);
@@ -35,7 +37,7 @@ const MyCryptoBoys = ({
         </div>
       </div>
       <div className="d-flex flex-wrap mb-2">
-        {myCryptoBoys.map((cryptoboy) => {
+        {myCryptoBoys.map(  (cryptoboy) => {
           return (
             <div
               key={cryptoboy.tokenId.toNumber()}
@@ -43,14 +45,8 @@ const MyCryptoBoys = ({
             >
               <div className="row">
                 <div className="col-md-6">
-                  {!loading ? (
-                    <CryptoBoyNFTImage
-                      colors={
-                        cryptoboy.metaData !== undefined
-                          ? cryptoboy.metaData.metaData.colors
-                          : ""
-                      }
-                    />
+                  {!loading && cryptoboy.metaData ? (
+                    <CryptoBoyNFTImage imageURI={cryptoboy.metaData.image} />
                   ) : (
                     <Loading />
                   )}

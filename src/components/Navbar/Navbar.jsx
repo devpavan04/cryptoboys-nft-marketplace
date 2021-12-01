@@ -1,14 +1,14 @@
 import React from "react";
 import icon from "./favicon-32x32.png";
+import Logo from "./logo-cr-skull-white.png";
 import { Link } from "react-router-dom";
 
-const Navbar = () => {
+const Navbar = ({isAdmin}) => {
   return (
-    <nav className="navbar navbar-expand-sm navbar-dark bg-dark">
+    <nav className="navbar navbar-expand-sm navbar-dark">
       <div className="container">
-        <img src={icon} alt="" />
         <Link to="/" className="navbar-brand ml-2">
-          NFT's
+          <img src={Logo} alt="CRSkull Logo" className="site-logo"/>
         </Link>
         <button
           className="navbar-toggler"
@@ -47,6 +47,14 @@ const Navbar = () => {
                 Queries
               </Link>
             </li>
+            { isAdmin ?
+              <li className="nav-item">
+                <Link to="/admin" className="nav-link">
+                  Admin Dashboard
+                </Link>
+              </li>
+            : '' }
+
           </ul>
         </div>
       </div>

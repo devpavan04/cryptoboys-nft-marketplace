@@ -56,7 +56,7 @@ class CryptoBoyNFTDetails extends Component {
           Ξ
         </p>
         <p>
-          <span className="font-weight-bold">No. of Transfers</span> :{" "}
+          <span className="font-weight-bold">No. of Transfers</span> :{"asd "}
           {this.props.cryptoboy.numberOfTransfers.toNumber()}
         </p>
         <div>

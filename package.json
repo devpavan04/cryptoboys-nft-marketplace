@@ -6,6 +6,7 @@
   "homepage": "https://devpavan04.github.io/cryptoboys-nft-marketplace",
   "dependencies": {
     "@openzeppelin/contracts": "^3.4.1",
+    "@truffle/hdwallet-provider": "^1.2.3",
     "babel-polyfill": "6.26.0",
     "babel-preset-env": "1.7.0",
     "babel-preset-es2015": "6.24.1",
@@ -17,6 +18,8 @@
     "chai-as-promised": "7.1.1",
     "chai-bignumber": "3.0.0",
     "dayjs": "^1.10.4",
+    "dotenv": "^10.0.0",
+    "hdwalletprovider": "^1.7.0",
     "ipfs-http-client": "^49.0.2",
     "react": "16.8.4",
     "react-bootstrap": "1.0.0-beta.5",
@@ -25,6 +28,7 @@
     "react-scripts": "2.1.3",
     "truffle": "5.0.5",
     "truffle-flattener": "^1.5.0",
+    "truffle-hdwallet-provider": "^1.0.17",
     "web3": "1.0.0-beta.55"
   },
   "scripts": {
