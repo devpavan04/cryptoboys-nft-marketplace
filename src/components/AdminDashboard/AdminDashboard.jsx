@@ -24,7 +24,7 @@ class AdminDashboard extends Component {
             <div>        
                 <div className="card mt-1">
                     <div className="card-body align-items-center d-flex justify-content-center">
-                         <h5>Color Your Crypto Boy As You Want It To be!</h5>
+                         <h5>Easly Manage your SmartContract</h5>
                     </div>
                 </div>
                 <form onSubmit={this.callUpdateTokenUriFromApp} className="pt-4 mt-1">

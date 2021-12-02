@@ -32,12 +32,13 @@ const MyCryptoBoys = ({
       <div className="card mt-1">
         <div className="card-body align-items-center d-flex justify-content-center">
           <h5>
-            Total No. of CryptoBoy's You Own : {totalTokensOwnedByAccount}
+            Total No. of CRSkulls's You Own : {totalTokensOwnedByAccount}
           </h5>
         </div>
       </div>
       <div className="d-flex flex-wrap mb-2">
         {myCryptoBoys.map(  (cryptoboy) => {
+          console.log( cryptoboy )
           return (
             <div
               key={cryptoboy.tokenId.toNumber()}

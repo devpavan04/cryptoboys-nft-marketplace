@@ -3,6 +3,9 @@ import CryptoBoyList from "../CryptoBoyList/CryptoBoyList";
 import CryptoBoyNFTImage from "../CryptoBoyNFTImage/CryptoBoyNFTImage";
 import CryptoBoyNFTDetails from "../CryptoBoyNFTDetails/CryptoBoyNFTDetails";
 import Loading from "../Loading/Loading";
+import FilterBar from "../FilterBar/FilterBar";
+import Select from "react-select";
+
 
 class AllCryptoBoys extends Component {
   constructor(props) {
@@ -15,11 +18,29 @@ class AllCryptoBoys extends Component {
       buyCryptoBoy: this.props.buyCryptoBoy,
       loading: this.props.loading,
       floorPrice: this.props.floorPrice,
-      highPrice: this.props.highPrice
+      highPrice: this.props.highPrice,
+      traits: this.props.traits,
+      traitsTypes: this.props.traitsTypes,
+      order: this.props.order
     };
-    this.handleOrderChange = this.props.handleOrderChange
+    this.handleOrderChange = this.props.handleOrderChange;
+    this.handleFilterBar = this.props.handleFilterBar;
+    this.resetFilter = this.props.resetFilter;
+    this.priceOptions = [
+      { value: 'ASC', label: 'Price ASC' },
+      { value: 'DESC' , label: 'Price DESC' }
+    ];
   }
-  componentDidMount() {
+
+  componentDidMount( ) {
+    /*if( this.props.cryptoBoys[0].metaData !== 0)
+    this.setState( {marketPlaceView: this.props.cryptoBoys })*/
+  }
+
+  
+
+  handleMarketplaceFilters = ( ev ) => {
+    //marketplaceView
   }
 
   /**/
@@ -34,53 +55,62 @@ class AllCryptoBoys extends Component {
       buyCryptoBoy,
       floorPrice,
       loading,
-      cryptoBoys,
       prices,
       order,
-      highPrice
+      traits,
+      highPrice,
+      traitsTypes
     } = this.state;
-
+    console.log( this.props.marketplaceView )
     return (
       <div>
         <div className="card mt-1">
-          <div className="card-body align-items-center d-flex justify-content-center">
-            <h5>
-              Total No. of CRSkulls Minted On The Platform :{" "}
-              {totalTokensMinted}
-            </h5>
+          <div className="card-body align-items-left d-flex justify-content-space-between">
+          <div className="align-items-left d-flex justify-content-left spaced">
+              <span className="floorPrice">
+                Floor Price: 
+                <b>{ ` ${floorPrice} Ξ`}</b>
+              </span>
+              <span className="floorPrice">
+                Higher Price: 
+                <b>{ ` ${highPrice} Ξ`}</b>
+              </span>
+              <span className="floorPrice">
+                Minted CRSkull: 
+                <b>{ ` #${totalTokensMinted}/${this.props.cryptoBoysMaxSupply}`}</b>
+              </span>
+            </div>
           </div>
         </div>
         <div className="card mt-1">
           <div className="card-body align-items-left d-flex justify-content-space-between">
-            <div className="align-items-left d-flex justify-content-left spaced">
-              <span className="floorPrice">
-                Floor Price: 
-                <b>{ ` ${floorPrice} $CRO`}</b>
-              </span>
-              <span className="floorPrice">
-                High Price: 
-                <b>{ ` ${highPrice} $CRO`}</b>
-              </span>
-            </div>
+            <FilterBar
+              traits={this.props.traits}
+              traitsTypes={this.props.traitsTypes}
+              handleFilterBar={this.handleFilterBar}
+            />
+            <span onClick={this.resetFilter} className="filterBar">&times; Reset</span>
             <div className="align-items-right d-flex justify-content-right spaced">
-              <span>Filter NFT</span>
-              <select onChange={this.handleOrderChange} value={this.props.order}>
-                <option value="none">None</option>
-                <option value="ASC">Price ASC</option>
-                <option value="DESC">Price DESC</option>
-              </select>
+              <div>
+                <span>Price Order</span>
+                <Select 
+                  options={this.priceOptions}
+                  onChange={this.handleOrderChange}
+                  value={order}
+                />
+              </div>
             </div>
           </div>
         </div>
         <div className="d-flex flex-wrap mb-2">
-                <CryptoBoyList
-                  cryptoBoys={this.props.cryptoBoys}
-                  accountAddress={accountAddress}
-                  totalTokensMinted={totalTokensMinted}
-                  changeTokenPrice={changeTokenPrice}
-                  toggleForSale={toggleForSale}
-                  buyCryptoBoy={buyCryptoBoy}
-                />
+          <CryptoBoyList
+            cryptoBoys={this.props.marketplaceView}
+            accountAddress={accountAddress}
+            totalTokensMinted={totalTokensMinted}
+            changeTokenPrice={changeTokenPrice}
+            toggleForSale={toggleForSale}
+            buyCryptoBoy={buyCryptoBoy}
+          />
           </div>
       </div>
     );

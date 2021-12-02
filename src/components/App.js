@@ -42,7 +42,11 @@ class App extends Component {
       lastMintTime: null,
       floorPrice: 0,
       highPrice: 0,
-      order: 'none'
+      traits: [],
+      traitsTypes: [],
+      order: 'ASC',
+      marketplaceView: [],
+      activeFilters: []
     };
     this.handleWeb3AccountChange();
   }
@@ -58,10 +62,11 @@ class App extends Component {
     await this.loadBlockchainData();
     await this.setMetaData();
     await this.setMintBtnTimer();
+    await this.handleOrderChange();
   };
 
   numToEth = (num) => {
-    return parseInt( window.web3.utils.fromWei( num.toString(), "ether" ) )
+    return parseFloat( window.web3.utils.fromWei( num.toString(), "ether" ), 6 )
   }
 
   setMintBtnTimer = () => {
@@ -164,8 +169,9 @@ class App extends Component {
 
         let floorPrice = 9999999999;
         let highPrice = 0;
-        this.state.cryptoBoys.map( cryptoboy => {
-          const price = web3.utils.fromWei( cryptoboy.price.toString(), "ether")
+         this.state.cryptoBoys.map( cryptoboy => {
+          let price = this.numToEth(cryptoboy.price)
+          console.log(price)
           if( price < floorPrice )
             floorPrice = price
           
@@ -218,19 +224,133 @@ class App extends Component {
       this.state.cryptoBoys.map(async (cryptoboy) => {
         const result = await fetch(this.state.baseURI + '/' + cryptoboy.tokenId.toNumber() + '.json' );
         const metaData = await result.json();
-        this.setState({
-          cryptoBoys: this.state.cryptoBoys.map((cryptoboy) =>
-            cryptoboy.tokenId.toNumber() === Number(metaData.edition)
-              ? {
-                  ...cryptoboy,
-                  metaData,
+        let cryptoBoys = this.state.cryptoBoys.map((cryptoboy) =>
+          cryptoboy.tokenId.toNumber() === Number(metaData.edition)
+            ? {
+                ...cryptoboy,
+                metaData,
+              }
+            : cryptoboy
+          )
+
+        this.setState({ cryptoBoys });
+        this.setState({ marketplaceView: cryptoBoys });
+        let traits = []
+        let traitsTypes = []
+        if( cryptoBoys.length.length !== 0 ){
+          let boyLength = cryptoBoys.length
+          cryptoBoys.map( (cryptoboy, iBoy) => { //loop cryptoboy
+            if( cryptoboy.metaData ){
+              let traitsLength = cryptoboy.metaData.attributes.length
+              cryptoboy.metaData.attributes.forEach( (trait, iTraits) => { // loop tratti
+                
+                let { trait_type, value } = trait
+                let type = trait_type.replace(' ', '-')
+                let uniqueType = true
+
+                traitsTypes.forEach( ( existType, i) => {
+                  if( existType === type )
+                    uniqueType = false
+                } )
+
+                if( uniqueType )
+                  traitsTypes.push( type )
+
+                if( traits[type] === undefined )
+                  traits[type] = []
+
+                let unique = true
+                traits[type].forEach( existValue => {
+                  if (existValue === value )
+                    unique = false
+                })
+
+                if( unique )
+                  traits[type].push( value )
+                  
+                if( boyLength === ( iBoy + 1 ) && traitsLength === ( iTraits + 1 ) ){
+                  this.setState({ traits });
+                  this.setState( { traitsTypes });
                 }
-              : cryptoboy
-          ),
-        });
-      });
+              })
+            }
+          })
+        }
+      }) 
     }
   };
+
+  handleFilterBar = (ev) => {
+    const { cryptoBoys, marketplaceView, activeFilters } = this.state;
+    let value = ev.value.split('_')
+    let trait = value[0].replace('-', ' ')
+    value = value[1]
+
+    let newFilters = activeFilters
+    if( ! newFilters.length > 0){
+      newFilters.push({ trait_type: trait , value: value })
+    }else{
+      let exist = false
+      newFilters.forEach( ( filter, i )=> { //controllo i filtri attivi
+        if( exist ) return; //se esiste già esco
+        if( filter.trait_type === trait  ){ // tipo tratto uguale 
+          if( filter.value != value){ // valore tratto diverso 
+            newFilters[i] = { trait_type: trait , value: value }
+            exist = true
+          }
+          if( filter.value === value ){ // valoe tratto uguale
+            exist = true
+          }
+        }
+      })
+        if( ! exist ) 
+          newFilters.push( { trait_type: trait , value: value } )
+    }
+    let newView = [];
+    cryptoBoys.map( ( cryptoBoy, i ) => { //crypto boy 1
+      if( cryptoBoy.metaData ){
+        let filterValid = true
+        newFilters.forEach( filter => { //filtro 1
+          if( ! filterValid ) return
+          let traitValid = false
+          cryptoBoy.metaData.attributes.forEach(forTrait => { // tratto 1
+            if( traitValid ) return
+            if( forTrait.trait_type === filter.trait_type && forTrait.value === filter.value ){ //tratto valido
+              traitValid = true
+              return
+            }
+          })
+          filterValid = traitValid
+        })
+        if(filterValid)
+          newView.push(cryptoBoy) // aggiungo il tratto
+      }
+    })
+
+    console.log( newView )
+    this.setState( { marketplaceView: newView } )
+    this.setState( { activeFilters: newFilters } )
+  }
+  handleOrderChange = (ev = null) => {
+    console.log( ev )
+    const { numToEth } = this
+    let order = ev != null ? ev.value : this.state.order
+    const { cryptoBoys, marketplaceView } = this.state;
+    if( order === 'ASC' ){
+      marketplaceView.sort( (a, b) => {
+        a = parseInt( numToEth(a.price) )
+        b = parseInt( numToEth(b.price) )
+        return (  a - b  ) 
+      })
+    }else{
+      marketplaceView.sort( (a, b) => {
+        a = parseInt( numToEth(a.price) )
+        b = parseInt( numToEth(b.price) )
+        return (  a - b  ) 
+      }).reverse()
+    }
+    this.setState({ order })
+  }
 
   setBaseURI = async ( _baseURI ) => {
     this.setState({ loading: true });
@@ -253,26 +373,6 @@ class App extends Component {
       });
   }
 
-  handleOrderChange = (ev = null) => {
-    const { numToEth } = this
-    let order = ev != null ? ev.target.value : this.state.order
-    const { cryptoBoys } = this.state;
-    if( order === 'ASC' ){
-      cryptoBoys.sort( (a, b) => {
-        a = parseInt( numToEth(a.price) )
-        b = parseInt( numToEth(b.price) )
-        return (  a - b  ) 
-      })
-    }else{
-      cryptoBoys.sort( (a, b) => {
-        a = parseInt( numToEth(a.price) )
-        b = parseInt( numToEth(b.price) )
-        return (  a - b  ) 
-      }).reverse()
-    }
-    this.setState({ order })
-  }
-
   mintMyNFT = async (_mintAmount) => {
     this.setState({ loading: true });
     //sicuramente trovare la supply attuale
@@ -292,17 +392,11 @@ class App extends Component {
         .on("confirmation", () => {
           localStorage.setItem(this.state.accountAddress, new Date().getTime());
           this.setState({ loading: false });
+          window.location = '/#/my-tokens';
+        })
+        .on("error", (error) => {
           window.location.reload();
         });
-    } else {
-     /* if (nameIsUsed) {
-        this.setState({ nameIsUsed: true });
-        this.setState({ loading: false });
-      } else if (colorsUsed.length !== 0) {
-        this.setState({ colorIsUsed: true });
-        this.setState({ colorsUsed });
-        this.setState({ loading: false });
-      }*/
     }
   };
 
@@ -313,6 +407,9 @@ class App extends Component {
       .send({ from: this.state.accountAddress })
       .on("confirmation", () => {
         this.setState({ loading: false });
+        window.location.reload();
+      })
+      .on("error", (error) => {
         window.location.reload();
       });
   };
@@ -326,8 +423,16 @@ class App extends Component {
       .on("confirmation", () => {
         this.setState({ loading: false });
         window.location.reload();
+      })
+      .on("error", (error) => {
+        window.location.reload();
       });
   };
+
+  resetFilter = () => {
+    const { cryptoBoys } = this.state;
+    this.setState( { marketplaceView: cryptoBoys } )
+  }
 
   buyCryptoBoy = (tokenId, price) => {
     this.setState({ loading: true });
@@ -336,6 +441,9 @@ class App extends Component {
       .send({ from: this.state.accountAddress, value: price })
       .on("confirmation", () => {
         this.setState({ loading: false });
+        window.location.reload();
+      })
+      .on("error", (error) => {
         window.location.reload();
       });
   };
@@ -375,12 +483,12 @@ class App extends Component {
                   />
                 )}
               />
-              <Route
+                <Route
                 path="/marketplace"
                 render={() => (
                   <AllCryptoBoys
                     accountAddress={this.state.accountAddress}
-                    cryptoBoys={this.state.cryptoBoys}
+                    marketplaceView={this.state.marketplaceView}
                     totalTokensMinted={this.state.totalTokensMinted}
                     changeTokenPrice={this.changeTokenPrice}
                     toggleForSale={this.toggleForSale}
@@ -389,10 +497,15 @@ class App extends Component {
                     floorPrice={this.state.floorPrice}
                     highPrice={this.state.highPrice}
                     handleOrderChange={this.handleOrderChange}
+                    handleFilterBar={this.handleFilterBar}
                     order={this.state.order}
-                  />
-                )}
-              />
+                    traits={this.state.traits}
+                    traitsTypes={this.state.traitsTypes}
+                    cryptoBoysMaxSupply={this.state.cryptoBoysMaxSupply}
+                    resetFilter={this.resetFilter}
+                    />
+                  )}
+                />
               <Route
                 path="/my-tokens"
                 render={() => (
@@ -428,6 +541,7 @@ class App extends Component {
             </HashRouter>
           </>
         )}
+        <span>v0.1.5</span>
       </div>
     );
   }

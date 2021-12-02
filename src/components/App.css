@@ -41,7 +41,6 @@ b, label{
 }
 
 .vertical{
-  margin-top: 20px;
   display: flex;
   flex-wrap: nowrap;
   flex-direction: column;
@@ -54,4 +53,14 @@ b, label{
 
 .mint-wrapper{
   padding: 25px;
+}
+
+.toogle-button {
+  padding: 8px;
+  border-radius: 3px;
+  border: 1px solid #fff;
+}
+
+.filterBar {
+  align-items: center;
 }
