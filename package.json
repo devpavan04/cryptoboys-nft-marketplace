@@ -20,6 +20,7 @@
     "dayjs": "^1.10.4",
     "dotenv": "^10.0.0",
     "hdwalletprovider": "^1.7.0",
+    "history": "^5.1.0",
     "ipfs-http-client": "^49.0.2",
     "react": "16.8.4",
     "react-bootstrap": "^1.6.4",

@@ -1,5 +1,5 @@
 import React, { Component, useEffect } from "react";
-import { HashRouter, Route } from "react-router-dom";
+import { HashRouter, Route, Redirect } from "react-router-dom";
 import "./App.css";
 import Web3 from "web3";
 import CryptoBoys from "../abis/CryptoBoys.json";
@@ -13,6 +13,8 @@ import Navbar from "./Navbar/Navbar";
 import MyCryptoBoys from "./MyCryptoBoys/MyCryptoBoys";
 import Queries from "./Queries/Queries";
 import AdminDashboard from './AdminDashboard/AdminDashboard';
+
+
 
 const ipfsClient = require("ipfs-http-client");
 const ipfs = ipfsClient({
@@ -46,7 +48,8 @@ class App extends Component {
       traitsTypes: [],
       order: 'ASC',
       marketplaceView: [],
-      activeFilters: []
+      activeFilters: [],
+      baseURI: '',
     };
     this.handleWeb3AccountChange();
   }
@@ -204,7 +207,7 @@ class App extends Component {
         let baseURI = await cryptoBoysContract.methods
           .baseURI()
           .call();
-        this.setState({ baseURI }); 
+          this.setState({ baseURI }); 
 
         this.setState({ loading: false });
       } else {
@@ -331,6 +334,7 @@ class App extends Component {
     this.setState( { marketplaceView: newView } )
     this.setState( { activeFilters: newFilters } )
   }
+
   handleOrderChange = (ev = null) => {
     console.log( ev )
     const { numToEth } = this
@@ -392,7 +396,7 @@ class App extends Component {
         .on("confirmation", () => {
           localStorage.setItem(this.state.accountAddress, new Date().getTime());
           this.setState({ loading: false });
-          window.location = '/#/my-tokens';
+          return <Redirect to="/my-tokens" push={true} />   
         })
         .on("error", (error) => {
           window.location.reload();
@@ -459,7 +463,7 @@ class App extends Component {
           <Loading />
         ) : (
           <>
-            <HashRouter basename="/">
+            <HashRouter basename="/" >
               <Navbar isAdmin={this.state.cryptoBoysContractOwner === this.state.accountAddress}/>
               <Route
                 path="/"
@@ -519,12 +523,17 @@ class App extends Component {
                   />
                 )}
               />
+              { this.state.baseURI != '' ? 
               <Route
                 path="/queries"
                 render={() => (
-                  <Queries cryptoBoysContract={this.state.cryptoBoysContract} />
+                  <Queries 
+                    cryptoBoysContract={this.state.cryptoBoysContract} 
+                    baseURI={this.state.baseURI}
+                  />
                 )}
               />
+               : '' }
               {
                 this.state.cryptoBoysContractOwner === this.state.accountAddress ?
               <Route

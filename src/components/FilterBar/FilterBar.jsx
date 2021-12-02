@@ -1,6 +1,4 @@
 import React, { Component, useState, setState, useEffect } from "react";
-import  FilterSelect  from "../FilterSelect/FilterSelect";
-import Loading from "../Loading/Loading";
 import Select from "react-select"
 
 const FilterBar = ( { 
@@ -12,7 +10,7 @@ const FilterBar = ( {
     const [loading, setLoading] = useState(false);
     return (
         <div className="filterBar align-items-right d-flex justify-content-right spaced">
-            {  
+            {  traitsTypes.length > 0 ?
                 traitsTypes.map( (type, i ) => {
                     const items = traits[traitsTypes[i]].map( (value, key) => {
                         let valueKey = type + '_' + value.replace(' ', '-');
@@ -32,7 +30,7 @@ const FilterBar = ( {
                     )
 
                 })
-             }
+                : 'Loading Skulls traits...' }
         </div>
     );
 };

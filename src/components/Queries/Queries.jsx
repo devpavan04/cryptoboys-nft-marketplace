@@ -112,11 +112,11 @@ const Queries = (props) => {
             </form>
             <p className="mt-4">
               <a
-                href={`${tokenMetadataLink}.json`}
+                href={props.baseURI + '/' + tokenIdForMetadata + '.json'}
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                {tokenMetadata ? `${tokenMetadata}.json` : '' }
+                {tokenMetadata ? `${props.baseURI + '/' + tokenIdForMetadata + '.json'}` : '' }
               </a>
             </p>
           </div>
