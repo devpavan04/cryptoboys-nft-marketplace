@@ -3,7 +3,7 @@ import React, { useState, useEffect } from "react";
 const CryptoBoyNFTImage = ({ imageURI }) => {
   return (
     <div>
-      <img src={imageURI.replace('ipfs://', 'https://ipfs.io/ipfs/')} className="NFT-image" />
+      <img src={imageURI.replace('ipfs://', 'https://gateway.pinata.cloud/ipfs/')} className="NFT-image" />
     </div>
   );
 };

@@ -207,6 +207,8 @@ class App extends Component {
         let baseURI = await cryptoBoysContract.methods
           .baseURI()
           .call();
+
+          baseURI = 'https://gateway.pinata.cloud/ipfs/' + baseURI;
           this.setState({ baseURI }); 
 
         this.setState({ loading: false });
@@ -222,10 +224,15 @@ class App extends Component {
     window.location.reload();
   };
 
+  sleep = (milliseconds) => {
+    return new Promise(resolve => setTimeout(resolve, milliseconds))
+  };
+
   setMetaData = async () => {
     if (this.state.cryptoBoys.length !== 0) {
       this.state.cryptoBoys.map(async (cryptoboy) => {
         const result = await fetch(this.state.baseURI + '/' + cryptoboy.tokenId.toNumber() + '.json' );
+        await this.sleep(1000)
         const metaData = await result.json();
         let cryptoBoys = this.state.cryptoBoys.map((cryptoboy) =>
           cryptoboy.tokenId.toNumber() === Number(metaData.edition)
