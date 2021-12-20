@@ -69,7 +69,7 @@ class CryptoBoyNFTDetails extends Component {
                           cryptoboy.metaData.attributes.map( attribute => {
                             return (
                               <span className="font-weight-bold">{attribute.trait_type}: 
-                                {attribute.value}
+                                 {attribute.value}
                               </span>
                             )
                           })

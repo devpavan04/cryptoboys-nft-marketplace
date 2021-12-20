@@ -5,6 +5,7 @@ import Web3 from "web3";
 import CryptoBoys from "../abis/CryptoBoys.json";
 import FormAndPreview from "../components/FormAndPreview/FormAndPreview";
 import AllCryptoBoys from "./AllCryptoBoys/AllCryptoBoys";
+import DetailsPage from "./AllCryptoBoys/AllCryptoBoys";
 import AccountDetails from "./AccountDetails/AccountDetails";
 import ContractNotDeployed from "./ContractNotDeployed/ContractNotDeployed";
 import ConnectToMetamask from "./ConnectMetamask/ConnectToMetamask";
@@ -13,7 +14,7 @@ import Navbar from "./Navbar/Navbar";
 import MyCryptoBoys from "./MyCryptoBoys/MyCryptoBoys";
 import Queries from "./Queries/Queries";
 import AdminDashboard from './AdminDashboard/AdminDashboard';
-
+import Bottleneck from "bottleneck";
 
 
 const ipfsClient = require("ipfs-http-client");
@@ -21,6 +22,11 @@ const ipfs = ipfsClient({
   host: "ipfs.infura.io",
   port: 5001,
   protocol: "https",
+});
+
+const limiter = new Bottleneck({
+  maxConcurrent: 1,
+  minTime: 1000
 });
 
 class App extends Component {
@@ -224,68 +230,64 @@ class App extends Component {
     window.location.reload();
   };
 
-  sleep = (milliseconds) => {
-    return new Promise(resolve => setTimeout(resolve, milliseconds))
-  };
-
   setMetaData = async () => {
     if (this.state.cryptoBoys.length !== 0) {
-      this.state.cryptoBoys.map(async (cryptoboy) => {
-        const result = await fetch(this.state.baseURI + '/' + cryptoboy.tokenId.toNumber() + '.json' );
-        await this.sleep(1000)
-        const metaData = await result.json();
-        let cryptoBoys = this.state.cryptoBoys.map((cryptoboy) =>
-          cryptoboy.tokenId.toNumber() === Number(metaData.edition)
-            ? {
-                ...cryptoboy,
-                metaData,
-              }
-            : cryptoboy
+      const result = await fetch(this.state.baseURI + '/_metadata.json' )
+      const metaDatas = await result.json();
+      metaDatas.map(async (metaData) => {
+      let cryptoBoys = this.state.cryptoBoys
+      cryptoBoys = cryptoBoys.map( (cryptoboy) =>
+            cryptoboy.tokenId.toNumber() === metaData.edition ? 
+            {
+              ...cryptoboy,
+              metaData,
+            }
+              : cryptoboy
           )
 
-        this.setState({ cryptoBoys });
-        this.setState({ marketplaceView: cryptoBoys });
-        let traits = []
-        let traitsTypes = []
-        if( cryptoBoys.length.length !== 0 ){
-          let boyLength = cryptoBoys.length
-          cryptoBoys.map( (cryptoboy, iBoy) => { //loop cryptoboy
-            if( cryptoboy.metaData ){
-              let traitsLength = cryptoboy.metaData.attributes.length
-              cryptoboy.metaData.attributes.forEach( (trait, iTraits) => { // loop tratti
-                
-                let { trait_type, value } = trait
-                let type = trait_type.replace(' ', '-')
-                let uniqueType = true
+            this.setState({ cryptoBoys });
+            this.setState({ marketplaceView: cryptoBoys });
+            let traits = []
+            let traitsTypes = []
+            if( cryptoBoys.length.length !== 0 ){
+              let boyLength = cryptoBoys.length
+              cryptoBoys.map( (cryptoboy, iBoy) => { //loop cryptoboy
+                if( cryptoboy.metaData ){
+                  let traitsLength = cryptoboy.metaData.attributes.length
+                  cryptoboy.metaData.attributes.forEach( (trait, iTraits) => { // loop tratti
+                    
+                    let { trait_type, value } = trait
+                    let type = trait_type.replace(' ', '-')
+                    let uniqueType = true
 
-                traitsTypes.forEach( ( existType, i) => {
-                  if( existType === type )
-                    uniqueType = false
-                } )
+                    traitsTypes.forEach( ( existType, i) => {
+                      if( existType === type )
+                        uniqueType = false
+                    } )
 
-                if( uniqueType )
-                  traitsTypes.push( type )
+                    if( uniqueType )
+                      traitsTypes.push( type )
 
-                if( traits[type] === undefined )
-                  traits[type] = []
+                    if( traits[type] === undefined )
+                      traits[type] = []
 
-                let unique = true
-                traits[type].forEach( existValue => {
-                  if (existValue === value )
-                    unique = false
-                })
+                    let unique = true
+                    traits[type].forEach( existValue => {
+                      if (existValue === value )
+                        unique = false
+                    })
 
-                if( unique )
-                  traits[type].push( value )
-                  
-                if( boyLength === ( iBoy + 1 ) && traitsLength === ( iTraits + 1 ) ){
-                  this.setState({ traits });
-                  this.setState( { traitsTypes });
+                    if( unique )
+                      traits[type].push( value )
+                      
+                    if( boyLength === ( iBoy + 1 ) && traitsLength === ( iTraits + 1 ) ){
+                      this.setState({ traits });
+                      this.setState( { traitsTypes });
+                    }
+                  })
                 }
               })
             }
-          })
-        }
       }) 
     }
   };
@@ -495,7 +497,7 @@ class App extends Component {
                 )}
               />
                 <Route
-                path="/marketplace"
+                path="/marketplace/:id"
                 render={() => (
                   <AllCryptoBoys
                     accountAddress={this.state.accountAddress}
@@ -517,6 +519,7 @@ class App extends Component {
                     />
                   )}
                 />
+
               <Route
                 path="/my-tokens"
                 render={() => (
