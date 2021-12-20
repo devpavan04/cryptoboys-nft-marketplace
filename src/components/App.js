@@ -497,7 +497,7 @@ class App extends Component {
                 )}
               />
                 <Route
-                path="/marketplace/:id"
+                path="/marketplace"
                 render={() => (
                   <AllCryptoBoys
                     accountAddress={this.state.accountAddress}

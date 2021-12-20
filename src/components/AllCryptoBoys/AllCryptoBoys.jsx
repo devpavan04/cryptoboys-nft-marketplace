@@ -63,7 +63,6 @@ class AllCryptoBoys extends Component {
     } = this.state;
     console.log( this.props.marketplaceView )
     return (
-       this.props.match === undefined  ?
         <div>
           <div className="card mt-1">
             <div className="card-body align-items-left d-flex justify-content-space-between">
@@ -114,11 +113,7 @@ class AllCryptoBoys extends Component {
             />
             </div>
       </div>
-      : 
-      <div>
-        <h1>{this.props.match.params.id}</h1>
-      </div>
-    );
+    )
   }
 };
 
