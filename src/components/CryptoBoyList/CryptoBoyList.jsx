@@ -26,7 +26,7 @@ const CryptoBoyList = ({
         }
     }, [cryptoBoys]);
     return (
-        !loading ? 
+        ! loading ? 
             cryptoBoys.map((cryptoboy) => {
                 return (
                 <div

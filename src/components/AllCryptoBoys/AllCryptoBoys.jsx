@@ -1,10 +1,8 @@
-import React, { Component, useState, useEffect } from "react";
+import React, { Component } from "react";
 import CryptoBoyList from "../CryptoBoyList/CryptoBoyList";
-import CryptoBoyNFTImage from "../CryptoBoyNFTImage/CryptoBoyNFTImage";
-import CryptoBoyNFTDetails from "../CryptoBoyNFTDetails/CryptoBoyNFTDetails";
-import Loading from "../Loading/Loading";
 import FilterBar from "../FilterBar/FilterBar";
 import Select from "react-select";
+import './AllCryptoBoys.css';
 
 
 class AllCryptoBoys extends Component {
@@ -17,8 +15,6 @@ class AllCryptoBoys extends Component {
       toggleForSale: this.props.toggleForSale,
       buyCryptoBoy: this.props.buyCryptoBoy,
       loading: this.props.loading,
-      floorPrice: this.props.floorPrice,
-      highPrice: this.props.highPrice,
       traits: this.props.traits,
       traitsTypes: this.props.traitsTypes,
       order: this.props.order
@@ -32,54 +28,48 @@ class AllCryptoBoys extends Component {
     ];
   }
 
-  componentDidMount( ) {
+  componentDidMount  ( ) {
     /*if( this.props.cryptoBoys[0].metaData !== 0)
     this.setState( {marketPlaceView: this.props.cryptoBoys })*/
   }
 
-  
-
-  handleMarketplaceFilters = ( ev ) => {
-    //marketplaceView
-  }
-
-  /**/
-
   render() {
-    //const [loading, setLoading] = useState(false);
     let {
       accountAddress,
-      totalTokensMinted,
       changeTokenPrice,
       toggleForSale,
       buyCryptoBoy,
-      floorPrice,
-      loading,
-      prices,
       order,
-      traits,
-      highPrice,
-      traitsTypes
     } = this.state;
+
+    let {
+      floorPrice,
+      highPrice,
+      cryptoBoysMaxSupply,
+      totalTokensMinted,
+      handleStatusNFTFilter
+    } = this.props;
     console.log( this.props.marketplaceView )
     return (
         <div className="container">
           <div className="card mt-1">
-            <div className="card-body align-items-left d-flex justify-content-space-between">
+            <div className="card-body align-items-left d-flex justify-content-center">
+              { highPrice ? 
             <div className="align-items-left d-flex justify-content-left spaced">
-                <span className="floorPrice">
-                  Floor Price: 
+                <span className="contractInfo">
+                  Floor Price
                   <b>{ ` ${floorPrice} Ξ`}</b>
                 </span>
-                <span className="floorPrice">
-                  Higher Price: 
+                <span className="contractInfo">
+                  Higher Price
                   <b>{ ` ${highPrice} Ξ`}</b>
                 </span>
-                <span className="floorPrice">
-                  Minted CRSkull: 
-                  <b>{ ` #${totalTokensMinted}/${this.props.cryptoBoysMaxSupply}`}</b>
+                <span className="contractInfo">
+                  Minted CRSkull
+                  <b>{ ` #${totalTokensMinted}/${cryptoBoysMaxSupply}`}</b>
                 </span>
               </div>
+              : '' }
             </div>
           </div>
           <div className="card mt-1">
@@ -88,6 +78,7 @@ class AllCryptoBoys extends Component {
                 traits={this.props.traits}
                 traitsTypes={this.props.traitsTypes}
                 handleFilterBar={this.handleFilterBar}
+                handleStatusNFTFilter={handleStatusNFTFilter}
               />
               <span onClick={this.resetFilter} className="filterBar">&times; Reset</span>
               <div className="align-items-right d-flex justify-content-right spaced">

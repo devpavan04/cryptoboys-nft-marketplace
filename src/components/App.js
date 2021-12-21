@@ -82,7 +82,6 @@ class App extends Component {
       await this.loadWeb3(window.ethereum);
 
     await this.setMintBtnTimer();
-    await this.handleOrderChange();
   };
 
   numToEth = (num) => {
@@ -178,7 +177,12 @@ class App extends Component {
         .call();
 
         this.setState({ cryptoBoysCount });
+        const cryptoBoysMaxSupply = await cryptoBoysContract.methods
+          .getMaxSupply()
+          .call();
         
+        this.setState( { cryptoBoysMaxSupply } )
+
         const result = await fetch(this.state.baseURI + '/_metadata.json' )
         const metaDatas = await result.json();
 
@@ -206,22 +210,10 @@ class App extends Component {
           })
         }
 
-        const cryptoBoysMaxSupply = await cryptoBoysContract.methods
-          .getMaxSupply()
-          .call();
-        
-        this.setState( { cryptoBoysMaxSupply } )
-        /*const cryptoBoysCost = await cryptoBoysContract.methods
-          .getCost()
-          .call();
-        this.setState({ cryptoBoysCost });*/
-
-        //load all cryptoBoys
-
         let floorPrice = 9999999999;
         let highPrice = 0;
         let cryptoBoys = this.state.cryptoBoys;
-        cryptoBoys.map( cryptoboy => {
+        cryptoBoys.forEach( cryptoboy => {
           let price = this.numToEth(cryptoboy.price)
           console.log(price)
           if( price < floorPrice )
@@ -230,8 +222,13 @@ class App extends Component {
           if( price > highPrice)
             highPrice = price
         })
-        this.setState({ floorPrice })
-        this.setState({ highPrice })
+        this.setState({ floorPrice, highPrice })
+        /*const cryptoBoysCost = await cryptoBoysContract.methods
+          .getCost()
+          .call();
+        this.setState({ cryptoBoysCost });*/
+
+        
         //get contract owner
         const contractOwner = await cryptoBoysContract.methods
           .getOwner()
