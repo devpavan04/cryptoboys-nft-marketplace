@@ -1,21 +1,20 @@
 import React from "react";
+import './AccountDetails.css';
 
 const AccountDetails = ({ accountAddress, accountBalance }) => {
   return (
-    <div>
-      <div className="jumbotron">
-        <h1 className="display-5">CRSkull NFT Marketplace</h1>
-        <p className="lead">
+      <div className="container ac-home">
+        <h1 className="ac-title">CroSkull NFT Marketplace</h1>
+        <p className="ac-text">
           This is an NFT marketplace where you can mint ERC721 implemented{" "}
-          <i>CRSkull NFTs</i> and manage them.
+          <i>CroSkull NFTs</i> and manage them.
         </p>
         <hr className="my-4" />
-        <p className="lead">Account address :</p>
-        <h4>{accountAddress}</h4>
-        <p className="lead">Account balance :</p>
-        <h4>{accountBalance} Ξ</h4>
+        <p className="ac-text">Account address :</p>
+        <h4 className="ac-text">{accountAddress}</h4>
+        <p className="ac-text">Account balance :</p>
+        <h4 className="ac-text">{accountBalance} Ξ</h4>
       </div>
-    </div>
   );
 };
 

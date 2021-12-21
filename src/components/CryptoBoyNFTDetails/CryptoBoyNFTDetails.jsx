@@ -16,7 +16,10 @@ class CryptoBoyNFTDetails extends Component {
   render() {
 
     let {cryptoboy} = this.props
+    if(this.props.toggleForSale || this.props.accountAddress == this.props.cryptoboy.currentOwner)
+    {
     return (
+     
       <div key={this.props.cryptoboy.tokenId.toNumber()} className="mt-4 vertical">
         <Accordion>
             <Card>
@@ -188,7 +191,11 @@ class CryptoBoyNFTDetails extends Component {
           ) : null}
         </div>
       </div>
-    );
+    );}
+    else{
+      return null;
+    }
+
   }
 }
 

@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import CryptoBoyNFTImage from "../CryptoBoyNFTImage/CryptoBoyNFTImage";
 import baseImage from "./1.png"
+import './FormAndPreview.css';
 
 class FormAndPreview extends Component {
   constructor(props) {
@@ -32,24 +33,21 @@ class FormAndPreview extends Component {
 
   render() {
     return (
-      <div>
-        <div className="card mt-1">
-          <div className="card-body align-items-center d-flex justify-content-center">
-            <h2>Mint your CRSkull NFT in just 3 Clicks</h2>
-          </div>
-        </div>
+      <div className="container">
+            <p className="fp-title">Mint your CroSkull NFT</p>
         <form onSubmit={this.callMintMyNFTFromApp} className="pt-4 mt-1">
           <div className="row">
             <div className="col-md-6">
               <img src={baseImage} />
             </div>
             <div className="mint-wrapper col-md-6">
-                <h4>Mint your NFT</h4>
-                <p>Get now your <b>blockchain-unique CRSkull NFT</b> out of 6666 possibile Skulls with unique traits and dna.</p>
-                <p>Collet at least <b>3 CRSkulls</b> to be eligibility for the free-AirDrop of a <b>1/1 Potion Mystery Box</b>. <b>Mystery Box</b> will return you a <b>Potion</b>, you can use Potions to Mint CRSkull+ and revieve $SkullLP Token Rewards.</p>
+              <div className="fp-text">
+                <p>Get now your <b>blockchain-unique CroSkull NFT</b> out of 6666 possibile Skulls with unique traits and dna.</p>
+                <p>Collet at least <b>3 CroSkulls</b> to be eligibility for the free-AirDrop of a <b>1/1 Potion Mystery Box</b>. <b>Mystery Box</b> will return you a <b>Potion</b>, you can use Potions to Mint CroSkull+ and revieve $SkullLP Token Rewards.</p>
+                </div>
                 <div className="mint-action">
                   <div>
-                    <label htmlFor="amount">Mint amount</label>
+                    <label htmlFor="amount" className="fp-text-m">Mint amount</label>
                     <input
                       required
                       type="number"
@@ -68,17 +66,17 @@ class FormAndPreview extends Component {
                       id="mintBt"
                       style={{ fontSize: "0.9rem", letterSpacing: "0.14rem" }}
                       type="submit"
-                      className="btn mt-4 btn-block btn-outline-primary"
+                      className="btn mt-4 btn-block btn-outline-secondary"
                     >
-                      Mint CRSkull
+                      Mint CroSkull
                       { this.state.mintAmount > 1 ? 
                       `s (${this.state.mintAmount})` : 
                       ` (${this.state.mintAmount})`}
                     </button>
                 </div>
                 <div className="vertical">
-                  <span className="cost-label">Mint Cost (excluded network fees) </span>
-                  <span className="cost-value">
+                  <span className="cost-label" className="fp-text-m">Mint Cost (excluded network fees) </span>
+                  <span className="cost-value" className="fp-text-m">
                     { this.state.mintAmount > 0 && this.state.cryptoBoysCost ? 
                       `${this.totalCost(this.state.mintAmount)} Ξ` 
                     : ``}
@@ -86,7 +84,7 @@ class FormAndPreview extends Component {
               </div>
               <div className="mt-4">
                 <div className="alert alert-info ">
-                    <strong>{ `${this.state.cryptoBoysCount} / ${this.state.cryptoBoysMaxSupply}` } CRSkull{ this.state.cryptoBoysCount > 1 ? 's' : '' } Minted</strong>
+                    <strong>{ `${this.state.cryptoBoysCount} / ${this.state.cryptoBoysMaxSupply}` } CroSkull{ this.state.cryptoBoysCount > 1 ? 's' : '' } Minted</strong>
                   </div>
                 { this.props.nameIsUsed ? (
                   <div className="alert alert-danger alert-dissmissible">

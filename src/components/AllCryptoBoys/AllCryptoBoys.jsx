@@ -25,8 +25,6 @@ class AllCryptoBoys extends Component {
     };
     this.handleOrderChange = this.props.handleOrderChange;
     this.handleFilterBar = this.props.handleFilterBar;
-    this.handleStatusNFTFilter = this.props.handleStatusNFTFilter;
-
     this.resetFilter = this.props.resetFilter;
     this.priceOptions = [
       { value: 'ASC', label: 'Price ASC' },
@@ -65,7 +63,7 @@ class AllCryptoBoys extends Component {
     } = this.state;
     console.log( this.props.marketplaceView )
     return (
-        <div>
+        <div className="container">
           <div className="card mt-1">
             <div className="card-body align-items-left d-flex justify-content-space-between">
             <div className="align-items-left d-flex justify-content-left spaced">
@@ -90,7 +88,6 @@ class AllCryptoBoys extends Component {
                 traits={this.props.traits}
                 traitsTypes={this.props.traitsTypes}
                 handleFilterBar={this.handleFilterBar}
-                handleStatusNFTFilter={this.handleStatusNFTFilter}
               />
               <span onClick={this.resetFilter} className="filterBar">&times; Reset</span>
               <div className="align-items-right d-flex justify-content-right spaced">

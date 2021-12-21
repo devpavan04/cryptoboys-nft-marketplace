@@ -5,8 +5,7 @@ import { Link } from "react-router-dom";
 
 const Navbar = ({isAdmin}) => {
   return (
-    <nav className="navbar navbar-expand-sm navbar-dark">
-      <div className="container">
+    <nav className="navbar navbar-expand-sm navbar-dark header">
         <Link to="/" className="navbar-brand ml-2">
           <img src={Logo} alt="CRSkull Logo" className="site-logo"/>
         </Link>
@@ -57,7 +56,6 @@ const Navbar = ({isAdmin}) => {
 
           </ul>
         </div>
-      </div>
     </nav>
   );
 };

@@ -3,6 +3,7 @@ import CryptoBoyNFTImage from "../CryptoBoyNFTImage/CryptoBoyNFTImage";
 import MyCryptoBoyNFTDetails from "../MyCryptoBoyNFTDetails/MyCryptoBoyNFTDetails";
 import Loading from "../Loading/Loading";
 import { fetch } from "ipfs-utils/src/http/fetch.node";
+import './MyCryptoBoys.css'
 
 const MyCryptoBoys = ({
   accountAddress,
@@ -28,14 +29,10 @@ const MyCryptoBoys = ({
   }, [cryptoBoys]);
 
   return (
-    <div>
-      <div className="card mt-1">
-        <div className="card-body align-items-center d-flex justify-content-center">
-          <h5>
-            Total No. of CRSkulls's You Own : {totalTokensOwnedByAccount}
+    <div className="container">
+          <h5 className="mcb-title">
+            Total No. of CroSkulls's You Own : {totalTokensOwnedByAccount}
           </h5>
-        </div>
-      </div>
       <div className="d-flex flex-wrap mb-2">
         {myCryptoBoys.map(  (cryptoboy) => {
           console.log( cryptoboy )

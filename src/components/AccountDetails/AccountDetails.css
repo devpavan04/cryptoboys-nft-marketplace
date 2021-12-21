@@ -1,0 +1,30 @@
+@font-face {
+    font-family: 'Headhunter';
+    src: url('../../utils/HeadhunterRegular-6Y1x.ttf')  format('truetype');
+    font-weight: bold;
+    };
+    @import url('https://fonts.googleapis.com/css2?family=Special+Elite&display=swap');
+
+    .ac-home
+    {
+        background-color: #0b1424;
+        color: rgb(224, 240, 255);
+        margin-top: 5%;
+        border: 1px  white;
+        padding: 2%;
+    }
+    .ac-title{
+        font-family: 'Headhunter';
+        color: rgb(224, 240, 255);
+        font-size: 4vh;
+    }
+    .ac-text
+    {
+        font-family: 'Special Elite', cursive;
+        font-size: 2vh;
+        color: rgb(224, 240, 255);
+    }
+    .my-4
+    {
+        background-color: #fff;
+    }

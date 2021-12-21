@@ -1,4 +1,5 @@
 import React from "react";
+import { Accordion, Card } from "react-bootstrap";
 
 const MyCryptoBoyNFTDetails = (props) => {
   const {
@@ -28,13 +29,34 @@ const MyCryptoBoyNFTDetails = (props) => {
         {numberOfTransfers.toNumber()}
       </p>
       {props.accountAddress === mintedBy &&
-      props.accountAddress !== previousOwner ? (
+        props.accountAddress !== previousOwner ? (
         <div className="alert alert-success w-50 text-center m-auto">
           Minted
         </div>
       ) : (
         <div className="alert alert-info w-50 text-center m-auto">Bought</div>
       )}
+      <br></br>
+      <Accordion>
+        <Card>
+          <Accordion.Toggle eventKey="1" className="toogle-button">
+            Traits Properties
+          </Accordion.Toggle>
+          <Accordion.Collapse eventKey="1">
+            <Card.Body className="vertical mcbd-cbody">
+              {metaData ?
+                metaData.attributes.map(attribute => {
+                  return (
+                    <span className="font-weight-bold mcbd-span">{attribute.trait_type}:
+                      {attribute.value}
+                    </span>
+                  )
+                })
+                : ''}
+            </Card.Body>
+          </Accordion.Collapse>
+        </Card>
+      </Accordion>
     </div>
   );
 };
