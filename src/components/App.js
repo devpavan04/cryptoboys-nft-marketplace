@@ -15,9 +15,18 @@ import MyCryptoBoys from "./MyCryptoBoys/MyCryptoBoys";
 import Queries from "./Queries/Queries";
 import AdminDashboard from './AdminDashboard/AdminDashboard';
 import Bottleneck from "bottleneck";
+import WalletConnectProvider from "@walletconnect/web3-provider";
+import WalletConnectQRCodeModal from "@walletconnect/qrcode-modal";
+
 
 
 const ipfsClient = require("ipfs-http-client");
+const WCProvider = new WalletConnectProvider({
+  rpc: {
+    339: "https://cassini.crypto.org",
+  },
+})
+
 const ipfs = ipfsClient({
   host: "ipfs.infura.io",
   port: 5001,
@@ -44,6 +53,7 @@ class App extends Component {
       cryptoBoys: [],
       loading: false,
       metamaskConnected: false,
+      walletConnectConnected: false,
       contractDetected: false,
       totalTokensMinted: 0,
       totalTokensOwnedByAccount: 0,
@@ -55,6 +65,7 @@ class App extends Component {
       order: 'ASC',
       marketplaceView: [],
       activeFilters: [],
+      activeNFTStatus: 'all',
       baseURI: '',
     };
     this.handleWeb3AccountChange();
@@ -67,9 +78,9 @@ class App extends Component {
   }
 
   componentWillMount = async () => {
-    await this.loadWeb3();
-    await this.loadBlockchainData();
-    await this.setMetaData();
+    if( window.ethereum )
+      await this.loadWeb3(window.ethereum);
+
     await this.setMintBtnTimer();
     await this.handleOrderChange();
   };
@@ -111,9 +122,11 @@ class App extends Component {
     }, 1000);
   };
 
-  loadWeb3 = async () => {
+  loadWeb3 = async (provider) => {
     if (window.ethereum) {
-      window.web3 = new Web3(window.ethereum);
+      window.web3 = new Web3(provider);
+      await this.loadBlockchainData();
+      await this.setMetaData();
     } else if (window.web3) {
       window.web3 = new Web3(window.web3.currentProvider);
     } else {
@@ -149,36 +162,66 @@ class App extends Component {
         );
         this.setState({ cryptoBoysContract });
         this.setState({ contractDetected: true });
+
+        //get current token baseURI
+        let baseURI = await cryptoBoysContract.methods
+          .baseURI()
+          .call();
+
+        baseURI = 'https://gateway.pinata.cloud/ipfs/' + baseURI;
+        this.setState({ baseURI }); 
+
         //get max total supply
+        //count actual circulating supply
+        const cryptoBoysCount = await cryptoBoysContract.methods
+        .cryptoBoyCounter()
+        .call();
+
+        this.setState({ cryptoBoysCount });
+        
+        const result = await fetch(this.state.baseURI + '/_metadata.json' )
+        const metaDatas = await result.json();
+
+        this.setState({ loading: false });
+        for (var i = 1; i <= cryptoBoysCount; i++) {
+          const cryptoBoy = await cryptoBoysContract.methods
+          .allCryptoBoys(i)
+          .call();
+          metaDatas.map(async (metaData) => {
+            if( cryptoBoy.tokenId.toNumber() === metaData.edition )
+            this.setState({
+              cryptoBoys: [
+                ...this.state.cryptoBoys, {
+                  ...cryptoBoy,
+                  metaData,
+                }
+              ],
+              marketplaceView: [
+                ...this.state.cryptoBoys, {
+                  ...cryptoBoy,
+                  metaData,
+                }
+              ],
+            });
+          })
+        }
+
         const cryptoBoysMaxSupply = await cryptoBoysContract.methods
           .getMaxSupply()
           .call();
         
         this.setState( { cryptoBoysMaxSupply } )
-        //count actual circulating supply
-        const cryptoBoysCount = await cryptoBoysContract.methods
-          .cryptoBoyCounter()
-          .call();
-        this.setState({ cryptoBoysCount });
-
-        const cryptoBoysCost = await cryptoBoysContract.methods
+        /*const cryptoBoysCost = await cryptoBoysContract.methods
           .getCost()
           .call();
-        //this.setState({ cryptoBoysCost });
+        this.setState({ cryptoBoysCost });*/
 
         //load all cryptoBoys
-        for (var i = 1; i <= cryptoBoysCount; i++) {
-          const cryptoBoy = await cryptoBoysContract.methods
-            .allCryptoBoys(i)
-            .call();
-          this.setState({
-            cryptoBoys: [...this.state.cryptoBoys, cryptoBoy],
-          });
-        }
 
         let floorPrice = 9999999999;
         let highPrice = 0;
-         this.state.cryptoBoys.map( cryptoboy => {
+        let cryptoBoys = this.state.cryptoBoys;
+        cryptoBoys.map( cryptoboy => {
           let price = this.numToEth(cryptoboy.price)
           console.log(price)
           if( price < floorPrice )
@@ -208,16 +251,6 @@ class App extends Component {
           .call();
         totalTokensOwnedByAccount = totalTokensOwnedByAccount.toNumber();
         this.setState({ totalTokensOwnedByAccount });
-
-        //get current token baseURI
-        let baseURI = await cryptoBoysContract.methods
-          .baseURI()
-          .call();
-
-          baseURI = 'https://gateway.pinata.cloud/ipfs/' + baseURI;
-          this.setState({ baseURI }); 
-
-        this.setState({ loading: false });
       } else {
         this.setState({ contractDetected: false });
       }
@@ -226,77 +259,110 @@ class App extends Component {
 
   connectToMetamask = async () => {
     await window.ethereum.enable();
+    await this.loadWeb3( window.ethereum )
     this.setState({ metamaskConnected: true });
-    window.location.reload();
+    console.log(this.state.metamaskConnected)
+    //window.location.reload();
   };
 
+  connectToWalletConnect = async () => {
+    await window.ethereum.enable();
+    await WCProvider.enable();
+    await this.loadWeb3( WCProvider )
+    this.setState({ walletConnectConnected: true });
+    //window.location.reload();
+  }
+
   setMetaData = async () => {
-    if (this.state.cryptoBoys.length !== 0) {
-      const result = await fetch(this.state.baseURI + '/_metadata.json' )
-      const metaDatas = await result.json();
-      metaDatas.map(async (metaData) => {
-      let cryptoBoys = this.state.cryptoBoys
-      cryptoBoys = cryptoBoys.map( (cryptoboy) =>
-            cryptoboy.tokenId.toNumber() === metaData.edition ? 
-            {
-              ...cryptoboy,
-              metaData,
-            }
-              : cryptoboy
-          )
+    const { cryptoBoys } = this.state
+    if (cryptoBoys.length !== 0) {
+      let traits = []
+      let traitsTypes = []
+      if( cryptoBoys.length.length !== 0 ){
+        let boyLength = cryptoBoys.length
+        cryptoBoys.forEach( (cryptoboy, iBoy) => { //loop cryptoboy
+          if( cryptoboy.metaData ){
+            let traitsLength = cryptoboy.metaData.attributes.length
+            cryptoboy.metaData.attributes.forEach( (trait, iTraits) => { // loop tratti
+              
+              let { trait_type, value } = trait
+              let type = trait_type.replace(' ', '-')
+              let uniqueType = true
 
-            this.setState({ cryptoBoys });
-            this.setState({ marketplaceView: cryptoBoys });
-            let traits = []
-            let traitsTypes = []
-            if( cryptoBoys.length.length !== 0 ){
-              let boyLength = cryptoBoys.length
-              cryptoBoys.map( (cryptoboy, iBoy) => { //loop cryptoboy
-                if( cryptoboy.metaData ){
-                  let traitsLength = cryptoboy.metaData.attributes.length
-                  cryptoboy.metaData.attributes.forEach( (trait, iTraits) => { // loop tratti
-                    
-                    let { trait_type, value } = trait
-                    let type = trait_type.replace(' ', '-')
-                    let uniqueType = true
+              traitsTypes.forEach( ( existType, i) => {
+                if( existType === type )
+                  uniqueType = false
+              } )
 
-                    traitsTypes.forEach( ( existType, i) => {
-                      if( existType === type )
-                        uniqueType = false
-                    } )
+              if( uniqueType )
+                traitsTypes.push( type )
 
-                    if( uniqueType )
-                      traitsTypes.push( type )
+              if( traits[type] === undefined )
+                traits[type] = []
 
-                    if( traits[type] === undefined )
-                      traits[type] = []
+              let unique = true
+              traits[type].forEach( existValue => {
+                if (existValue === value )
+                  unique = false
+              })
 
-                    let unique = true
-                    traits[type].forEach( existValue => {
-                      if (existValue === value )
-                        unique = false
-                    })
+              if( unique )
+                traits[type].push( value )
+              
 
-                    if( unique )
-                      traits[type].push( value )
-                      
-                    if( boyLength === ( iBoy + 1 ) && traitsLength === ( iTraits + 1 ) ){
-                      this.setState({ traits });
-                      this.setState( { traitsTypes });
-                    }
-                  })
+                
+                if( boyLength === ( iBoy + 1 ) && traitsLength === ( iTraits + 1 ) ){
+                  this.setState({ traits });
+                  this.setState( { traitsTypes });
                 }
               })
             }
-      }) 
+          })
+        }
+        console.log(this.state)
     }
   };
+
+  handleStatusNFTFilter = (ev) => {
+    let { cryptoBoys, accountAddress } = this.state;
+    let value = ev.value
+    console.log(value)
+    let newMarketplaceView = [];
+    switch (value){
+      case 'all':
+        newMarketplaceView = cryptoBoys
+        break;
+      case 'inSale':
+        cryptoBoys.forEach( ( cryptoBoy, i ) => {
+          if( cryptoBoy.forSale )
+            newMarketplaceView.push(cryptoBoy)
+        } )
+        break;
+      case 'notInSale':
+        cryptoBoys.forEach( ( cryptoBoy, i ) => {
+          if( ! cryptoBoy.forSale )
+            newMarketplaceView.push(cryptoBoy)
+        } )
+        break;
+      case 'owned':
+        cryptoBoys.forEach( ( cryptoBoy, i ) => {
+          if( cryptoBoy.currentOwner === accountAddress)
+            newMarketplaceView.push(cryptoBoy)
+        } )
+        break;
+      }
+      this.setState( { marketplaceView: newMarketplaceView } )
+
+
+  }
 
   handleFilterBar = (ev) => {
     const { cryptoBoys, marketplaceView, activeFilters } = this.state;
     let value = ev.value.split('_')
-    let trait = value[0].replace('-', ' ')
-    value = value[1]
+
+    let trait = value[0]
+
+    value = value[1].replace('-', ' ')
 
     let newFilters = activeFilters
     if( ! newFilters.length > 0){
@@ -307,7 +373,8 @@ class App extends Component {
         if( exist ) return; //se esiste già esco
         if( filter.trait_type === trait  ){ // tipo tratto uguale 
           if( filter.value != value){ // valore tratto diverso 
-            newFilters[i] = { trait_type: trait , value: value }
+            console.log(value)
+              newFilters[i] = { trait_type: trait , value: value }
             exist = true
           }
           if( filter.value === value ){ // valoe tratto uguale
@@ -318,6 +385,8 @@ class App extends Component {
         if( ! exist ) 
           newFilters.push( { trait_type: trait , value: value } )
     }
+
+    console.log(newFilters)
     let newView = [];
     cryptoBoys.map( ( cryptoBoy, i ) => { //crypto boy 1
       if( cryptoBoy.metaData ){
@@ -327,7 +396,8 @@ class App extends Component {
           let traitValid = false
           cryptoBoy.metaData.attributes.forEach(forTrait => { // tratto 1
             if( traitValid ) return
-            if( forTrait.trait_type === filter.trait_type && forTrait.value === filter.value ){ //tratto valido
+
+            if( forTrait.trait_type === filter.trait_type && forTrait.value === filter.value || filter.value === 'none' ){ //tratto valido
               traitValid = true
               return
             }
@@ -465,7 +535,10 @@ class App extends Component {
     return (
       <div className="container">
         {!this.state.metamaskConnected ? (
-          <ConnectToMetamask connectToMetamask={this.connectToMetamask} state={this.state}/>
+          <ConnectToMetamask 
+            connectToMetamask={this.connectToMetamask} 
+            connectToWalletConnect={this.connectToWalletConnect}
+          />
         ) : !this.state.contractDetected ? (
           <ContractNotDeployed />
         ) : this.state.loading ? (
@@ -511,6 +584,7 @@ class App extends Component {
                     highPrice={this.state.highPrice}
                     handleOrderChange={this.handleOrderChange}
                     handleFilterBar={this.handleFilterBar}
+                    handleStatusNFTFilter={this.handleStatusNFTFilter}
                     order={this.state.order}
                     traits={this.state.traits}
                     traitsTypes={this.state.traitsTypes}
@@ -560,7 +634,7 @@ class App extends Component {
             </HashRouter>
           </>
         )}
-        <span>v0.1.5</span>
+        <span>v0.1.6</span>
       </div>
     );
   }

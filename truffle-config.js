@@ -4,7 +4,6 @@ require('dotenv').config()
 const HDWalletProvider = require('@truffle/hdwallet-provider');
 
 const MNEMONIC = process.env.MNEMONIC;
-const PRIVATE_KEY = process.env.PRIVETE_KEY;
 console.log(MNEMONIC)
 module.exports = {
   networks: {
@@ -37,5 +36,3 @@ module.exports = {
     },
   },
 };
-1050000000000000000000
-99895000000000000000

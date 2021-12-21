@@ -4,17 +4,30 @@ import Select from "react-select"
 const FilterBar = ( { 
     traits, 
     traitsTypes,
-    handleFilterBar
+    handleFilterBar,
+    handleStatusNFTFilter
     } ) => {
-
+    const nftStatusOptions = [{
+        value: "all", label: "All"
+    },{
+        value: "inSale", label: "In Sale"
+    },{
+        value: "notInSale", label: "Not in Sale"
+    },{
+        value: "owned", label: "Owned"
+    }]
     const [loading, setLoading] = useState(false);
     return (
         <div className="filterBar align-items-right d-flex justify-content-right spaced">
             {  traitsTypes.length > 0 ?
                 traitsTypes.map( (type, i ) => {
-                    const items = traits[traitsTypes[i]].map( (value, key) => {
+                    let items = []
+                    traits[traitsTypes[i]].forEach( (value, key) => {
                         let valueKey = type + '_' + value.replace(' ', '-');
-                        return { value: valueKey, label: value }
+                        if( ! key )
+                          items.push( { value: type + '_none', label: 'None'} );
+
+                        items.push( { value: valueKey, label: value } );
                     })
                     return (
                         items &&
@@ -31,6 +44,14 @@ const FilterBar = ( {
 
                 })
                 : 'Loading Skulls traits...' }
+                <div>
+                    <span>NFT Status</span>
+                    <Select
+                        options={nftStatusOptions}
+                        onChange={handleStatusNFTFilter}
+                        placeholder="all"
+                    ></Select>
+                </div>
         </div>
     );
 };

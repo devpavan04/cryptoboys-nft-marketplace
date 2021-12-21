@@ -82,7 +82,7 @@ contract CryptoBoys is ERC721 {
         address(0),
         cost,
         0,
-      true);
+      false);
       allCryptoBoys[cryptoBoyCounter] = newCryptoBoy;
     }
 
