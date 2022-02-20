@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.4.21 <0.8.0;
-pragma abicoder v2;
+// pragma abicoder v2;
+pragma experimental ABIEncoderV2;
 
 // import ERC721 iterface
 import "./ERC721.sol";
