@@ -37,7 +37,7 @@ npm i ganache-cli
 ```
 #### Run ganache-cli
 ```
-ganache-cli --port 7545
+ganache-cli --port 8545
 ```
 #### Open new terminal window and clone this repository
 ```
