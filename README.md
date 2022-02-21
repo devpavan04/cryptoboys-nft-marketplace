@@ -28,8 +28,6 @@
 #
 ### Run the DApp Locally
 #### Open new terminal window and clone this repository
-```
-git clone https://github.com/devpavan04/cryptoboys-NFT-marketplace.git
 #### Install truffle
 ```
 npm install -g truffle
@@ -42,7 +40,8 @@ npm i ganache-cli
 ```
 ganache-cli --port 8545
 ```
-
+```
+git clone https://github.com/devpavan04/cryptoboys-NFT-marketplace.git
 ```
 #### Install dependencies
 ```
