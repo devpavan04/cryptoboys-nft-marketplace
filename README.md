@@ -27,6 +27,9 @@
 - Access Crypto Boy Marketplace DApp at [cryptoboys-NFT-marketplace](https://devpavan04.github.io/cryptoboys-nft-marketplace/) and start minting your Crypto Boys.
 #
 ### Run the DApp Locally
+#### Open new terminal window and clone this repository
+```
+git clone https://github.com/devpavan04/cryptoboys-NFT-marketplace.git
 #### Install truffle
 ```
 npm install -g truffle
@@ -39,9 +42,7 @@ npm i ganache-cli
 ```
 ganache-cli --port 8545
 ```
-#### Open new terminal window and clone this repository
-```
-git clone https://github.com/devpavan04/cryptoboys-NFT-marketplace.git
+
 ```
 #### Install dependencies
 ```
