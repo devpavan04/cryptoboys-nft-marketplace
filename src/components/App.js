@@ -299,7 +299,7 @@ class App extends Component {
 
   render() {
     return (
-      <div className="container">
+      <div>
         {!this.state.metamaskConnected ? (
           <ConnectToMetamask connectToMetamask={this.connectToMetamask} />
         ) : !this.state.contractDetected ? (
@@ -310,6 +310,7 @@ class App extends Component {
           <>
             <HashRouter basename="/">
               <Navbar />
+              <div>
               <Route
                 path="/"
                 exact
@@ -363,6 +364,7 @@ class App extends Component {
                   <Queries cryptoBoysContract={this.state.cryptoBoysContract} />
                 )}
               />
+              </div>
             </HashRouter>
           </>
         )}

@@ -68,7 +68,7 @@
   "sourceMap": "69:493:2:-:0;;;162:45;;;;;;;;;;191:10;183:5;;:18;;;;;;;;;;;;;;;;;;69:493;;;;;;",
   "deployedSourceMap": "69:493:2:-:0;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;391:168;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;:::i;:::-;;119:36;;;:::i;:::-;;;;;;;;;;;;;;;;;;;94:20;;;:::i;:::-;;;;;;;;;;;;;;;;;;;;;280:105;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;:::i;:::-;;391:168;260:5;;;;;;;;;;246:19;;:10;:19;;;242:26;;;454:19:::1;487:11;454:45;;506:8;:21;;;528:24;;506:47;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;::::0;::::1;;;;;;;;;;;;::::0;::::1;;;;;;;;;267:1;242:26:::0;391:168;:::o;119:36::-;;;;:::o;94:20::-;;;;;;;;;;;;:::o;280:105::-;260:5;;;;;;;;;;246:19;;:10;:19;;;242:26;;;370:9:::1;343:24;:36;;;;242:26:::0;280:105;:::o",
   "source": "// SPDX-License-Identifier: MIT\r\npragma solidity >=0.4.21 <0.8.0;\r\n\r\ncontract Migrations {\r\n  address public owner;\r\n  uint public last_completed_migration;\r\n\r\n  constructor() {\r\n    owner = msg.sender;\r\n  }\r\n\r\n  modifier restricted() {\r\n    if (msg.sender == owner) _;\r\n  }\r\n\r\n  function setCompleted(uint completed) public restricted {\r\n    last_completed_migration = completed;\r\n  }\r\n\r\n  function upgrade(address new_address) public restricted {\r\n    Migrations upgraded = Migrations(new_address);\r\n    upgraded.setCompleted(last_completed_migration);\r\n  }\r\n}\r\n",
-  "sourcePath": "C:\\Users\\Matebook X\\Desktop\\CrytoBoi\\cryptoboys-NFT-marketplace\\src\\contracts\\Migrations.sol",
+  "sourcePath": "D:\\Project\\cryptoboys-nft-marketplace\\src\\contracts\\Migrations.sol",
   "ast": {
     "absolutePath": "project:/src/contracts/Migrations.sol",
     "exportedSymbols": {
@@ -1547,10 +1547,16 @@
       "links": {},
       "address": "0xB6Bb927925065588Fd4A283344082Ba2E3EF843b",
       "transactionHash": "0xdd1363b56e086e1d7c788f5902fef0682fe939eccc3d071548cbcf0293b4fae8"
+    },
+    "1646499515796": {
+      "events": {},
+      "links": {},
+      "address": "0x6057D3aC12268e9588b40b776711e01c48dd2082",
+      "transactionHash": "0xee617f8a21e92183f333b85836ab25009688ca5e8cae484fe444d7314fbe55d4"
     }
   },
-  "schemaVersion": "3.4.4",
-  "updatedAt": "2022-02-15T14:21:25.325Z",
+  "schemaVersion": "3.4.5",
+  "updatedAt": "2022-03-05T17:00:17.517Z",
   "networkType": "ethereum",
   "devdoc": {
     "kind": "dev",

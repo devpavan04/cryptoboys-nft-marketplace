@@ -5,3 +5,7 @@ input::-webkit-input-placeholder {
 input[type="color"]:hover {
   cursor: pointer;
 }
+
+* {
+  font-family: "Poppins", sans-serif !important;
+}

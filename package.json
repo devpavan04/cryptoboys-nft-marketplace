@@ -6,6 +6,7 @@
   "homepage": "https://devpavan04.github.io/cryptoboys-nft-marketplace",
   "dependencies": {
     "@openzeppelin/contracts": "^3.4.1",
+    "antd": "^4.18.9",
     "babel-polyfill": "6.26.0",
     "babel-preset-env": "1.7.0",
     "babel-preset-es2015": "6.24.1",
