@@ -2,17 +2,19 @@ import React, { Component } from "react";
 import { HashRouter, Route } from "react-router-dom";
 import "./App.css";
 import Web3 from "web3";
-import CryptoBoys from "../abis/CryptoBoys.json";
+import CryptoBoys from "./abis/CryptoBoys.json";
 
-import FormAndPreview from "../components/FormAndPreview/FormAndPreview";
-import AllCryptoBoys from "./AllCryptoBoys/AllCryptoBoys";
-import AccountDetails from "./AccountDetails/AccountDetails";
-import ContractNotDeployed from "./ContractNotDeployed/ContractNotDeployed";
-import ConnectToMetamask from "./ConnectMetamask/ConnectToMetamask";
-import Loading from "./Loading/Loading";
-import Navbar from "./Navbar/Navbar";
-import MyCryptoBoys from "./MyCryptoBoys/MyCryptoBoys";
-import Queries from "./Queries/Queries";
+import FormAndPreview from "./components/FormAndPreview/FormAndPreview";
+import AllCryptoBoys from "./components/AllCryptoBoys/AllCryptoBoys";
+import AccountDetails from "./components/AccountDetails/AccountDetails";
+import ContractNotDeployed from "./components/ContractNotDeployed/ContractNotDeployed";
+import ConnectToMetamask from "./components/ConnectMetamask/ConnectToMetamask";
+import Loading from "./components/Loading/Loading";
+import Navbar from "./components/Navbar/Navbar";
+import MyCryptoBoys from "./components/MyCryptoBoys/MyCryptoBoys";
+import Queries from "./components/Queries/Queries";
+import LayoutIndex from "./page";
+import "./style/index.css"
 
 const ipfsClient = require("ipfs-http-client");
 const ipfs = ipfsClient({
@@ -132,7 +134,7 @@ class App extends Component {
         let totalTokensMinted = await cryptoBoysContract.methods
           .getNumberOfTokensMinted()
           .call();
-        totalTokensMinted = totalTokensMinted.toNumber();
+        totalTokensMinted = totalTokensMinted && totalTokensMinted.toNumber();
         this.setState({ totalTokensMinted });
         let totalTokensOwnedByAccount = await cryptoBoysContract.methods
           .getTotalNumberOfTokensOwnedByAnAddress(this.state.accountAddress)
@@ -315,10 +317,7 @@ class App extends Component {
                 path="/"
                 exact
                 render={() => (
-                  <AccountDetails
-                    accountAddress={this.state.accountAddress}
-                    accountBalance={this.state.accountBalance}
-                  />
+                  <LayoutIndex.Homepage/>
                 )}
               />
               <Route
