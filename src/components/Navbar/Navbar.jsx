@@ -59,6 +59,11 @@ const Navbar = () => {
                 Queries
               </Link>
             </li>
+             <li className="mr-3">
+              <Link to="/login" className="">
+                Login
+              </Link>
+            </li>
           </ul>
         </div>
       </div>

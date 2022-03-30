@@ -2,8 +2,8 @@ import React, { Component } from "react";
 import { HashRouter, Route } from "react-router-dom";
 import "./App.css";
 import Web3 from "web3";
-import CryptoBoys from "./abis/CryptoBoys.json";
 
+import CryptoBoys from "./abis/CryptoBoys.json";
 import FormAndPreview from "./components/FormAndPreview/FormAndPreview";
 import AllCryptoBoys from "./components/AllCryptoBoys/AllCryptoBoys";
 import AccountDetails from "./components/AccountDetails/AccountDetails";
@@ -14,7 +14,8 @@ import Navbar from "./components/Navbar/Navbar";
 import MyCryptoBoys from "./components/MyCryptoBoys/MyCryptoBoys";
 import Queries from "./components/Queries/Queries";
 import LayoutIndex from "./page";
-import "./style/index.css"
+import "./style/index.css";
+import Login from "./components/Login/Login";
 
 const ipfsClient = require("ipfs-http-client");
 const ipfs = ipfsClient({
@@ -45,10 +46,10 @@ class App extends Component {
   }
 
   componentWillMount = async () => {
-    await this.loadWeb3();
-    await this.loadBlockchainData();
-    await this.setMetaData();
-    await this.setMintBtnTimer();
+    // await this.loadWeb3();
+    // await this.loadBlockchainData();
+    // await this.setMetaData();
+    // await this.setMintBtnTimer();
   };
 
   setMintBtnTimer = () => {
@@ -97,55 +98,55 @@ class App extends Component {
   };
 
   loadBlockchainData = async () => {
-    const web3 = window.web3;
-    const accounts = await web3.eth.getAccounts();
-    if (accounts.length === 0) {
-      this.setState({ metamaskConnected: false });
-    } else {
-      this.setState({ metamaskConnected: true });
-      this.setState({ loading: true });
-      this.setState({ accountAddress: accounts[0] });
-      let accountBalance = await web3.eth.getBalance(accounts[0]);
-      accountBalance = web3.utils.fromWei(accountBalance, "Ether");
-      this.setState({ accountBalance });
-      this.setState({ loading: false });
-      const networkId = await web3.eth.net.getId();
-      const networkData = CryptoBoys.networks[networkId];
-      if (networkData) {
-        this.setState({ loading: true });
-        const cryptoBoysContract = web3.eth.Contract(
-          CryptoBoys.abi,
-          networkData.address
-        );
-        this.setState({ cryptoBoysContract });
-        this.setState({ contractDetected: true });
-        const cryptoBoysCount = await cryptoBoysContract.methods
-          .cryptoBoyCounter()
-          .call();
-        this.setState({ cryptoBoysCount });
-        for (var i = 1; i <= cryptoBoysCount; i++) {
-          const cryptoBoy = await cryptoBoysContract.methods
-            .allCryptoBoys(i)
-            .call();
-          this.setState({
-            cryptoBoys: [...this.state.cryptoBoys, cryptoBoy],
-          });
-        }
-        let totalTokensMinted = await cryptoBoysContract.methods
-          .getNumberOfTokensMinted()
-          .call();
-        totalTokensMinted = totalTokensMinted && totalTokensMinted.toNumber();
-        this.setState({ totalTokensMinted });
-        let totalTokensOwnedByAccount = await cryptoBoysContract.methods
-          .getTotalNumberOfTokensOwnedByAnAddress(this.state.accountAddress)
-          .call();
-        totalTokensOwnedByAccount = totalTokensOwnedByAccount.toNumber();
-        this.setState({ totalTokensOwnedByAccount });
-        this.setState({ loading: false });
-      } else {
-        this.setState({ contractDetected: false });
-      }
-    }
+    // const web3 = window.web3;
+    // const accounts = await web3.eth.getAccounts();
+    // if (accounts.length === 0) {
+    //   this.setState({ metamaskConnected: false });
+    // } else {
+    //   this.setState({ metamaskConnected: true });
+    //   this.setState({ loading: true });
+    //   this.setState({ accountAddress: accounts[0] });
+    //   let accountBalance = await web3.eth.getBalance(accounts[0]);
+    //   accountBalance = web3.utils.fromWei(accountBalance, "Ether");
+    //   this.setState({ accountBalance });
+    //   this.setState({ loading: false });
+    //   const networkId = await web3.eth.net.getId();
+    //   const networkData = CryptoBoys.networks[networkId];
+    //   if (networkData) {
+    //     this.setState({ loading: true });
+    //     const cryptoBoysContract = web3.eth.Contract(
+    //       CryptoBoys.abi,
+    //       networkData.address
+    //     );
+    //     this.setState({ cryptoBoysContract });
+    //     this.setState({ contractDetected: true });
+    //     const cryptoBoysCount = await cryptoBoysContract.methods
+    //       .cryptoBoyCounter()
+    //       .call();
+    //     this.setState({ cryptoBoysCount });
+    //     for (var i = 1; i <= cryptoBoysCount; i++) {
+    //       const cryptoBoy = await cryptoBoysContract.methods
+    //         .allCryptoBoys(i)
+    //         .call();
+    //       this.setState({
+    //         cryptoBoys: [...this.state.cryptoBoys, cryptoBoy],
+    //       });
+    //     }
+    //     let totalTokensMinted = await cryptoBoysContract.methods
+    //       .getNumberOfTokensMinted()
+    //       .call();
+    //     totalTokensMinted = totalTokensMinted && totalTokensMinted.toNumber();
+    //     this.setState({ totalTokensMinted });
+    //     let totalTokensOwnedByAccount = await cryptoBoysContract.methods
+    //       .getTotalNumberOfTokensOwnedByAnAddress(this.state.accountAddress)
+    //       .call();
+    //     totalTokensOwnedByAccount = totalTokensOwnedByAccount.toNumber();
+    //     this.setState({ totalTokensOwnedByAccount });
+    //     this.setState({ loading: false });
+    //   } else {
+    //     this.setState({ contractDetected: false });
+    //   }
+    // }
   };
 
   connectToMetamask = async () => {
@@ -301,73 +302,126 @@ class App extends Component {
 
   render() {
     return (
-      <div>
-        {!this.state.metamaskConnected ? (
-          <ConnectToMetamask connectToMetamask={this.connectToMetamask} />
-        ) : !this.state.contractDetected ? (
-          <ContractNotDeployed />
-        ) : this.state.loading ? (
-          <Loading />
-        ) : (
-          <>
-            <HashRouter basename="/">
-              <Navbar />
-              <div>
-              <Route
-                path="/"
-                exact
-                render={() => (
-                  <LayoutIndex.Homepage/>
-                )}
-              />
-              <Route
-                path="/mint"
-                render={() => (
-                  <FormAndPreview
-                    mintMyNFT={this.mintMyNFT}
-                    nameIsUsed={this.state.nameIsUsed}
-                    colorIsUsed={this.state.colorIsUsed}
-                    colorsUsed={this.state.colorsUsed}
-                    setMintBtnTimer={this.setMintBtnTimer}
-                  />
-                )}
-              />
-              <Route
-                path="/marketplace"
-                render={() => (
-                  <AllCryptoBoys
-                    accountAddress={this.state.accountAddress}
-                    cryptoBoys={this.state.cryptoBoys}
-                    totalTokensMinted={this.state.totalTokensMinted}
-                    changeTokenPrice={this.changeTokenPrice}
-                    toggleForSale={this.toggleForSale}
-                    buyCryptoBoy={this.buyCryptoBoy}
-                  />
-                )}
-              />
-              <Route
-                path="/my-tokens"
-                render={() => (
-                  <MyCryptoBoys
-                    accountAddress={this.state.accountAddress}
-                    cryptoBoys={this.state.cryptoBoys}
-                    totalTokensOwnedByAccount={
-                      this.state.totalTokensOwnedByAccount
-                    }
-                  />
-                )}
-              />
-              <Route
-                path="/queries"
-                render={() => (
-                  <Queries cryptoBoysContract={this.state.cryptoBoysContract} />
-                )}
-              />
-              </div>
-            </HashRouter>
-          </>
-        )}
-      </div>
+      // <div>
+      //   {!this.state.metamaskConnected ? (
+      //     <ConnectToMetamask connectToMetamask={this.connectToMetamask} />
+      //   ) : !this.state.contractDetected ? (
+      //     <ContractNotDeployed />
+      //   ) : this.state.loading ? (
+      //     <Loading />
+      //   ) : (
+      //     <>
+      //       <HashRouter basename="/">
+      //         <Navbar />
+      //         <div>
+      //         <Route
+      //           path="/"
+      //           exact
+      //           render={() => (
+      //             <LayoutIndex.Homepage/>
+      //           )}
+      //         />
+      //         <Route
+      //           path="/mint"
+      //           render={() => (
+      //             <FormAndPreview
+      //               mintMyNFT={this.mintMyNFT}
+      //               nameIsUsed={this.state.nameIsUsed}
+      //               colorIsUsed={this.state.colorIsUsed}
+      //               colorsUsed={this.state.colorsUsed}
+      //               setMintBtnTimer={this.setMintBtnTimer}
+      //             />
+      //           )}
+      //         />
+      //         <Route
+      //           path="/marketplace"
+      //           render={() => (
+      //             <AllCryptoBoys
+      //               accountAddress={this.state.accountAddress}
+      //               cryptoBoys={this.state.cryptoBoys}
+      //               totalTokensMinted={this.state.totalTokensMinted}
+      //               changeTokenPrice={this.changeTokenPrice}
+      //               toggleForSale={this.toggleForSale}
+      //               buyCryptoBoy={this.buyCryptoBoy}
+      //             />
+      //           )}
+      //         />
+      //         <Route
+      //           path="/my-tokens"
+      //           render={() => (
+      //             <MyCryptoBoys
+      //               accountAddress={this.state.accountAddress}
+      //               cryptoBoys={this.state.cryptoBoys}
+      //               totalTokensOwnedByAccount={
+      //                 this.state.totalTokensOwnedByAccount
+      //               }
+      //             />
+      //           )}
+      //         />
+      //         <Route
+      //           path="/queries"
+      //           render={() => (
+      //             <Queries cryptoBoysContract={this.state.cryptoBoysContract} />
+      //           )}
+      //         />
+      //         </div>
+      //       </HashRouter>
+      //     </>
+      //   )}
+      // </div>
+      <>
+        <HashRouter basename="/">
+          <Navbar />
+          <div>
+            <Route path="/" exact render={() => <LayoutIndex.Homepage />} />
+            <Route
+              path="/mint"
+              render={() => (
+                <FormAndPreview
+                  mintMyNFT={this.mintMyNFT}
+                  nameIsUsed={this.state.nameIsUsed}
+                  colorIsUsed={this.state.colorIsUsed}
+                  colorsUsed={this.state.colorsUsed}
+                  setMintBtnTimer={this.setMintBtnTimer}
+                />
+              )}
+            />
+            <Route
+              path="/marketplace"
+              render={() => (
+                <AllCryptoBoys
+                  accountAddress={this.state.accountAddress}
+                  cryptoBoys={this.state.cryptoBoys}
+                  totalTokensMinted={this.state.totalTokensMinted}
+                  changeTokenPrice={this.changeTokenPrice}
+                  toggleForSale={this.toggleForSale}
+                  buyCryptoBoy={this.buyCryptoBoy}
+                />
+              )}
+            />
+            <Route
+              path="/my-tokens"
+              render={() => (
+                <MyCryptoBoys
+                  accountAddress={this.state.accountAddress}
+                  cryptoBoys={this.state.cryptoBoys}
+                  totalTokensOwnedByAccount={
+                    this.state.totalTokensOwnedByAccount
+                  }
+                />
+              )}
+            />
+            <Route
+              path="/queries"
+              render={() => (
+                <Queries cryptoBoysContract={this.state.cryptoBoysContract} />
+              )}
+            />
+            <Route path="/login" render={() => <Login />} />
+            <Route path="/account" render={() => <AccountDetails />} />
+          </div>
+        </HashRouter>
+      </>
     );
   }
 }
