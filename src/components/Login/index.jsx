@@ -53,7 +53,7 @@ const Login = () => {
       await window.ethereum.request({
         method: "eth_requestAccounts",
       });
-      history.push("/account");
+      history.push("/settings");
     } catch (e) {
       toast.error("Cannot connect to Metamask");
     }

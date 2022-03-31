@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { ethers } from "ethers";
-import { ToastContainer, toast } from "react-toastify";
+import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import styled from "styled-components";
 import { Layout,Row, Col  } from "antd";
-import ProfileSettings from "./ProfileSettings";
-import RightsideProfileSetting from "./RightsideProfileSettings";
+import MainSettings from "./MainSettings";
+import ImageSetting from "./ImageSetting";
 
 const { Header, Footer, Sider, Content } = Layout;
 const StyledMainLayout = styled.div`
@@ -15,7 +15,7 @@ const StyledMainLayout = styled.div`
   margin: 0 auto;
 `;
 
-const AccountDetails = () => {
+const AccountSettings = () => {
   const [walletAddress, setWalletAddress] = useState(null);
   useEffect(() => {
     getAccount();
@@ -35,17 +35,16 @@ const AccountDetails = () => {
 
   return (
     <StyledMainLayout>
-      <ToastContainer limit={1} autoClose={3000} />
-      <Row >
+      <Row>
         <Col xs={24} xl={16} >
-           <ProfileSettings walletAddress={walletAddress} />
+           <MainSettings walletAddress={walletAddress} />
         </Col>
         <Col xs={24} xl={8}>
-          <RightsideProfileSetting />
+          <ImageSetting />
         </Col>
       </Row>
     </StyledMainLayout>
   );
 };
 
-export default AccountDetails;
+export default AccountSettings;

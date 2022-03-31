@@ -14,7 +14,7 @@ const StyledProfileLayout = styled.div`
   }
 `;
 
-const RightsideProfileSettings = () => {
+const ImageSetting = () => {
   const [randomGrad, setRandomGrad] = useState(null);
   const [isShownHoverContent, setIsShownHoverContent] = useState(false);
 
@@ -39,4 +39,4 @@ const RightsideProfileSettings = () => {
   );
 };
 
-export default RightsideProfileSettings;
+export default ImageSetting;

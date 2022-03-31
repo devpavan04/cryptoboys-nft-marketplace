@@ -2,11 +2,11 @@ import React, { Component } from "react";
 import { HashRouter, Route } from "react-router-dom";
 import "./App.css";
 import Web3 from "web3";
-
+import { ToastContainer } from "react-toastify";
 import CryptoBoys from "./abis/CryptoBoys.json";
 import FormAndPreview from "./components/FormAndPreview/FormAndPreview";
 import AllCryptoBoys from "./components/AllCryptoBoys/AllCryptoBoys";
-import AccountDetails from "./components/AccountDetails/AccountDetails";
+import AccountDetails from "./components/AccountSettings";
 import ContractNotDeployed from "./components/ContractNotDeployed/ContractNotDeployed";
 import ConnectToMetamask from "./components/ConnectMetamask/ConnectToMetamask";
 import Loading from "./components/Loading/Loading";
@@ -15,7 +15,8 @@ import MyCryptoBoys from "./components/MyCryptoBoys/MyCryptoBoys";
 import Queries from "./components/Queries/Queries";
 import LayoutIndex from "./page";
 import "./style/index.css";
-import Login from "./components/Login/Login";
+import Login from "./components/Login/index";
+import AccountSettings from "./components/AccountSettings/index";
 
 const ipfsClient = require("ipfs-http-client");
 const ipfs = ipfsClient({
@@ -373,6 +374,7 @@ class App extends Component {
         <HashRouter basename="/">
           <Navbar />
           <div>
+            <ToastContainer limit={1} autoClose={3000} />
             <Route path="/" exact render={() => <LayoutIndex.Homepage />} />
             <Route
               path="/mint"
@@ -418,7 +420,7 @@ class App extends Component {
               )}
             />
             <Route path="/login" render={() => <Login />} />
-            <Route path="/account" render={() => <AccountDetails />} />
+            <Route path="/settings" render={() => <AccountSettings />} />
           </div>
         </HashRouter>
       </>

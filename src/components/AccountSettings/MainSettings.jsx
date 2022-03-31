@@ -32,7 +32,7 @@ const InputStyle = {
 
 
 
-const ProfileSettings = (props) => {
+const MainSettings = (props) => {
   
   const copyToClipboard = () => {
     navigator.clipboard.writeText(props.walletAddress);
@@ -71,4 +71,4 @@ const ProfileSettings = (props) => {
   );
 };
 
-export default ProfileSettings;
+export default MainSettings;
