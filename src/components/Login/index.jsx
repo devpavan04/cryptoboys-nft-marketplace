@@ -4,8 +4,8 @@ import { Button } from "antd";
 import { ReactComponent as Metamask } from "../../assets/icons/metamask.svg";
 import Icon from "@ant-design/icons";
 import { ToastContainer, toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
 import { useHistory } from "react-router-dom";
+import { ethers } from "ethers";
 
 const StyledLayout = styled.div`
   text-align: center;
@@ -40,6 +40,7 @@ const Login = () => {
   let history = useHistory();
   useEffect(() => {
     checkMetamaskInstalled();
+    checkLoggedIn();
   }, []);
 
   const checkMetamaskInstalled = async () => {
@@ -47,13 +48,27 @@ const Login = () => {
     return setIsMetamaskInstalled(false);
   };
 
+  const checkLoggedIn = async () => {
+    const provider = new ethers.providers.Web3Provider(window.ethereum);
+    const signer = await provider.getSigner();
+    try{
+      const address = await signer.getAddress();
+      if(address==null){
+        return false;
+      }
+      history.push("/account");
+    }catch{
+      return false
+    }
+  }
+
   const connectToMetamask = async () => {
     try {
       await window.ethereum.enable();
       await window.ethereum.request({
         method: "eth_requestAccounts",
       });
-      history.push("/settings");
+      window.location.reload();
     } catch (e) {
       toast.error("Cannot connect to Metamask");
     }

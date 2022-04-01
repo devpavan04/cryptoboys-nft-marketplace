@@ -64,6 +64,16 @@ const Navbar = () => {
                 Login
               </Link>
             </li>
+            <li className="mr-3">
+              <Link to="/account" className="">
+                Account
+              </Link>
+            </li>
+            <li className="mr-3">
+              <Link to="/settings" className="">
+                Settings
+              </Link>
+            </li>
           </ul>
         </div>
       </div>
