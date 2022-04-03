@@ -10,6 +10,7 @@ import {
   Space,
   Avatar,
   Typography,
+  Affix,
 } from "antd";
 import {
   HeartOutlined,
@@ -19,6 +20,7 @@ import {
   MenuFoldOutlined,
 } from "@ant-design/icons";
 import styled from "styled-components";
+import Card from "../Card";
 const { Header, Sider, Content } = Layout;
 const { Search } = Input;
 const { Option } = Select;
@@ -73,6 +75,15 @@ const StyledHR = styled.hr`
   width: 80%;
   margin: 0 auto;
   margin-bottom: 20px;
+`;
+
+const StyledContent = styled(Content)`
+  display: flex;
+  margin: 24px 16px 0px;
+  flex-wrap: wrap;
+  gap: 26px;
+  height: 100vw;
+  align-content: flex-start;
 `;
 
 const Account = () => {
@@ -176,28 +187,15 @@ const Account = () => {
               />
             </Space>
           </StyledHeader>
-          <Content style={{ margin: "24px 16px 0", overflow: "initial" }}>
-            <div
-              className="site-layout-background"
-              style={{ padding: 24, textAlign: "center" }}
-            >
-              ...
-              <br />
-              Really
-              <br />
-              ...
-              <br />
-              ...
-              <br />
-              ...
-              <br />
-              long
-              <br />
-              ...
-              <br />
-              content
-            </div>
-          </Content>
+          <StyledContent>
+            <Card collapsed={collapsed} />
+            <Card collapsed={collapsed} />
+            <Card collapsed={collapsed} />
+            <Card collapsed={collapsed} />
+            <Card collapsed={collapsed} />
+            <Card collapsed={collapsed} />
+            <Card collapsed={collapsed} />
+          </StyledContent>
         </Layout>
       </StyledLayout>
     </>
