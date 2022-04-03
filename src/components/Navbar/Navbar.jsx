@@ -5,11 +5,19 @@ import { Input, Space } from "antd";
 
 const Navbar = () => {
   return (
-    <nav className="navbar navbar-expand-sm navbar-dark">
+    <nav
+      className="navbar navbar-expand-sm navbar-dark"
+      style={{ boxShadow: "rgb(4 17 29 / 25%) 0px 0px 8px 0px" }}
+    >
       <div className="w-100 row pl-2 pr-2 justify-content-around">
         <div className="col-3">
           <Link to="/">
-            <img style={{ width: "50px" }} className="mr-4" src={"https://opensea.io/static/images/logos/opensea.svg"} alt="" />
+            <img
+              style={{ width: "50px" }}
+              className="mr-4"
+              src={"https://opensea.io/static/images/logos/opensea.svg"}
+              alt=""
+            />
             <span className="h4 font-weight-bold">Crypto boyz</span>
           </Link>
         </div>
@@ -26,8 +34,11 @@ const Navbar = () => {
         <div
           id="navbarNav"
           className="collapse navbar-collapse col-5 pt-2"
-          ref={element => {
-            return element && element.style.setProperty('display', 'inline-block', 'important');
+          ref={(element) => {
+            return (
+              element &&
+              element.style.setProperty("display", "inline-block", "important")
+            );
           }}
         >
           <ul
@@ -59,7 +70,7 @@ const Navbar = () => {
                 Queries
               </Link>
             </li>
-             <li className="mr-3">
+            <li className="mr-3">
               <Link to="/login" className="">
                 Login
               </Link>

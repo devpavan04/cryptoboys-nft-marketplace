@@ -1,8 +1,8 @@
-import React,{ useEffect,useState } from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
-import { Avatar } from 'antd';
-import Icon,{ PictureOutlined  } from '@ant-design/icons';
-import generateGrad from "../../utils/gradientGenerator.js"
+import { Avatar } from "antd";
+import Icon, { PictureOutlined } from "@ant-design/icons";
+import generateGrad from "../../utils/gradientGenerator.js";
 
 const StyledProfileLayout = styled.div`
   padding: 0.5rem 1rem;
@@ -25,16 +25,21 @@ const ImageSetting = () => {
   return (
     <StyledProfileLayout>
       <div className="label">Profile Image</div>
-      <div onMouseEnter={() => setIsShownHoverContent(true)}
-        onMouseLeave={() => setIsShownHoverContent(false)}>
-      <Avatar size={120} style={{backgroundImage:`${randomGrad}`}}>
-        {isShownHoverContent && (
-        <div>
-           <Icon component={PictureOutlined} style={{fontSize:"35px",color:"primary"}} />
-        </div>
-        )}
-      </Avatar>
-      </div>
+      <Avatar
+        size={120}
+        style={{ backgroundImage: `${randomGrad}`, cursor: "pointer" }}
+      />
+      <div className="label">Profile Banner</div>
+      <Avatar
+        size={120}
+        shape="square"
+        style={{
+          backgroundImage: `${randomGrad}`,
+          width: "200px",
+          borderRadius: "6px",
+          cursor: "pointer",
+        }}
+      />
     </StyledProfileLayout>
   );
 };

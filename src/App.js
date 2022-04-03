@@ -1,4 +1,4 @@
-import React, {useState,useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { HashRouter, Route } from "react-router-dom";
 import "./App.css";
 import Web3 from "web3";
@@ -19,7 +19,7 @@ import Login from "./components/Login/index";
 import AccountSettings from "./components/AccountSettings/index";
 import Account from "./components/Account";
 import PrivateRoute from "./PrivateRoute";
-import { ethers } from 'ethers';
+import { ethers } from "ethers";
 import "react-toastify/dist/ReactToastify.css";
 
 const ipfsClient = require("ipfs-http-client");
@@ -30,25 +30,24 @@ const ipfs = ipfsClient({
 });
 
 const checkLoggedIn = async () => {
-    const provider = new ethers.providers.Web3Provider(window.ethereum);
-    const signer = await provider.getSigner();
-    try{
-      const address = await signer.getAddress();
-      if(address==null){
-        return false;
-      }
-      return true;
-    }catch{
-      return false
+  const provider = new ethers.providers.Web3Provider(window.ethereum);
+  const signer = await provider.getSigner();
+  try {
+    const address = await signer.getAddress();
+    if (address == null) {
+      return false;
     }
-}
-
+    return true;
+  } catch {
+    return false;
+  }
+};
 
 const App = () => {
   const [loggedIn, setLoggedIn] = useState(false);
 
   useEffect(() => {
-    checkLoggedIn().then(res => {
+    checkLoggedIn().then((res) => {
       setLoggedIn(res);
     });
   }, []);
@@ -80,8 +79,6 @@ const App = () => {
   //   // await this.setMetaData();
   //   // await this.setMintBtnTimer();
   // };
-
-  
 
   //#region Web3
   // setMintBtnTimer = () => {
@@ -334,80 +331,80 @@ const App = () => {
 
   //#endregion
 
-    return (
-      // <div>
-      //   {!this.state.metamaskConnected ? (
-      //     <ConnectToMetamask connectToMetamask={this.connectToMetamask} />
-      //   ) : !this.state.contractDetected ? (
-      //     <ContractNotDeployed />
-      //   ) : this.state.loading ? (
-      //     <Loading />
-      //   ) : (
-      //     <>
-      //       <HashRouter basename="/">
-      //         <Navbar />
-      //         <div>
-      //         <Route
-      //           path="/"
-      //           exact
-      //           render={() => (
-      //             <LayoutIndex.Homepage/>
-      //           )}
-      //         />
-      //         <Route
-      //           path="/mint"
-      //           render={() => (
-      //             <FormAndPreview
-      //               mintMyNFT={this.mintMyNFT}
-      //               nameIsUsed={this.state.nameIsUsed}
-      //               colorIsUsed={this.state.colorIsUsed}
-      //               colorsUsed={this.state.colorsUsed}
-      //               setMintBtnTimer={this.setMintBtnTimer}
-      //             />
-      //           )}
-      //         />
-      //         <Route
-      //           path="/marketplace"
-      //           render={() => (
-      //             <AllCryptoBoys
-      //               accountAddress={this.state.accountAddress}
-      //               cryptoBoys={this.state.cryptoBoys}
-      //               totalTokensMinted={this.state.totalTokensMinted}
-      //               changeTokenPrice={this.changeTokenPrice}
-      //               toggleForSale={this.toggleForSale}
-      //               buyCryptoBoy={this.buyCryptoBoy}
-      //             />
-      //           )}
-      //         />
-      //         <Route
-      //           path="/my-tokens"
-      //           render={() => (
-      //             <MyCryptoBoys
-      //               accountAddress={this.state.accountAddress}
-      //               cryptoBoys={this.state.cryptoBoys}
-      //               totalTokensOwnedByAccount={
-      //                 this.state.totalTokensOwnedByAccount
-      //               }
-      //             />
-      //           )}
-      //         />
-      //         <Route
-      //           path="/queries"
-      //           render={() => (
-      //             <Queries cryptoBoysContract={this.state.cryptoBoysContract} />
-      //           )}
-      //         />
-      //         </div>
-      //       </HashRouter>
-      //     </>
-      //   )}
-      // </div>
-      // <ProvideAuth>
-        <HashRouter basename="/" >
-          <Navbar />
-          <ToastContainer limit={1} autoClose={3000} />
-            <Route path="/" exact render={() => <LayoutIndex.Homepage />} />
-            {/* <Route
+  return (
+    // <div>
+    //   {!this.state.metamaskConnected ? (
+    //     <ConnectToMetamask connectToMetamask={this.connectToMetamask} />
+    //   ) : !this.state.contractDetected ? (
+    //     <ContractNotDeployed />
+    //   ) : this.state.loading ? (
+    //     <Loading />
+    //   ) : (
+    //     <>
+    //       <HashRouter basename="/">
+    //         <Navbar />
+    //         <div>
+    //         <Route
+    //           path="/"
+    //           exact
+    //           render={() => (
+    //             <LayoutIndex.Homepage/>
+    //           )}
+    //         />
+    //         <Route
+    //           path="/mint"
+    //           render={() => (
+    //             <FormAndPreview
+    //               mintMyNFT={this.mintMyNFT}
+    //               nameIsUsed={this.state.nameIsUsed}
+    //               colorIsUsed={this.state.colorIsUsed}
+    //               colorsUsed={this.state.colorsUsed}
+    //               setMintBtnTimer={this.setMintBtnTimer}
+    //             />
+    //           )}
+    //         />
+    //         <Route
+    //           path="/marketplace"
+    //           render={() => (
+    //             <AllCryptoBoys
+    //               accountAddress={this.state.accountAddress}
+    //               cryptoBoys={this.state.cryptoBoys}
+    //               totalTokensMinted={this.state.totalTokensMinted}
+    //               changeTokenPrice={this.changeTokenPrice}
+    //               toggleForSale={this.toggleForSale}
+    //               buyCryptoBoy={this.buyCryptoBoy}
+    //             />
+    //           )}
+    //         />
+    //         <Route
+    //           path="/my-tokens"
+    //           render={() => (
+    //             <MyCryptoBoys
+    //               accountAddress={this.state.accountAddress}
+    //               cryptoBoys={this.state.cryptoBoys}
+    //               totalTokensOwnedByAccount={
+    //                 this.state.totalTokensOwnedByAccount
+    //               }
+    //             />
+    //           )}
+    //         />
+    //         <Route
+    //           path="/queries"
+    //           render={() => (
+    //             <Queries cryptoBoysContract={this.state.cryptoBoysContract} />
+    //           )}
+    //         />
+    //         </div>
+    //       </HashRouter>
+    //     </>
+    //   )}
+    // </div>
+    // <ProvideAuth>
+    <HashRouter basename="/">
+      <Navbar />
+      <ToastContainer limit={1} autoClose={3000} />
+      <Route path="/" exact render={() => <LayoutIndex.Homepage />} />
+      {/* <Route
               path="/mint"
               render={() => (
                 <FormAndPreview
@@ -450,11 +447,17 @@ const App = () => {
                 <Queries cryptoBoysContract={this.state.cryptoBoysContract} />
               )}
             /> */}
-            <Route path="/login" render={() => <Login />} />
-            <PrivateRoute path="/account" component={Account} auth={loggedIn} />
-            <PrivateRoute path="/settings" component={AccountSettings} auth={loggedIn} />
-        </HashRouter>
+      <Route path="/login" render={() => <Login />} />
+      <Route path="/account" render={() => <Account />} />
+      <Route path="/settings" render={() => <AccountSettings />} />
+      {/* <PrivateRoute path="/account" component={Account} auth={loggedIn} />
+        <PrivateRoute
+          path="/settings"
+          component={AccountSettings}
+          auth={loggedIn}
+        /> */}
+    </HashRouter>
   );
-}
+};
 
 export default App;
