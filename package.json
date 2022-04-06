@@ -1,4 +1,5 @@
 {
+  "proxy": "http://localhost:22530",
   "name": "cryptoboys",
   "version": "0.1.0",
   "description": "Crypto Boys NFT Marketplace",
@@ -8,6 +9,7 @@
     "@ant-design/icons": "^4.7.0",
     "@openzeppelin/contracts": "^4.5.0",
     "antd": "^4.18.9",
+    "axios": "^0.26.1",
     "babel-polyfill": "6.26.0",
     "babel-preset-env": "1.7.0",
     "babel-preset-es2015": "6.24.1",

@@ -6,6 +6,7 @@ import Icon from "@ant-design/icons";
 import { ToastContainer, toast } from "react-toastify";
 import { useHistory } from "react-router-dom";
 import { ethers } from "ethers";
+import UserService from "../../service/user.service";
 
 const StyledLayout = styled.div`
   text-align: center;
@@ -51,13 +52,16 @@ const Login = () => {
   const checkLoggedIn = async () => {
     const provider = new ethers.providers.Web3Provider(window.ethereum);
     const signer = await provider.getSigner();
-    try{
+    try {
       const address = await signer.getAddress();
-      if(address==null){
+      if (address == null) {
         return false;
       }
-      history.push("/account");
-    }catch{
+      UserService.loginService(address).then(res => {
+        history.push("/account/" + res._id || "")
+      })
+      // history.push("/account");
+    } catch {
       return false
     }
   }
@@ -70,6 +74,7 @@ const Login = () => {
       });
       window.location.reload();
     } catch (e) {
+      console.log(e)
       toast.error("Cannot connect to Metamask");
     }
   };

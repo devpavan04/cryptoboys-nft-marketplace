@@ -2,7 +2,7 @@ import { Route, Redirect } from 'react-router-dom';
 import React from 'react';
 
 function PrivateRoute({ component: Component, ...rest }) {
-    const{ auth }=rest;
+    const { auth } = rest;
 
     return (
         <Route {...rest} render={props => {

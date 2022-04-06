@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { ethers } from "ethers";
 import styled from "styled-components";
-import { Row, Col  } from "antd";
+import { Row, Col, Form } from "antd";
 import MainSettings from "./MainSettings";
 import ImageSetting from "./ImageSetting";
 import { useHistory } from 'react-router-dom';
@@ -30,10 +30,9 @@ const AccountSettings = () => {
   const checkLogin = async () => {
     const provider = await new ethers.providers.Web3Provider(window.ethereum);
     const signer = provider.getSigner();
-    if(!signer.getAddress()){
+    if (!signer.getAddress()) {
       history.push('/login');
     }
-
     return getAccount();
   };
 
@@ -43,14 +42,16 @@ const AccountSettings = () => {
 
   return (
     <StyledMainLayout>
-      <Row>
-        <Col xs={24} xl={16} >
-           <MainSettings walletAddress={walletAddress} />
-        </Col>
-        <Col xs={24} xl={8}>
-          <ImageSetting />
-        </Col>
-      </Row>
+      <Form>
+        <Row>
+          <Col xs={24} xl={16} >
+            <MainSettings walletAddress={walletAddress} />
+          </Col>
+          <Col xs={24} xl={8}>
+            <ImageSetting />
+          </Col>
+        </Row>
+      </Form>
     </StyledMainLayout>
   );
 };

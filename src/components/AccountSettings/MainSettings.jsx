@@ -44,13 +44,13 @@ const MainSettings = (props) => {
       <div className="header">Profile Settings</div>
       <div className="label">Username</div>
       <Input
-        defaultValue={"Default"}
+        placeholder="Your username"
         prefix={<UserOutlined />}
         style={InputStyle}
       />
       <div className="label">Email Address</div>
       <Input
-        defaultValue={"yourmail@mail.com"}
+         placeholder="Your email"
         prefix={<MailOutlined />}
         style={InputStyle}
       />
