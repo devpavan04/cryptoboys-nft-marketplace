@@ -1,21 +1,205 @@
-import React,{useEffect} from 'react'
-import { ethers } from 'ethers';
-import { useParams } from 'react-router-dom';
-import UserService from '../../service/user.service';
-// const { Header, Footer, Sider, Content } = Layout;
+import React, { useEffect, useState } from "react";
+import { ethers } from "ethers";
+import {
+  Select,
+  Layout,
+  Menu,
+  Image,
+  Input,
+  Divider,
+  Space,
+  Avatar,
+  Typography,
+  Affix,
+} from "antd";
+import {
+  HeartOutlined,
+  FormatPainterOutlined,
+  CopyOutlined,
+  MenuUnfoldOutlined,
+  MenuFoldOutlined,
+} from "@ant-design/icons";
+import styled from "styled-components";
+import Card from "../Card";
+const { Header, Sider, Content } = Layout;
+const { Search } = Input;
+const { Option } = Select;
+const { Title } = Typography;
 
-const Account = (props) => {
-  const params = useParams();
+const StyledLayout = styled(Layout)`
+  height: 100vh;
+`;
 
-  useEffect(async () => {
-    if(params.id) {
-      UserService.getUserDetailService(params.id).then(res => console.log(res))
-    }
-  }, [params])
+const StyledProfileLayout = styled.div`
+  display: flex;
+  margin: 0 auto;
+  width: 80%;
+  height: 100px;
+`;
+
+const StyledAvatar = styled(Avatar)`
+  position: relative;
+  border: 2px solid #fff;
+  top: -70px;
+`;
+
+const StyledBannerImage = styled(Image)`
+  width: 100vw;
+  height: 30vh;
+`;
+
+const StyledFallback = styled.div`
+  background-color: #e8e6e6;
+  width: 100vw;
+  height: 30vh;
+`;
+
+const StyledSelect = styled(Select)`
+  width: 300px;
+  border: 1px solid #d9d9d9;
+  border-radius: 3px;
+
+  .ant-select-selector {
+    border: none !important;
+  }
+`;
+
+const StyledHeader = styled(Header)`
+  background-color: #fff;
+  height: 45px;
+  line-height: 0px;
+  padding-left: 10px;
+`;
+
+const StyledHR = styled.hr`
+  width: 80%;
+  margin: 0 auto;
+  margin-bottom: 20px;
+`;
+
+const StyledContent = styled(Content)`
+  display: flex;
+  margin: 24px 16px 0px;
+  flex-wrap: wrap;
+  gap: 26px;
+  height: 100vw;
+  align-content: flex-start;
+`;
+
+const Account = () => {
+  const [bannerImage, setBannerImage] = useState(null);
+  const [collapsed, setCollapsed] = useState(false);
+
+  // useEffect(() => {
+  //   setBannerImage("https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png")
+  // });
+
+  const toggleSider = () => {
+    setCollapsed(!collapsed);
+  };
+
+  const handleCategoriesChange = (value) => {
+    console.log(`selected ${value}`);
+  };
+
+  const handleCategoriesSearch = (value) => {
+    console.log(`search ${value}`);
+  };
 
   return (
-    <div>This is my account ne</div>
-  )
-}
+    <>
+      <div>
+        {bannerImage ? (
+          <StyledBannerImage src={bannerImage} />
+        ) : (
+          <StyledFallback />
+        )}
+        <StyledProfileLayout>
+          <StyledAvatar size={150} icon={<HeartOutlined />} />
+          <Space direction="vertical" size={0} style={{ marginLeft: "10px" }}>
+            <Title level={3}>Default</Title>
+            <Title level={5}>Wallet Address</Title>
+          </Space>
+        </StyledProfileLayout>
+      </div>
+      <StyledHR />
+      <StyledLayout hasSider>
+        <Sider
+          collapsible
+          collapsed={collapsed}
+          onCollapse={toggleSider}
+          trigger={null}
+          breakpoint="lg"
+          collapsedWidth="40"
+          style={{ backgroundColor: "#fff" }}
+        >
+          <Menu mode="inline" defaultSelectedKeys={["1"]}>
+            <Menu.Item key="1" icon={<CopyOutlined />}>
+              Collected
+            </Menu.Item>
+            <Menu.Item key="2" icon={<FormatPainterOutlined />}>
+              Created
+            </Menu.Item>
+            <Menu.Item key="3" icon={<HeartOutlined />}>
+              Favorited
+            </Menu.Item>
+          </Menu>
+        </Sider>
+        <Layout className="site-layout">
+          <StyledHeader className="site-layout-background">
+            <Space
+              align="center"
+              split={<Divider type="vertical" />}
+              size="small"
+              style={{ marginTop: "5px" }}
+            >
+              {collapsed ? (
+                <MenuUnfoldOutlined
+                  onClick={toggleSider}
+                  style={{ fontSize: "25px" }}
+                />
+              ) : (
+                <MenuFoldOutlined
+                  onClick={toggleSider}
+                  style={{ fontSize: "25px" }}
+                />
+              )}
+              <StyledSelect
+                showSearch
+                placeholder="Select category"
+                optionFilterProp="children"
+                onChange={handleCategoriesChange}
+                onSearch={handleCategoriesSearch}
+                filterOption={(input, option) =>
+                  option.children.toLowerCase().indexOf(input.toLowerCase()) >=
+                  0
+                }
+              >
+                <Option value="jack">Jack</Option>
+                <Option value="lucy">Lucy</Option>
+                <Option value="tom">Tom</Option>
+              </StyledSelect>
+              <Search
+                placeholder="Search"
+                allowClear
+                enterButton
+                style={{ width: "300px" }}
+              />
+            </Space>
+          </StyledHeader>
+          <StyledContent>
+            <Card collapsed={collapsed} />
+            <Card collapsed={collapsed} />
+            <Card collapsed={collapsed} />
+            <Card collapsed={collapsed} />
+            <Card collapsed={collapsed} />
+            <Card collapsed={collapsed} />
+            <Card collapsed={collapsed} />
+          </StyledContent>
+        </Layout>
+      </StyledLayout>
+    </>
+  );
+};
 
-export default Account
+export default Account;

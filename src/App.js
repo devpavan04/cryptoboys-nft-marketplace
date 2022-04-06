@@ -19,7 +19,7 @@ import Login from "./components/Login/index";
 import AccountSettings from "./components/AccountSettings/index";
 import Account from "./components/Account";
 import PrivateRoute from "./PrivateRoute";
-import { ethers } from 'ethers';
+import { ethers } from "ethers";
 import "react-toastify/dist/ReactToastify.css";
 import Container from "./page/Container";
 
@@ -49,7 +49,7 @@ const App = () => {
   const [loggedIn, setLoggedIn] = useState(false);
 
   useEffect(() => {
-    checkLoggedIn().then(res => {
+    checkLoggedIn().then((res) => {
       setLoggedIn(res);
     });
   }, []);
@@ -451,12 +451,18 @@ const App = () => {
                 <Queries cryptoBoysContract={this.state.cryptoBoysContract} />
               )}
             /> */}
-        <Route path="/login" render={() => <Login />} />
-        <PrivateRoute path="/account/:id" component={Account} auth={loggedIn} />
-        <PrivateRoute path="/settings" component={AccountSettings} auth={loggedIn} />
+      <Route path="/login" render={() => <Login />} />
+      <Route path="/account" render={() => <Account />} />
+      <Route path="/settings" render={() => <AccountSettings />} />
+      {/* <PrivateRoute path="/account" component={Account} auth={loggedIn} />
+        <PrivateRoute
+          path="/settings"
+          component={AccountSettings}
+          auth={loggedIn}
+        /> */}
       </Container>
     </HashRouter>
   );
-}
+};
 
 export default App;
