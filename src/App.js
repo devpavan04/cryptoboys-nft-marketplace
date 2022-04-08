@@ -22,6 +22,7 @@ import PrivateRoute from "./PrivateRoute";
 import { ethers } from "ethers";
 import "react-toastify/dist/ReactToastify.css";
 import Container from "./page/Container";
+import MintNFTForm from "./components/MintNFTForm";
 
 const ipfsClient = require("ipfs-http-client");
 const ipfs = ipfsClient({
@@ -454,6 +455,7 @@ const App = () => {
       <Route path="/login" render={() => <Login />} />
       <Route path="/account" render={() => <Account />} />
       <Route path="/settings" render={() => <AccountSettings />} />
+      <Route path="/mint" render={() => <MintNFTForm />} />
       {/* <PrivateRoute path="/account" component={Account} auth={loggedIn} />
         <PrivateRoute
           path="/settings"

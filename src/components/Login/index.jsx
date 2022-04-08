@@ -11,6 +11,7 @@ import UserService from "../../service/user.service";
 const StyledLayout = styled.div`
   text-align: center;
   padding: 0.5rem 1rem;
+  margin-top: 3rem;
 
   p {
     font-size: 20px;
