@@ -45,7 +45,7 @@ contract CryptoBoys is ERC721 {
 
   // mint a new crypto boy
   function mintCryptoBoy(string memory _name, string memory _tokenURI, uint256 _price, string[] calldata _colors) external {
-    // check if thic fucntion caller is not an zero address account
+    // check if this fucntion caller is not a zero address account
     require(msg.sender != address(0));
     // increment counter
     cryptoBoyCounter ++;
