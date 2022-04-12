@@ -48,6 +48,11 @@ const Navbar = (props) => {
             className="navbar-nav ml-auto float-right"
           >
             <li className="mr-3">
+              <Link to="/explore" className="">
+                Explore
+              </Link>
+            </li>
+            <li className="mr-3">
               <Link to="/mint" className="">
                 Mint NFT
               </Link>

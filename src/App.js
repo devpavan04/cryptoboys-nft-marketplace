@@ -24,6 +24,7 @@ import "react-toastify/dist/ReactToastify.css";
 import Container from "./page/Container";
 import MintNFTForm from "./components/MintNFTForm";
 import NFTDetails from "./components/NFTDetails";
+import Explore from "./components/Explore";
 
 const ipfsClient = require("ipfs-http-client");
 const ipfs = ipfsClient({
@@ -455,6 +456,7 @@ const App = () => {
         <Route path="/settings" render={() => <AccountSettings />} />
         <Route path="/mint" render={() => <MintNFTForm />} />
         <Route path="/detail" render={() => <NFTDetails />} />
+        <Route path="/explore" render={() => <Explore />} />
         {/* <PrivateRoute path="/account" component={Account} auth={loggedIn} />
         <PrivateRoute
           path="/settings"
