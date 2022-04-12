@@ -4,11 +4,10 @@ import { Link } from "react-router-dom";
 import { Input, Space } from "antd";
 
 const Navbar = (props) => {
-
   return (
     <nav
       style={{
-        boxShadow: "rgb(4 17 29 / 25%) 0px 0px 8px 0px"
+        boxShadow: "rgb(4 17 29 / 25%) 0px 0px 8px 0px",
       }}
       className="navbar navbar-expand-sm navbar-dark"
     >
@@ -54,6 +53,11 @@ const Navbar = (props) => {
               </Link>
             </li>
             <li className="mr-3">
+              <Link to="/detail" className="">
+                Detail
+              </Link>
+            </li>
+            <li className="mr-3">
               <Link to="/marketplace" className="">
                 Marketplace
               </Link>
@@ -68,22 +72,26 @@ const Navbar = (props) => {
                 Queries
               </Link>
             </li> */}
-            {!props.auth ? <li className="mr-3">
-              <Link to="/login" className="">
-                Login
-              </Link>
-            </li> : <Fragment>
+            {!props.auth ? (
               <li className="mr-3">
-                <Link to="/account" className="">
-                  Account
+                <Link to="/login" className="">
+                  Login
                 </Link>
               </li>
-              <li className="mr-3">
-                <Link to="/settings" className="">
-                  Settings
-                </Link>
-              </li>
-            </Fragment>}
+            ) : (
+              <Fragment>
+                <li className="mr-3">
+                  <Link to="/account" className="">
+                    Account
+                  </Link>
+                </li>
+                <li className="mr-3">
+                  <Link to="/settings" className="">
+                    Settings
+                  </Link>
+                </li>
+              </Fragment>
+            )}
           </ul>
         </div>
       </div>

@@ -23,6 +23,7 @@ import { ethers } from "ethers";
 import "react-toastify/dist/ReactToastify.css";
 import Container from "./page/Container";
 import MintNFTForm from "./components/MintNFTForm";
+import NFTDetails from "./components/NFTDetails";
 
 const ipfsClient = require("ipfs-http-client");
 const ipfs = ipfsClient({
@@ -41,10 +42,9 @@ const checkLoggedIn = async () => {
     }
     return true;
   } catch {
-    return false
+    return false;
   }
-}
-
+};
 
 const App = () => {
   const [loggedIn, setLoggedIn] = useState(false);
@@ -82,8 +82,6 @@ const App = () => {
   //   // await this.setMetaData();
   //   // await this.setMintBtnTimer();
   // };
-
-
 
   //#region Web3
   // setMintBtnTimer = () => {
@@ -405,7 +403,7 @@ const App = () => {
     //   )}
     // </div>
     // <ProvideAuth>
-    <HashRouter basename="/" >
+    <HashRouter basename="/">
       <Container auth={loggedIn}>
         <ToastContainer limit={1} autoClose={3000} />
         <Route path="/" exact render={() => <LayoutIndex.Homepage />} />
@@ -452,11 +450,12 @@ const App = () => {
                 <Queries cryptoBoysContract={this.state.cryptoBoysContract} />
               )}
             /> */}
-      <Route path="/login" render={() => <Login />} />
-      <Route path="/account" render={() => <Account />} />
-      <Route path="/settings" render={() => <AccountSettings />} />
-      <Route path="/mint" render={() => <MintNFTForm />} />
-      {/* <PrivateRoute path="/account" component={Account} auth={loggedIn} />
+        <Route path="/login" render={() => <Login />} />
+        <Route path="/account" render={() => <Account />} />
+        <Route path="/settings" render={() => <AccountSettings />} />
+        <Route path="/mint" render={() => <MintNFTForm />} />
+        <Route path="/detail" render={() => <NFTDetails />} />
+        {/* <PrivateRoute path="/account" component={Account} auth={loggedIn} />
         <PrivateRoute
           path="/settings"
           component={AccountSettings}
