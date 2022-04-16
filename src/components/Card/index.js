@@ -28,6 +28,14 @@ const HeartStyle = {
   fontSize: "20px",
 };
 
+const StyledCardInfo = styled.span`
+  position: relative;
+  left: 180px;
+  font-size: 12px;
+  font-weight: bold;
+  color: gray;
+`;
+
 const EthereumIcon = (props) => <Icon component={Ethereum} {...props} />;
 
 const CardComponent = (props) => {
@@ -45,7 +53,7 @@ const CardComponent = (props) => {
     <StyledCard
       hoverable={true}
       style={{
-        width: collapsed ? "310px" : "335px",
+        width: collapsed ? "310px" : "300px",
         height: collapsed ? "400px" : "420px",
       }}
       cover={
@@ -53,7 +61,7 @@ const CardComponent = (props) => {
           alt="example"
           src="https://os.alipayobjects.com/rmsportal/QBnOOoLaAfKPirc.png"
           style={{
-            width: collapsed ? "310px" : "335px",
+            width: collapsed ? "310px" : "300px",
             height: collapsed ? "290px" : "310px",
           }}
         />
@@ -65,8 +73,8 @@ const CardComponent = (props) => {
           size={0}
           style={{ marginLeft: "10px" }}
         >
-          <p style={{ margin: "2px" }}>Collection Name</p>
-          <h4>NFT name</h4>
+          <p style={{ marginBottom: "0px", color: "gray" }}>Collection Name</p>
+          <p style={{ fontWeight: "bold" }}>NFT name</p>
         </StyledSpace>
 
         <StyledSpace
@@ -74,12 +82,21 @@ const CardComponent = (props) => {
           size={0}
           style={{ marginRight: "5px", textAlign: "right" }}
         >
-          <p style={{ margin: "2px" }}>Price</p>
+          <p style={{ marginBottom: "0px", color: "gray" }}>
+            {props.isFixedPrice ? "Price" : "Bid"}
+          </p>
           <Space direction="horizontal" size={0}>
             <EthereumIcon
-              style={{ fontSize: "18px", position: "relative", top: "-7px" }}
+              style={{
+                fontSize: "15px",
+                position: "relative",
+                top: "-12px",
+                left: "-5px",
+              }}
             />
-            <h4>0.05</h4>
+            <p style={{ fontWeight: "bold" }}>
+              {props.price ? props.price : 0}
+            </p>
           </Space>
         </StyledSpace>
       </StyledCardContent>
@@ -91,6 +108,9 @@ const CardComponent = (props) => {
           <HeartOutlined style={HeartStyle} onClick={() => addToFavorite()} />
         )}
       </Tooltip>
+      <StyledCardInfo style={{ left: props.isFixedPrice ? "230px" : "180px" }}>
+        {props.isFixedPrice ? "Sale" : "On Auction"}
+      </StyledCardInfo>
     </StyledCard>
   );
 };

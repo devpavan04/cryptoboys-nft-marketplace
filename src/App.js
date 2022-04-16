@@ -25,6 +25,7 @@ import Container from "./page/Container";
 import MintNFTForm from "./components/MintNFTForm";
 import NFTDetails from "./components/NFTDetails";
 import Explore from "./components/Explore";
+import Listing from "./components/Listing";
 
 const ipfsClient = require("ipfs-http-client");
 const ipfs = ipfsClient({
@@ -457,6 +458,7 @@ const App = () => {
         <Route path="/mint" render={() => <MintNFTForm />} />
         <Route path="/detail" render={() => <NFTDetails />} />
         <Route path="/explore" render={() => <Explore />} />
+        <Route path="/listing" render={() => <Listing />} />
         {/* <PrivateRoute path="/account" component={Account} auth={loggedIn} />
         <PrivateRoute
           path="/settings"
