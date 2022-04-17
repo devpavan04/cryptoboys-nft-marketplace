@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { HashRouter, Route } from "react-router-dom";
+import { HashRouter, Route,Redirect,Switch } from "react-router-dom";
 import "./App.css";
 import Web3 from "web3";
 import { ToastContainer } from "react-toastify";
@@ -26,6 +26,9 @@ import MintNFTForm from "./components/MintNFTForm";
 import NFTDetails from "./components/NFTDetails";
 import Explore from "./components/Explore";
 import Listing from "./components/Listing";
+import PageNotFound from "./components/Common/PageNotFound";
+import ErrorPage from "./components/Common/ErrorPage";
+import SuccessPage from "./components/Common/SuccessPage";
 
 const ipfsClient = require("ipfs-http-client");
 const ipfs = ipfsClient({
@@ -408,6 +411,7 @@ const App = () => {
     <HashRouter basename="/">
       <Container auth={loggedIn}>
         <ToastContainer limit={1} autoClose={3000} />
+        <Switch>
         <Route path="/" exact render={() => <LayoutIndex.Homepage />} />
         {/* <Route
               path="/mint"
@@ -452,19 +456,23 @@ const App = () => {
                 <Queries cryptoBoysContract={this.state.cryptoBoysContract} />
               )}
             /> */}
-        <Route path="/login" render={() => <Login />} />
-        <Route path="/account" render={() => <Account />} />
-        <Route path="/settings" render={() => <AccountSettings />} />
-        <Route path="/mint" render={() => <MintNFTForm />} />
-        <Route path="/detail" render={() => <NFTDetails />} />
-        <Route path="/explore" render={() => <Explore />} />
-        <Route path="/listing" render={() => <Listing />} />
+          <Route path="/login" render={() => <Login />} />
+          <Route path="/account" render={() => <Account />} />
+          <Route path="/settings" render={() => <AccountSettings />} />
+          <Route path="/mint" render={() => <MintNFTForm />} />
+          <Route path="/detail" render={() => <NFTDetails />} />
+          <Route path="/explore" render={() => <Explore />} />
+          <Route path="/listing" render={() => <Listing />} />
+          <Route path="/error" render={() => <ErrorPage />} />
+          <Route path="/success" render={() => <SuccessPage />} />
+          <Route render={() => <PageNotFound />} />
         {/* <PrivateRoute path="/account" component={Account} auth={loggedIn} />
         <PrivateRoute
           path="/settings"
           component={AccountSettings}
           auth={loggedIn}
         /> */}
+        </Switch>
       </Container>
     </HashRouter>
   );
