@@ -29,6 +29,7 @@ import Listing from "./components/Listing";
 import PageNotFound from "./components/Common/PageNotFound";
 import ErrorPage from "./components/Common/ErrorPage";
 import SuccessPage from "./components/Common/SuccessPage";
+import Collection from "./components/Collection";
 
 const ipfsClient = require("ipfs-http-client");
 const ipfs = ipfsClient({
@@ -462,6 +463,7 @@ const App = () => {
           <Route path="/mint" render={() => <MintNFTForm />} />
           <Route path="/detail" render={() => <NFTDetails />} />
           <Route path="/explore" render={() => <Explore />} />
+          <Route path="/collection" render={() => <Collection />} />
           <Route path="/listing" render={() => <Listing />} />
           <Route path="/error" render={() => <ErrorPage />} />
           <Route path="/success" render={() => <SuccessPage />} />

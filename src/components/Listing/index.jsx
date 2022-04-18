@@ -15,7 +15,7 @@ import { ReactComponent as Ethereum } from "../../assets/icons/ethereum.svg";
 import Icon from "@ant-design/icons";
 import moment from "moment";
 import { CalendarOutlined } from "@ant-design/icons";
-import CardComponent from "../Card";
+import AssetCard from "../Common/AssetCard";
 import { useForm, Controller } from "react-hook-form";
 
 const { Panel } = Collapse;
@@ -317,7 +317,7 @@ const Listing = () => {
         </Col>
         <Col xs={0} sm={0} md={0} xl={12}>
           <StyledLabel>Preview</StyledLabel>
-          <CardComponent price={priceState} isFixedPrice={isFixedPrice} />
+          <AssetCard price={priceState} isFixedPrice={isFixedPrice} />
         </Col>
       </Row>
     </StyledLayout>

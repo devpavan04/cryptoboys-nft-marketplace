@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import styled from "styled-components";
 import { Menu } from "antd";
-import CollectionCard from "./CollectionCard";
+import CollectionCard from "../Common/CollectionCard";
 
 const StyledLayout = styled.div`
   padding: 0.5rem 1rem;

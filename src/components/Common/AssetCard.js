@@ -38,7 +38,7 @@ const StyledCardInfo = styled.span`
 
 const EthereumIcon = (props) => <Icon component={Ethereum} {...props} />;
 
-const CardComponent = (props) => {
+const AssetCard = (props) => {
   // const title = props.title;
   // const desc = props.desc;
   // const image = props.image;
@@ -53,16 +53,17 @@ const CardComponent = (props) => {
     <StyledCard
       hoverable={true}
       style={{
-        width: collapsed ? "310px" : "300px",
-        height: collapsed ? "400px" : "420px",
+        width: "300px",
+        height:  "420px",
       }}
       cover={
         <img
           alt="example"
           src="https://os.alipayobjects.com/rmsportal/QBnOOoLaAfKPirc.png"
           style={{
-            width: collapsed ? "310px" : "300px",
-            height: collapsed ? "290px" : "310px",
+            width: "300px",
+            height:  "310px",
+            borderRadius: "10px 10px 0px 0px",
           }}
         />
       }
@@ -115,4 +116,4 @@ const CardComponent = (props) => {
   );
 };
 
-export default CardComponent;
+export default AssetCard;

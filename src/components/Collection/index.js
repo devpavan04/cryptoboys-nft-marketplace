@@ -20,12 +20,10 @@ import {
   CopyOutlined,
   MenuUnfoldOutlined,
   MenuFoldOutlined,
-  PictureOutlined 
 } from "@ant-design/icons";
 import styled from "styled-components";
 import AssetCard from "../Common/AssetCard";
 import FilterSider from "../Common/FilterSider";
-import CollectionCard from "../Common/CollectionCard";
 const { Header, Sider, Content } = Layout;
 const { Search } = Input;
 const { Option } = Select;
@@ -102,7 +100,7 @@ width: 95%;
 margin: 0 auto;
 `;
 
-const Account = () => {
+const Collection = () => {
   const [bannerImage, setBannerImage] = useState(null);
   const [collapsed, setCollapsed] = useState(false);
   const [ellipsis, setEllipsis] = useState(true);
@@ -156,19 +154,7 @@ const Account = () => {
           theme="light"
           width="300px"
         >
-          <Menu mode="inline" defaultSelectedKeys={["1"]}>
-            <Menu.Item key="1" icon={<CopyOutlined />}>
-              Collected
-            </Menu.Item>
-            <Menu.Item key="2" icon={<FormatPainterOutlined />}>
-              Created
-            </Menu.Item>
-            <Menu.Item key="3" icon={<HeartOutlined />}>
-              Favorited
-            </Menu.Item>
-            <Menu.Item key="4" icon={<PictureOutlined />}>
-              Owned Collection
-            </Menu.Item>
+          <Menu mode="inline" >
             <FilterSider />
           </Menu>
         </Sider>
@@ -191,21 +177,6 @@ const Account = () => {
                   style={{ fontSize: "25px" }}
                 />
               )}
-              <StyledSelect
-                showSearch
-                placeholder="Select category"
-                optionFilterProp="children"
-                onChange={handleCategoriesChange}
-                onSearch={handleCategoriesSearch}
-                filterOption={(input, option) =>
-                  option.children.toLowerCase().indexOf(input.toLowerCase()) >=
-                  0
-                }
-              >
-                <Option value="jack">Jack</Option>
-                <Option value="lucy">Lucy</Option>
-                <Option value="tom">Tom</Option>
-              </StyledSelect>
               <Search
                 placeholder="Search"
                 allowClear
@@ -230,4 +201,4 @@ const Account = () => {
   );
 };
 
-export default Account;
+export default Collection;
