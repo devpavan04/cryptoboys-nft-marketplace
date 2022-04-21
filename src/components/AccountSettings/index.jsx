@@ -4,8 +4,6 @@ import styled from "styled-components";
 import { Row, Col, Form } from "antd";
 import MainSettings from "./MainSettings";
 import ImageSetting from "./ImageSetting";
-import { useHistory } from 'react-router-dom';
-
 
 const StyledMainLayout = styled.div`
   text-align: center;
@@ -16,36 +14,35 @@ const StyledMainLayout = styled.div`
 
 const AccountSettings = () => {
   const [walletAddress, setWalletAddress] = useState(null);
-  const history = useHistory();
   useEffect(() => {
-    checkLogin();
+    // checkLogin();
   }, []);
 
-  const getAccount = async () => {
-    const provider = new ethers.providers.Web3Provider(window.ethereum);
-    const signer = provider.getSigner();
-    setWalletAddress(await signer.getAddress());
-  };
+  // const getAccount = async () => {
+  //   const provider = new ethers.providers.Web3Provider(window.ethereum);
+  //   const signer = provider.getSigner();
+  //   setWalletAddress(await signer.getAddress());
+  // };
 
-  const checkLogin = async () => {
-    const provider = await new ethers.providers.Web3Provider(window.ethereum);
-    const signer = provider.getSigner();
-    if (!signer.getAddress()) {
-      history.push('/login');
-    }
-    return getAccount();
-  };
+  // const checkLogin = async () => {
+  //   const provider = await new ethers.providers.Web3Provider(window.ethereum);
+  //   const signer = provider.getSigner();
+  //   if (!signer.getAddress()) {
+  //     history.push('/login');
+  //   }
+  //   return getAccount();
+  // };
 
-  window.ethereum.on("accountsChanged", () => {
-    getAccount();
-  });
+  // window.ethereum.on("accountsChanged", () => {
+  //   getAccount();
+  // });
 
   return (
     <StyledMainLayout>
       <Form>
         <Row>
-          <Col xs={24} xl={16} >
-            <MainSettings walletAddress={walletAddress} />
+          <Col xs={24} xl={16}>
+            <MainSettings />
           </Col>
           <Col xs={24} xl={8}>
             <ImageSetting />

@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
-import { HashRouter, Route,Redirect,Switch } from "react-router-dom";
+import { HashRouter, Route, Switch } from "react-router-dom";
 import "./App.css";
 import Web3 from "web3";
-import { ToastContainer } from "react-toastify";
+import { toast, ToastContainer } from "react-toastify";
 import CryptoBoys from "./abis/CryptoBoys.json";
 import FormAndPreview from "./components/FormAndPreview/FormAndPreview";
 import AllCryptoBoys from "./components/AllCryptoBoys/AllCryptoBoys";
@@ -30,6 +30,8 @@ import PageNotFound from "./components/Common/PageNotFound";
 import ErrorPage from "./components/Common/ErrorPage";
 import SuccessPage from "./components/Common/SuccessPage";
 import Collection from "./components/Collection";
+import { useDispatch } from "react-redux";
+import { login } from "./state/action/userAction";
 
 const ipfsClient = require("ipfs-http-client");
 const ipfs = ipfsClient({
@@ -52,8 +54,27 @@ const checkLoggedIn = async () => {
   }
 };
 
+const customToastID = "mainToast";
+
 const App = () => {
   const [loggedIn, setLoggedIn] = useState(false);
+  const dispatch = useDispatch();
+
+  window.ethereum.on("accountsChanged", () => {
+    changedAccount();
+  });
+
+  let changedAccount = async () => {
+    const provider = new ethers.providers.Web3Provider(window.ethereum);
+    const signer = provider.getSigner();
+    const address = await signer.getAddress();
+    if (address != null) {
+      dispatch(login(address)).catch((err) => {
+        toast.error(err);
+      });
+      toast.success("Account changed successfully", { toastId: customToastID });
+    }
+  };
 
   useEffect(() => {
     checkLoggedIn().then((res) => {
@@ -413,8 +434,8 @@ const App = () => {
       <Container auth={loggedIn}>
         <ToastContainer limit={1} autoClose={3000} />
         <Switch>
-        <Route path="/" exact render={() => <LayoutIndex.Homepage />} />
-        {/* <Route
+          <Route path="/" exact render={() => <LayoutIndex.Homepage />} />
+          {/* <Route
               path="/mint"
               render={() => (
                 <FormAndPreview
@@ -468,7 +489,7 @@ const App = () => {
           <Route path="/error" render={() => <ErrorPage />} />
           <Route path="/success" render={() => <SuccessPage />} />
           <Route render={() => <PageNotFound />} />
-        {/* <PrivateRoute path="/account" component={Account} auth={loggedIn} />
+          {/* <PrivateRoute path="/account" component={Account} auth={loggedIn} />
         <PrivateRoute
           path="/settings"
           component={AccountSettings}

@@ -11,8 +11,8 @@ import {
   Avatar,
   Typography,
   Affix,
-  Row, 
-  Col
+  Row,
+  Col,
 } from "antd";
 import {
   HeartOutlined,
@@ -20,16 +20,17 @@ import {
   CopyOutlined,
   MenuUnfoldOutlined,
   MenuFoldOutlined,
-  PictureOutlined 
+  PictureOutlined,
 } from "@ant-design/icons";
 import styled from "styled-components";
 import AssetCard from "../Common/AssetCard";
 import FilterSider from "../Common/FilterSider";
 import CollectionCard from "../Common/CollectionCard";
+import { useDispatch, useSelector } from "react-redux";
 const { Header, Sider, Content } = Layout;
 const { Search } = Input;
 const { Option } = Select;
-const { Title,Paragraph } = Typography;
+const { Title, Paragraph } = Typography;
 
 const StyledLayout = styled(Layout)`
   height: 100vh;
@@ -98,18 +99,31 @@ const StyledContent = styled(Content)`
 `;
 
 const StyledContainer = styled.div`
-width: 95%;
-margin: 0 auto;
+  width: 95%;
+  margin: 0 auto;
 `;
 
 const Account = () => {
   const [bannerImage, setBannerImage] = useState(null);
+  const [profileImage, setProfileImage] = useState(null);
   const [collapsed, setCollapsed] = useState(false);
   const [ellipsis, setEllipsis] = useState(true);
+  const user = useSelector((state) => state.user);
 
-  // useEffect(() => {
-  //   setBannerImage("https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png")
-  // });
+  useEffect(() => {
+    setImg();
+  }, []);
+  console.log(user);
+
+  const setImg = () => {
+    if (user.bannerImg) {
+      setBannerImage(user.bannerImage);
+    }
+
+    if (user.profileImg) {
+      setProfileImage(user.profileImage);
+    }
+  };
 
   const toggleSider = () => {
     setCollapsed(!collapsed);
@@ -132,13 +146,25 @@ const Account = () => {
           <StyledFallback />
         )}
         <StyledProfileLayout>
-          <StyledAvatar size={150} icon={<HeartOutlined />} />
-          <div style={{width:"50%",wordBreak:"break-all"}}> 
+          {profileImage ? (
+            <StyledAvatar size={150} src={profileImage} />
+          ) : (
+            <StyledAvatar size={150} icon={<HeartOutlined />} />
+          )}
+          <div style={{ width: "50%", wordBreak: "break-all" }}>
             <Space direction="vertical" size={0} style={{ marginLeft: "10px" }}>
-              <Title level={3}>Default</Title>
-              <Title level={5}>Wallet Address</Title>
-              <Paragraph ellipsis={ellipsis ? { rows: 2, expandable: true, symbol: 'more' } : false}>
-                Description
+              <Title level={3}>{user.name ? user.name : "Default"}</Title>
+              <Title level={5}>
+                {user.walletAddress ? user.walletAddress : "0x0000"}
+              </Title>
+              <Paragraph
+                ellipsis={
+                  ellipsis
+                    ? { rows: 2, expandable: true, symbol: "more" }
+                    : false
+                }
+              >
+                {user.bio ? user.bio : ""}
               </Paragraph>
             </Space>
           </div>
@@ -214,16 +240,15 @@ const Account = () => {
               />
             </Space>
           </StyledHeader>
-            <StyledContent>
-              <AssetCard collapsed={collapsed} />
-              <AssetCard collapsed={collapsed} />
-              <AssetCard collapsed={collapsed} />
-              <AssetCard collapsed={collapsed} />
-              <AssetCard collapsed={collapsed} />
-              <AssetCard collapsed={collapsed} />
-              <AssetCard collapsed={collapsed} />     
-            </StyledContent>
-          
+          <StyledContent>
+            <AssetCard collapsed={collapsed} />
+            <AssetCard collapsed={collapsed} />
+            <AssetCard collapsed={collapsed} />
+            <AssetCard collapsed={collapsed} />
+            <AssetCard collapsed={collapsed} />
+            <AssetCard collapsed={collapsed} />
+            <AssetCard collapsed={collapsed} />
+          </StyledContent>
         </Layout>
       </StyledLayout>
     </>

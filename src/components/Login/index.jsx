@@ -3,10 +3,12 @@ import styled from "styled-components";
 import { Button } from "antd";
 import { ReactComponent as Metamask } from "../../assets/icons/metamask.svg";
 import Icon from "@ant-design/icons";
-import { ToastContainer, toast } from "react-toastify";
+import { toast } from "react-toastify";
 import { useHistory } from "react-router-dom";
 import { ethers } from "ethers";
 import UserService from "../../service/user.service";
+import { useDispatch, useSelector } from "react-redux";
+import { login } from "../../state/action/userAction";
 
 const StyledLayout = styled.div`
   text-align: center;
@@ -39,6 +41,8 @@ const MetamaskIcon = (props) => <Icon component={Metamask} {...props} />;
 
 const Login = () => {
   const [isMetamaskInstalled, setIsMetamaskInstalled] = useState(false);
+  const user = useSelector((state) => state.user);
+  const dispatch = useDispatch();
   let history = useHistory();
   useEffect(() => {
     checkMetamaskInstalled();
@@ -47,25 +51,27 @@ const Login = () => {
 
   const checkMetamaskInstalled = async () => {
     if (window.ethereum) return setIsMetamaskInstalled(true);
-    return setIsMetamaskInstalled(false);
   };
 
   const checkLoggedIn = async () => {
     const provider = new ethers.providers.Web3Provider(window.ethereum);
-    const signer = await provider.getSigner();
+    const signer = provider.getSigner();
     try {
       const address = await signer.getAddress();
-      if (address == null) {
-        return false;
+      if (address != null) {
+        dispatch(login(address)).catch((err) => {
+          return toast.error(err);
+        });
+        history.push("/account");
       }
-      UserService.loginService(address).then(res => {
-        history.push("/account/" + res._id || "")
-      })
+      // UserService.loginService(address).then(res => {
+      //   history.push("/account/" + res._id || "")
+      // })
       // history.push("/account");
     } catch {
-      return false
+      return false;
     }
-  }
+  };
 
   const connectToMetamask = async () => {
     try {
@@ -75,7 +81,7 @@ const Login = () => {
       });
       window.location.reload();
     } catch (e) {
-      console.log(e)
+      console.log(e);
       toast.error("Cannot connect to Metamask");
     }
   };
@@ -97,7 +103,6 @@ const Login = () => {
       ) : (
         <h5>Please download Chrome to install Metamask</h5>
       )}
-      <ToastContainer />
     </StyledLayout>
   );
 };
