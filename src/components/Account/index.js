@@ -10,9 +10,10 @@ import {
   Space,
   Avatar,
   Typography,
-  Affix,
   Row,
   Col,
+  Spin,
+  Empty
 } from "antd";
 import {
   HeartOutlined,
@@ -21,12 +22,17 @@ import {
   MenuUnfoldOutlined,
   MenuFoldOutlined,
   PictureOutlined,
+  LoadingOutlined 
 } from "@ant-design/icons";
 import styled from "styled-components";
 import AssetCard from "../Common/AssetCard";
 import FilterSider from "../Common/FilterSider";
 import CollectionCard from "../Common/CollectionCard";
 import { useDispatch, useSelector } from "react-redux";
+import { getOwnedAsset } from "../../state/action/ownedAssetsAction";
+import { getOwnedCollection } from "../../state/action/ownedCollectionAction";
+import { getFavoriteAsset } from "../../state/action/favoriteAssetsAction";
+import { toast } from "react-toastify";
 const { Header, Sider, Content } = Layout;
 const { Search } = Input;
 const { Option } = Select;
@@ -98,23 +104,31 @@ const StyledContent = styled(Content)`
   }
 `;
 
-const StyledContainer = styled.div`
-  width: 95%;
-  margin: 0 auto;
-`;
+const loadingIcon = <LoadingOutlined style={{ fontSize: 70 }} spin />;
+
 
 const Account = () => {
+  const dispatch = useDispatch();
   const [bannerImage, setBannerImage] = useState(null);
   const [profileImage, setProfileImage] = useState(null);
   const [collapsed, setCollapsed] = useState(false);
   const [ellipsis, setEllipsis] = useState(true);
+  const [loading, setLoading] = useState(true);
+  const [menuSelected, setMenuSelected] = useState("1");
   const user = useSelector((state) => state.user);
+  const ownedAssets = useSelector((state) => state.ownedAssets);
+  const ownedCollections = useSelector((state) => state.ownedCollections);
+  const favoriteAssets = useSelector((state) => state.favoriteAssets);
 
-  useEffect(() => {
-    setImg();
-  }, []);
-  console.log(user);
-
+  useEffect(()=>{
+    console.log("user",user);
+    if(user != ""){    
+      getAssetsAndCollections(user._id);
+      setImg();
+      setLoading(false);
+    }
+  },[user])
+  
   const setImg = () => {
     if (user.bannerImg) {
       setBannerImage(user.bannerImage);
@@ -123,6 +137,18 @@ const Account = () => {
     if (user.profileImg) {
       setProfileImage(user.profileImage);
     }
+  };
+
+  const getAssetsAndCollections = (id) => {
+    dispatch(getOwnedAsset(id)).catch(()=>{
+      toast.error("Error fetching owned assets")
+    })
+    dispatch(getOwnedCollection(id)).catch(()=>{
+      toast.error("Error fetching owned collections")
+    })
+    dispatch(getFavoriteAsset(id)).catch(()=>{
+      toast.error("Error fetching favorite assets")
+    })
   };
 
   const toggleSider = () => {
@@ -137,8 +163,91 @@ const Account = () => {
     console.log(`search ${value}`);
   };
 
+  const handleMenuSelect = (e) => {
+    setMenuSelected(e.key);
+  };
+
+  const renderAssetsAndCollection = () => {
+    switch (menuSelected) {
+      case "1":
+        return (
+          <>
+          {ownedAssets.length > 0 ? (
+              ownedAssets.map((asset) => (
+                <AssetCard
+                  key={asset._id}
+                  asset={asset}
+                  onClick={() => {
+                    window.location.href = `/asset/${asset._id}`;
+                  }}
+                />
+              ))
+            ) : (
+              <div style={{width:"90%",margin:"0 auto"}}>
+                <Empty
+                description={
+                  <span>
+                    You don't have any assets yet.
+                  </span>
+                }
+              />
+              </div>
+            )}
+          </>
+        )
+      case "2":
+        return (
+          <>
+          {favoriteAssets.length > 0 ? (
+              favoriteAssets.map((asset) => (
+                <AssetCard
+                  key={asset._id}
+                  asset={asset}
+                />
+              ))
+            ) : (
+              <div style={{width:"90%",margin:"0 auto"}}>
+                <Empty
+                description={
+                  <span>
+                    You don't have any favorite yet.
+                  </span>
+                }
+              />
+              </div>
+            )}
+          </>
+        )
+      case "3":
+        return (
+          <>
+          {ownedCollections.length > 0 ? (
+              ownedCollections.map((collection) => (
+                <CollectionCard
+                  key={collection._id}
+                  collection={collection}
+                />
+              ))
+            ) : (
+              <div style={{width:"90%",margin:"0 auto"}}>
+                <Empty
+                description={
+                  <span>
+                    You don't have any collections yet.
+                  </span>
+                }
+              />
+              </div>
+            )}
+          </>
+        )
+      default:
+        break;
+    };
+  };
+
   return (
-    <>
+    <Spin spinning={loading} indicator={loadingIcon}>
       <div>
         {bannerImage ? (
           <StyledBannerImage src={bannerImage} />
@@ -182,17 +291,14 @@ const Account = () => {
           theme="light"
           width="300px"
         >
-          <Menu mode="inline" defaultSelectedKeys={["1"]}>
+          <Menu mode="inline" defaultSelectedKeys={["1"]} onSelect={handleMenuSelect}>
             <Menu.Item key="1" icon={<CopyOutlined />}>
               Collected
             </Menu.Item>
-            <Menu.Item key="2" icon={<FormatPainterOutlined />}>
-              Created
-            </Menu.Item>
-            <Menu.Item key="3" icon={<HeartOutlined />}>
+            <Menu.Item key="2" icon={<HeartOutlined />}>
               Favorited
             </Menu.Item>
-            <Menu.Item key="4" icon={<PictureOutlined />}>
+            <Menu.Item key="3" icon={<PictureOutlined />}>
               Owned Collection
             </Menu.Item>
             <FilterSider />
@@ -241,17 +347,19 @@ const Account = () => {
             </Space>
           </StyledHeader>
           <StyledContent>
+            {renderAssetsAndCollection()}
+
+            {/* <AssetCard collapsed={collapsed} />
             <AssetCard collapsed={collapsed} />
             <AssetCard collapsed={collapsed} />
             <AssetCard collapsed={collapsed} />
             <AssetCard collapsed={collapsed} />
             <AssetCard collapsed={collapsed} />
-            <AssetCard collapsed={collapsed} />
-            <AssetCard collapsed={collapsed} />
+            <AssetCard collapsed={collapsed} /> */}
           </StyledContent>
         </Layout>
       </StyledLayout>
-    </>
+    </Spin>
   );
 };
 

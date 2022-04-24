@@ -1,12 +1,14 @@
 import React from "react";
 import { Card, Image } from "antd";
 import styled from "styled-components";
+import { useHistory } from "react-router-dom";
 
 const StyledCard = styled(Card)`
   width: 400px;
   border-radius: 10px;
   transition: all 0.3s ease-in-out;
   border: 1px solid #e8e8e8;
+  cursor: pointer;
 
   .ant-card-body {
     padding: 0px !important;
@@ -60,9 +62,15 @@ const StyledDesc = styled.div`
   padding-top: 0px;
 `;
 
-const CollectionCard = () => {
+const CollectionCard = (props) => {
+  const {collection} = props;
+  const history = useHistory();
+
   return (
-    <StyledCard>
+    <StyledCard onClick={()=>{
+      console.log(collection._id);
+      history.push(`/collection/${collection._id}`);
+    }}>
       <StyledBanner>
         <StyledBannerImage
           src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png"

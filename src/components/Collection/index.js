@@ -130,11 +130,9 @@ const Collection = () => {
           <StyledFallback />
         )}
         <StyledProfileLayout>
-          <StyledAvatar size={150} icon={<HeartOutlined />} />
           <div style={{width:"50%",wordBreak:"break-all"}}> 
             <Space direction="vertical" size={0} style={{ marginLeft: "10px" }}>
               <Title level={3}>Default</Title>
-              <Title level={5}>Wallet Address</Title>
               <Paragraph ellipsis={ellipsis ? { rows: 2, expandable: true, symbol: 'more' } : false}>
                 Description
               </Paragraph>

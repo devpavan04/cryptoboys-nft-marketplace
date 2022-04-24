@@ -7,6 +7,7 @@ import { ReactComponent as Ethereum } from "../../assets/icons/ethereum.svg";
 const StyledCard = styled(Card)`
   border-radius: 10px;
   transition: all 0.3s ease;
+  cursor: pointer;
 
   .ant-card-body {
     padding: 0;

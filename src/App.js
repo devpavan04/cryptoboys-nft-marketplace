@@ -30,7 +30,7 @@ import PageNotFound from "./components/Common/PageNotFound";
 import ErrorPage from "./components/Common/ErrorPage";
 import SuccessPage from "./components/Common/SuccessPage";
 import Collection from "./components/Collection";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { login } from "./state/action/userAction";
 
 const ipfsClient = require("ipfs-http-client");
@@ -41,16 +41,18 @@ const ipfs = ipfsClient({
 });
 
 const checkLoggedIn = async () => {
-  const provider = new ethers.providers.Web3Provider(window.ethereum);
-  const signer = await provider.getSigner();
-  try {
-    const address = await signer.getAddress();
-    if (address == null) {
+  if (window.ethereum) {
+    const provider = new ethers.providers.Web3Provider(window.ethereum);
+    const signer = await provider.getSigner();
+    try {
+      const address = await signer.getAddress();
+      if (address == null) {
+        return false;
+      }
+      return true;
+    } catch {
       return false;
     }
-    return true;
-  } catch {
-    return false;
   }
 };
 
@@ -59,12 +61,15 @@ const customToastID = "mainToast";
 const App = () => {
   const [loggedIn, setLoggedIn] = useState(false);
   const dispatch = useDispatch();
+  const user = useSelector((state) => state.user);
 
-  window.ethereum.on("accountsChanged", () => {
-    changedAccount();
-  });
+  if (window.ethereum) {
+    window.ethereum.on("accountsChanged", () => {
+      changedAccount();
+    });
+  }
 
-  let changedAccount = async () => {
+  const changedAccount = async () => {
     const provider = new ethers.providers.Web3Provider(window.ethereum);
     const signer = provider.getSigner();
     const address = await signer.getAddress();
@@ -76,10 +81,23 @@ const App = () => {
     }
   };
 
+  const getUser = async () => {
+    if (!user && window.ethereum) {
+      const provider = new ethers.providers.Web3Provider(window.ethereum);
+      const signer = provider.getSigner();
+      const address = await signer.getAddress();
+      if (address != null) {
+        dispatch(login(address))
+      }
+    }
+  };
+
   useEffect(() => {
     checkLoggedIn().then((res) => {
       setLoggedIn(res);
     });
+
+    getUser();
   }, []);
   // constructor(props) {
   //   super(props);
@@ -484,7 +502,7 @@ const App = () => {
           <Route path="/mint" render={() => <MintNFTForm />} />
           <Route path="/detail" render={() => <NFTDetails />} />
           <Route path="/explore" render={() => <Explore />} />
-          <Route path="/collection" render={() => <Collection />} />
+          <Route path="/collection/:id" render={() => <Collection />} />
           <Route path="/listing" render={() => <Listing />} />
           <Route path="/error" render={() => <ErrorPage />} />
           <Route path="/success" render={() => <SuccessPage />} />
