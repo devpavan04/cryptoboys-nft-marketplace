@@ -2,6 +2,8 @@ import React from "react";
 import { Card, Image } from "antd";
 import styled from "styled-components";
 import { useHistory } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { setCollection } from "../../state/action/collectionAction";
 
 const StyledCard = styled(Card)`
   width: 400px;
@@ -64,11 +66,13 @@ const StyledDesc = styled.div`
 
 const CollectionCard = (props) => {
   const {collection} = props;
+  const dispatch = useDispatch();
   const history = useHistory();
 
   return (
     <StyledCard onClick={()=>{
       console.log(collection._id);
+      dispatch(setCollection(collection));
       history.push(`/collection/${collection._id}`);
     }}>
       <StyledBanner>
@@ -78,12 +82,10 @@ const CollectionCard = (props) => {
         />
       </StyledBanner>
 
-      <StyledHeader>Collection's name</StyledHeader>
-      <StyledSubHeader>By Owner</StyledSubHeader>
+      <StyledHeader>{collection.name}</StyledHeader>
+      <StyledSubHeader>By <strong>{collection.owner.name}</strong></StyledSubHeader>
       <StyledDesc>
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque
-        euismod, urna eu tincidunt consectetur, nisi nisl tincidunt nisi, eget
-        consectetur nisl nisl euismod nisi.
+        {collection.description? collection.description : ""}
       </StyledDesc>
     </StyledCard>
   );

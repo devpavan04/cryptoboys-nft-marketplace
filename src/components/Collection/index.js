@@ -11,8 +11,10 @@ import {
   Avatar,
   Typography,
   Affix,
-  Row, 
-  Col
+  Row,
+  Col,
+  Empty,
+  Spin
 } from "antd";
 import {
   HeartOutlined,
@@ -20,14 +22,19 @@ import {
   CopyOutlined,
   MenuUnfoldOutlined,
   MenuFoldOutlined,
+  LoadingOutlined
 } from "@ant-design/icons";
+import { useParams } from "react-router-dom";
 import styled from "styled-components";
 import AssetCard from "../Common/AssetCard";
 import FilterSider from "../Common/FilterSider";
+import { useSelector, useDispatch } from "react-redux";
+import { fetchCollection } from "../../state/action/collectionAction";
+import { toast } from "react-toastify";
 const { Header, Sider, Content } = Layout;
 const { Search } = Input;
 const { Option } = Select;
-const { Title,Paragraph } = Typography;
+const { Title, Paragraph } = Typography;
 
 const StyledLayout = styled(Layout)`
   height: 100vh;
@@ -96,18 +103,37 @@ const StyledContent = styled(Content)`
 `;
 
 const StyledContainer = styled.div`
-width: 95%;
-margin: 0 auto;
+  width: 95%;
+  margin: 0 auto;
 `;
 
+const loadingIcon = <LoadingOutlined style={{ fontSize: 70 }} spin />;
+
 const Collection = () => {
+  const { id } = useParams();
   const [bannerImage, setBannerImage] = useState(null);
   const [collapsed, setCollapsed] = useState(false);
   const [ellipsis, setEllipsis] = useState(true);
+  const [notFound, setNotFound] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const dispatch = useDispatch();
+  const collection = useSelector((state) => state.collection);
 
   // useEffect(() => {
   //   setBannerImage("https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png")
   // });
+
+  useEffect(() => {
+    if (collection == null || collection == "") {
+      setLoading(true);
+      dispatch(fetchCollection(id)).catch(() => {
+        toast.error("Error getting collection");
+        setNotFound(true);
+      });
+      setLoading(false);
+    }
+    setLoading(false);
+  }, [collection]);
 
   const toggleSider = () => {
     setCollapsed(!collapsed);
@@ -122,80 +148,106 @@ const Collection = () => {
   };
 
   return (
-    <>
-      <div>
-        {bannerImage ? (
-          <StyledBannerImage src={bannerImage} />
-        ) : (
-          <StyledFallback />
-        )}
-        <StyledProfileLayout>
-          <div style={{width:"50%",wordBreak:"break-all"}}> 
-            <Space direction="vertical" size={0} style={{ marginLeft: "10px" }}>
-              <Title level={3}>Default</Title>
-              <Paragraph ellipsis={ellipsis ? { rows: 2, expandable: true, symbol: 'more' } : false}>
-                Description
+    <Spin spinning={loading} indicator={loadingIcon}>
+      {notFound ? (
+        <Empty
+          description={
+            <span>
+              <Paragraph>
+                Sorry, we couldn't find the collection you are looking for.
               </Paragraph>
-            </Space>
+              <Paragraph>Please check the URL and try again.</Paragraph>
+            </span>
+          }
+        />
+      ) : (
+        <>
+          <div>
+            {bannerImage ? (
+              <StyledBannerImage src={bannerImage} />
+            ) : (
+              <StyledFallback />
+            )}
+            <StyledProfileLayout>
+              <div style={{ width: "50%", wordBreak: "break-all" }}>
+                <Space
+                  direction="vertical"
+                  size={0}
+                  style={{ marginLeft: "10px" }}
+                >
+                  <Title level={3}>{collection.name}</Title>
+                  <Paragraph
+                    ellipsis={
+                      ellipsis
+                        ? { rows: 2, expandable: true, symbol: "more" }
+                        : false
+                    }
+                  >
+                    {collection.description}
+                  </Paragraph>
+                </Space>
+              </div>
+            </StyledProfileLayout>
           </div>
-        </StyledProfileLayout>
-      </div>
-      <StyledHR />
-      <StyledLayout hasSider>
-        <Sider
-          collapsible
-          collapsed={collapsed}
-          onCollapse={toggleSider}
-          trigger={null}
-          breakpoint="lg"
-          collapsedWidth="40"
-          theme="light"
-          width="300px"
-        >
-          <Menu mode="inline" >
-            <FilterSider />
-          </Menu>
-        </Sider>
-        <Layout className="site-layout">
-          <StyledHeader className="site-layout-background">
-            <Space
-              align="center"
-              split={<Divider type="vertical" />}
-              size="small"
-              style={{ marginTop: "5px" }}
+          <StyledHR />
+          <StyledLayout hasSider>
+            <Sider
+              collapsible
+              collapsed={collapsed}
+              onCollapse={toggleSider}
+              trigger={null}
+              breakpoint="lg"
+              collapsedWidth="40"
+              theme="light"
+              width="300px"
             >
-              {collapsed ? (
-                <MenuUnfoldOutlined
-                  onClick={toggleSider}
-                  style={{ fontSize: "25px" }}
-                />
-              ) : (
-                <MenuFoldOutlined
-                  onClick={toggleSider}
-                  style={{ fontSize: "25px" }}
-                />
-              )}
-              <Search
-                placeholder="Search"
-                allowClear
-                enterButton
-                style={{ width: "300px" }}
-              />
-            </Space>
-          </StyledHeader>
-            <StyledContent>
-              <AssetCard collapsed={collapsed} />
-              <AssetCard collapsed={collapsed} />
-              <AssetCard collapsed={collapsed} />
-              <AssetCard collapsed={collapsed} />
-              <AssetCard collapsed={collapsed} />
-              <AssetCard collapsed={collapsed} />
-              <AssetCard collapsed={collapsed} />     
-            </StyledContent>
-          
-        </Layout>
-      </StyledLayout>
-    </>
+              <Menu mode="inline">
+                <FilterSider />
+              </Menu>
+            </Sider>
+            <Layout className="site-layout">
+              <StyledHeader className="site-layout-background">
+                <Space
+                  align="center"
+                  split={<Divider type="vertical" />}
+                  size="small"
+                  style={{ marginTop: "5px" }}
+                >
+                  {collapsed ? (
+                    <MenuUnfoldOutlined
+                      onClick={toggleSider}
+                      style={{ fontSize: "25px" }}
+                    />
+                  ) : (
+                    <MenuFoldOutlined
+                      onClick={toggleSider}
+                      style={{ fontSize: "25px" }}
+                    />
+                  )}
+                  <Search
+                    placeholder="Search"
+                    allowClear
+                    enterButton
+                    style={{ width: "300px" }}
+                  />
+                </Space>
+              </StyledHeader>
+              <StyledContent>
+                {collection && collection.assets.length > 0 ? (
+                  collection.assets.map((asset) => (
+                    <AssetCard asset={asset} key={asset._id} />
+                  ))
+                ) : (
+                  <div style={{ width: "90%", margin: "0 auto" }}>
+                    <Empty description={<span>No assets found.</span>} />
+                  </div>
+                )}
+              </StyledContent>
+            </Layout>
+          </StyledLayout>
+        </>
+      )}
+    </Spin>
   );
 };
 
