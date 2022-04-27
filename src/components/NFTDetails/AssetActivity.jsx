@@ -1,10 +1,11 @@
 import React, { useState } from "react";
 import styled from "styled-components";
-import { Collapse,Table } from "antd";
-import Icon,{FireOutlined,DollarOutlined } from '@ant-design/icons';
+import { Collapse, Table } from "antd";
+import Icon, { FireOutlined, DollarOutlined } from "@ant-design/icons";
 import { ReactComponent as Ethereum } from "../../assets/icons/ethereum.svg";
-
-
+import { useSelector } from "react-redux";
+import { Link } from "react-router-dom";
+import moment from "moment";
 
 const { Panel } = Collapse;
 
@@ -30,38 +31,43 @@ const StyledCollaped = styled(Collapse)`
 `;
 
 const StyledIcon = styled(Icon)`
-position: relative;
-top: -3px;
-`
+  position: relative;
+  top: -3px;
+`;
+
+const StyledLink = styled.a`
+  color: #00a8ff;
+  text-decoration: none;
+`;
 
 const EthereumIcon = (props) => <Icon component={Ethereum} {...props} />;
 
 const columns = [
   {
-    title: 'Event',
-    dataIndex: 'event',
-    key: 'event',
-    render: text => {
+    title: "Event",
+    dataIndex: "type",
+    key: "type",
+    render: (text) => {
       return (
         <span>
-          {text==="Sale" ? 
-            <StyledIcon component={DollarOutlined} style={{color:"green"}}/> 
-            : <StyledIcon component={FireOutlined}  style={{color:"red"}}/> 
-          }
-          {" "}
-          {text}
+          {text === "Sale" ? (
+            <StyledIcon component={DollarOutlined} style={{ color: "green" }} />
+          ) : (
+            <StyledIcon component={FireOutlined} style={{ color: "red" }} />
+          )}{" "}
+          {text.toUpperCase()}
         </span>
-      )
+      );
     },
   },
   {
-    title: 'Price',
-    dataIndex: 'price',
-    key: 'price',
-    render : price => {
+    title: "Price",
+    dataIndex: "price",
+    key: "price",
+    render: (price) => {
       return (
         <div>
-          {price!==0 && (
+          {price !== 0 && (
             <span>
               <EthereumIcon
                 style={{
@@ -75,95 +81,48 @@ const columns = [
             </span>
           )}
         </div>
-      )
-    }
+      );
+    },
   },
   {
-    title: 'From',
-    dataIndex: 'from',
-    key: 'from',
-    render: (text) => <a>{text}</a>
+    title: "From",
+    dataIndex: "from",
+    key: "from",
+    render: (text) => (
+      <>
+        {text == null ? (
+          "Null Address"
+        ) : (
+          <StyledLink>{text.walletAddress}</StyledLink>
+        )}
+      </>
+    ),
   },
   {
-    title: 'To',
-    key: 'to',
-    dataIndex: 'to',
-    render: (text) => <a>{text}</a>
+    title: "To",
+    key: "to",
+    dataIndex: "to",
+    render: (text) => <StyledLink>{text.walletAddress}</StyledLink>,
   },
   {
-    title: 'Date',
-    key: 'date',
-    dataIndex: 'date',
-  },
-]
-
-const data = [
-  {
-    key: '1',
-    event: 'Mint',
-    price: 0,
-    from: '0x000000',
-    to: '0x000000',
-    date: '2020-01-01',
-  },
-  {
-    key: '2',
-    event: 'Sale',
-    price: 0.55,
-    from: '0x000000',
-    to: '0x000000',
-    date: '2020-01-01',
-  },
-  {
-    key: '3',
-    event: 'Sale',
-    price: 0.68,
-    from: '0x000000',
-    to: '0x000000',
-    date: '2020-01-01',
-  },
-  {
-    key: '4',
-    event: 'Sale',
-    price: 0.68,
-    from: '0x000000',
-    to: '0x000000',
-    date: '2020-01-01',
-  },
-  {
-    key: '5',
-    event: 'Sale',
-    price: 0.68,
-    from: '0x000000',
-    to: '0x000000',
-    date: '2020-01-01',
-  },
-  {
-    key: '6',
-    event: 'Sale',
-    price: 0.68,
-    from: '0x000000',
-    to: '0x000000',
-    date: '2020-01-01',
-  },
-  {
-    key: '7',
-    event: 'Sale',
-    price: 0.68,
-    from: '0x000000',
-    to: '0x000000',
-    date: '2020-01-01',
+    title: "Date",
+    key: "date",
+    dataIndex: "date",
+    render: (text) => <p>{moment(text).format("DD/MM/YYYY")}</p>,
   },
 ];
 
 const AssetActivity = () => {
-  const [description, setDescription] = useState("");
+  const asset = useSelector((state) => state.asset);
   return (
     <StyledLayout>
-      <StyledCollaped defaultActiveKey={['1']} expandIconPosition="right">
+      <StyledCollaped defaultActiveKey={["1"]} expandIconPosition="right">
         <Panel header="Asset Activities" key="1">
-          <Table columns={columns} dataSource={data} 
-            pagination={{position:["none","none"]}} scroll={{y:200}}
+          <Table
+            columns={columns}
+            dataSource={asset.history}
+            pagination={{ position: ["none", "none"] }}
+            scroll={{ y: 200 }}
           />
         </Panel>
       </StyledCollaped>

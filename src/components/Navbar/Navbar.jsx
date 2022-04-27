@@ -58,8 +58,8 @@ const Navbar = (props) => {
               </Link>
             </li>
             <li className="mr-3">
-              <Link to="/detail" className="">
-                Detail
+              <Link to="/assets" className="">
+                Assets
               </Link>
             </li>
             <li className="mr-3">

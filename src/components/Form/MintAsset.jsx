@@ -84,7 +84,7 @@ const getBase64 = (file) => {
   });
 };
 
-const MintNFTForm = () => {
+const MintAsset = () => {
   const [fileList, setFileList] = useState([]);
   const [previewVisible, setPreviewVisible] = useState(false);
   const [previewImage, setPreviewImage] = useState("");
@@ -223,4 +223,4 @@ const MintNFTForm = () => {
   );
 };
 
-export default MintNFTForm;
+export default MintAsset;

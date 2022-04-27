@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import styled from "styled-components";
 import { Collapse } from "antd";
+import { useSelector } from "react-redux";
 
 const { Panel } = Collapse;
 
@@ -25,12 +26,16 @@ const StyledCollaped = styled(Collapse)`
 `;
 
 const SellerDesc = () => {
-  const [description, setDescription] = useState("");
+  const asset = useSelector((state) => state.asset);
   return (
     <StyledLayout>
-      <StyledCollaped defaultActiveKey={['1']} expandIconPosition="right">
+      <StyledCollaped defaultActiveKey={["1"]} expandIconPosition="right">
         <Panel header="About me" key="1">
-          <p>{description ? description : "Not provided by seller."}</p>
+          <p>
+            {asset && asset.currentOwner
+              ? asset.currentOwner.bio
+              : "Not provided by seller."}
+          </p>
         </Panel>
       </StyledCollaped>
     </StyledLayout>

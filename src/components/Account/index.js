@@ -25,7 +25,7 @@ import {
   LoadingOutlined 
 } from "@ant-design/icons";
 import styled from "styled-components";
-import AssetCard from "../Common/AssetCard";
+import AssetCard from "../Common/AssetCard.jsx";
 import FilterSider from "../Common/FilterSider";
 import CollectionCard from "../Common/CollectionCard";
 import { useDispatch, useSelector } from "react-redux";
@@ -177,9 +177,6 @@ const Account = () => {
                 <AssetCard
                   key={asset._id}
                   asset={asset}
-                  onClick={() => {
-                    window.location.href = `/asset/${asset._id}`;
-                  }}
                 />
               ))
             ) : (

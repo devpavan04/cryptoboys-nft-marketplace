@@ -1,4 +1,4 @@
-import axios from "axios";
+import axios from 'axios';
 
 export const login = (walletAddress) => {
   return async (dispatch) => {
@@ -8,7 +8,7 @@ export const login = (walletAddress) => {
       })
       .then((res) => {
         dispatch({
-          type: "SUCCESS",
+          type: 'FETCH_USER',
           payload: res.data,
         });
       })
@@ -29,7 +29,7 @@ export const update = (user) => {
       })
       .then((res) => {
         dispatch({
-          type: "UPDATE",
+          type: 'UPDATE_USER',
           payload: user,
         });
       })

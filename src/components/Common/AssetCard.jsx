@@ -3,6 +3,9 @@ import { Card, Space, Tooltip } from "antd";
 import styled from "styled-components";
 import Icon, { HeartOutlined, HeartTwoTone } from "@ant-design/icons";
 import { ReactComponent as Ethereum } from "../../assets/icons/ethereum.svg";
+import { setAsset } from "../../state/action/assetAction";
+import { useDispatch } from "react-redux";
+import { useHistory } from "react-router-dom";
 
 const StyledCard = styled(Card)`
   border-radius: 10px;
@@ -40,6 +43,9 @@ const StyledCardInfo = styled.span`
 const EthereumIcon = (props) => <Icon component={Ethereum} {...props} />;
 
 const AssetCard = (props) => {
+  const {asset} = props;
+  const dispatch = useDispatch();
+  const history = useHistory();
   // const title = props.title;
   // const desc = props.desc;
   // const image = props.image;
@@ -52,6 +58,11 @@ const AssetCard = (props) => {
 
   return (
     <StyledCard
+      onClick={()=>{
+        console.log(asset);
+        dispatch(setAsset(asset));
+        history.push(`/assets/${asset._id}`);
+      }}
       hoverable={true}
       style={{
         width: "300px",
@@ -75,8 +86,8 @@ const AssetCard = (props) => {
           size={0}
           style={{ marginLeft: "10px" }}
         >
-          <p style={{ marginBottom: "0px", color: "gray" }}>Collection Name</p>
-          <p style={{ fontWeight: "bold" }}>NFT name</p>
+          <p style={{ marginBottom: "0px", color: "gray" }}>{asset.currentCollection.name}</p>
+          <p style={{ fontWeight: "bold" }}>{asset.name}</p>
         </StyledSpace>
 
         <StyledSpace
@@ -97,7 +108,7 @@ const AssetCard = (props) => {
               }}
             />
             <p style={{ fontWeight: "bold" }}>
-              {props.price ? props.price : 0}
+              {asset.currentPrice ? asset.currentPrice : 0}
             </p>
           </Space>
         </StyledSpace>
@@ -111,7 +122,7 @@ const AssetCard = (props) => {
         )}
       </Tooltip>
       <StyledCardInfo style={{ left: props.isFixedPrice ? "230px" : "180px" }}>
-        {props.isFixedPrice ? "Sale" : "On Auction"}
+        {asset.status}
       </StyledCardInfo>
     </StyledCard>
   );

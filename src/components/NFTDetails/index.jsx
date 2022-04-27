@@ -1,10 +1,13 @@
-import React from "react";
-import styled from "styled-components";
-import AssetImage from "./AssetImage.jsx";
-import AssetDetails from "./AssetDetails.jsx";
-import AssetActivity from "./AssetActivity.jsx";
-import { Row, Col, Affix, Button } from "antd";
-import { useHistory } from "react-router-dom";
+import React, { useEffect, useState } from 'react';
+import styled from 'styled-components';
+import AssetImage from './AssetImage.jsx';
+import AssetDetails from './AssetDetails.jsx';
+import AssetActivity from './AssetActivity.jsx';
+import { Row, Col, Affix, Button, Empty, Typography } from 'antd';
+import { useHistory, useParams } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchAsset } from '../../state/action/assetAction.js';
+import { toast } from 'react-toastify';
 
 const StyledLayout = styled.div`
   padding: 0.5rem 1rem;
@@ -39,48 +42,85 @@ const StyledButton = styled(Button)`
   margin-top: 10px;
 `;
 
+const { Paragraph } = Typography;
+
 const NFTDetails = () => {
   const history = useHistory();
+  const { id } = useParams();
+  const asset = useSelector((state) => state.asset);
+  const user = useSelector((state) => state.user);
+  const [notFound, setNotFound] = useState(false);
+  const dispatch = useDispatch();
   const colProps = {
     xs: 24,
     sm: 24,
   };
 
   const onSellClick = () => {
-    history.push("/listing");
+    history.push('/listing');
   };
+
+  const onEditClick = () => {
+    history.push(`/assets/edit/${asset._id}`);
+  };
+
+  useEffect(() => {
+    if (asset == '' || asset == undefined) {
+      dispatch(fetchAsset(id)).catch(() => {
+        toast.error('Cannot found the asset');
+        setNotFound(true);
+      });
+    }
+  }, [asset]);
+
   return (
     <>
-      <Affix>
-        <OptionLayout>
-          <StyledButton type="primary" onClick={() => onSellClick()}>
-            Sell
-          </StyledButton>
-          <StyledButton
-            type="primary"
-            style={{
-              marginRight: "10px",
-              backgroundColor: "white",
-              color: "#038cfc",
-            }}
-          >
-            Edit
-          </StyledButton>
-        </OptionLayout>
-      </Affix>
-      <StyledLayout>
-        <Row>
-          <Col {...colProps} md={10}>
-            <AssetImage />
-          </Col>
-          <Col {...colProps} md={14}>
-            <AssetDetails />
-          </Col>
-        </Row>
-        <Row md={24}>
-          <AssetActivity />
-        </Row>
-      </StyledLayout>
+      {notFound ? (
+        <Empty
+          description={
+            <span>
+              <Paragraph>Sorry, we couldn't find the asset you are looking for.</Paragraph>
+              <Paragraph>Please check the URL and try again.</Paragraph>
+            </span>
+          }
+        />
+      ) : (
+        <>
+          {asset && user && user._id == asset.currentOwner._id && (
+            <Affix>
+              <OptionLayout>
+                <StyledButton type="primary" onClick={() => onSellClick()}>
+                  Sell
+                </StyledButton>
+                <StyledButton
+                  type="primary"
+                  style={{
+                    marginRight: '10px',
+                    backgroundColor: 'white',
+                    color: '#038cfc',
+                  }}
+                  onClick={() => onEditClick()}
+                >
+                  Edit
+                </StyledButton>
+              </OptionLayout>
+            </Affix>
+          )}
+          <StyledLayout>
+            <Row>
+              <Col {...colProps} md={10}>
+                <AssetImage />
+              </Col>
+              <Col {...colProps} md={14}>
+                <AssetDetails />
+              </Col>
+            </Row>
+            <Row md={24}>
+              <AssetActivity />
+            </Row>
+          </StyledLayout>
+        </>
+      )}
     </>
   );
 };

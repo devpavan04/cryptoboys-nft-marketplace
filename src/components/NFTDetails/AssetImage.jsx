@@ -1,8 +1,9 @@
-import React, { useState } from "react";
-import { Card, Image } from "antd";
-import styled from "styled-components";
-import { HeartTwoTone } from "@ant-design/icons";
-import AssetDesc from "./AssetDesc.jsx";
+import React, { useState } from 'react';
+import { Card, Image } from 'antd';
+import styled from 'styled-components';
+import { HeartTwoTone } from '@ant-design/icons';
+import AssetDesc from './AssetDesc.jsx';
+import { useSelector } from 'react-redux';
 
 const StyledCard = styled(Card)`
   width: 100% !important;
@@ -31,6 +32,7 @@ const StyledImage = styled(Image)`
 
 const AssetImage = () => {
   const [favorite, setFavorite] = useState(false);
+  const asset = useSelector((state) => state.asset);
 
   //#region Favorite
 
@@ -39,25 +41,17 @@ const AssetImage = () => {
   };
   const FavoriteLayout = () => {
     const heartProps = {
-      marginRight: "12px",
-      fontSize: "20px",
+      marginRight: '12px',
+      fontSize: '20px',
     };
     return (
       <>
         {favorite ? (
-          <HeartTwoTone
-            twoToneColor="#eb2f96"
-            onClick={handleFavorite}
-            style={heartProps}
-          />
+          <HeartTwoTone twoToneColor="#eb2f96" onClick={handleFavorite} style={heartProps} />
         ) : (
-          <HeartTwoTone
-            twoToneColor="#bdbcb9"
-            onClick={handleFavorite}
-            style={heartProps}
-          />
+          <HeartTwoTone twoToneColor="#bdbcb9" onClick={handleFavorite} style={heartProps} />
         )}
-        <span style={{ position: "relative", top: "3px" }}>200</span>
+        <span style={{ position: 'relative', top: '3px' }}>{asset && asset.favoriteCount}</span>
       </>
     );
   };

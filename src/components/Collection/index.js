@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from "react";
-import { ethers } from "ethers";
+import React, { useEffect, useState } from 'react';
+import { ethers } from 'ethers';
 import {
   Select,
   Layout,
@@ -10,27 +10,17 @@ import {
   Space,
   Avatar,
   Typography,
-  Affix,
-  Row,
-  Col,
   Empty,
-  Spin
-} from "antd";
-import {
-  HeartOutlined,
-  FormatPainterOutlined,
-  CopyOutlined,
-  MenuUnfoldOutlined,
-  MenuFoldOutlined,
-  LoadingOutlined
-} from "@ant-design/icons";
-import { useParams } from "react-router-dom";
-import styled from "styled-components";
-import AssetCard from "../Common/AssetCard";
-import FilterSider from "../Common/FilterSider";
-import { useSelector, useDispatch } from "react-redux";
-import { fetchCollection } from "../../state/action/collectionAction";
-import { toast } from "react-toastify";
+  Spin,
+} from 'antd';
+import { MenuUnfoldOutlined, MenuFoldOutlined, LoadingOutlined } from '@ant-design/icons';
+import { useParams } from 'react-router-dom';
+import styled from 'styled-components';
+import AssetCard from '../Common/AssetCard.jsx';
+import FilterSider from '../Common/FilterSider';
+import { useSelector, useDispatch } from 'react-redux';
+import { fetchCollection } from '../../state/action/collectionAction';
+import { toast } from 'react-toastify';
 const { Header, Sider, Content } = Layout;
 const { Search } = Input;
 const { Option } = Select;
@@ -124,10 +114,10 @@ const Collection = () => {
   // });
 
   useEffect(() => {
-    if (collection == null || collection == "") {
+    if (collection == null || collection == '') {
       setLoading(true);
       dispatch(fetchCollection(id)).catch(() => {
-        toast.error("Error getting collection");
+        toast.error('Error getting collection');
         setNotFound(true);
       });
       setLoading(false);
@@ -153,9 +143,7 @@ const Collection = () => {
         <Empty
           description={
             <span>
-              <Paragraph>
-                Sorry, we couldn't find the collection you are looking for.
-              </Paragraph>
+              <Paragraph>Sorry, we couldn't find the collection you are looking for.</Paragraph>
               <Paragraph>Please check the URL and try again.</Paragraph>
             </span>
           }
@@ -163,25 +151,13 @@ const Collection = () => {
       ) : (
         <>
           <div>
-            {bannerImage ? (
-              <StyledBannerImage src={bannerImage} />
-            ) : (
-              <StyledFallback />
-            )}
+            {bannerImage ? <StyledBannerImage src={bannerImage} /> : <StyledFallback />}
             <StyledProfileLayout>
-              <div style={{ width: "50%", wordBreak: "break-all" }}>
-                <Space
-                  direction="vertical"
-                  size={0}
-                  style={{ marginLeft: "10px" }}
-                >
+              <div style={{ width: '50%', wordBreak: 'break-all' }}>
+                <Space direction="vertical" size={0} style={{ marginLeft: '10px' }}>
                   <Title level={3}>{collection.name}</Title>
                   <Paragraph
-                    ellipsis={
-                      ellipsis
-                        ? { rows: 2, expandable: true, symbol: "more" }
-                        : false
-                    }
+                    ellipsis={ellipsis ? { rows: 2, expandable: true, symbol: 'more' } : false}
                   >
                     {collection.description}
                   </Paragraph>
@@ -211,34 +187,21 @@ const Collection = () => {
                   align="center"
                   split={<Divider type="vertical" />}
                   size="small"
-                  style={{ marginTop: "5px" }}
+                  style={{ marginTop: '5px' }}
                 >
                   {collapsed ? (
-                    <MenuUnfoldOutlined
-                      onClick={toggleSider}
-                      style={{ fontSize: "25px" }}
-                    />
+                    <MenuUnfoldOutlined onClick={toggleSider} style={{ fontSize: '25px' }} />
                   ) : (
-                    <MenuFoldOutlined
-                      onClick={toggleSider}
-                      style={{ fontSize: "25px" }}
-                    />
+                    <MenuFoldOutlined onClick={toggleSider} style={{ fontSize: '25px' }} />
                   )}
-                  <Search
-                    placeholder="Search"
-                    allowClear
-                    enterButton
-                    style={{ width: "300px" }}
-                  />
+                  <Search placeholder="Search" allowClear enterButton style={{ width: '300px' }} />
                 </Space>
               </StyledHeader>
               <StyledContent>
                 {collection && collection.assets.length > 0 ? (
-                  collection.assets.map((asset) => (
-                    <AssetCard asset={asset} key={asset._id} />
-                  ))
+                  collection.assets.map((asset) => <AssetCard asset={asset} key={asset._id} />)
                 ) : (
-                  <div style={{ width: "90%", margin: "0 auto" }}>
+                  <div style={{ width: '90%', margin: '0 auto' }}>
                     <Empty description={<span>No assets found.</span>} />
                   </div>
                 )}

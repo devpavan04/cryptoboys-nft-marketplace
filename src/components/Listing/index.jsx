@@ -15,7 +15,7 @@ import { ReactComponent as Ethereum } from "../../assets/icons/ethereum.svg";
 import Icon from "@ant-design/icons";
 import moment from "moment";
 import { CalendarOutlined } from "@ant-design/icons";
-import AssetCard from "../Common/AssetCard";
+import AssetCard from "../Common/AssetCard.jsx";
 import { useForm, Controller } from "react-hook-form";
 
 const { Panel } = Collapse;

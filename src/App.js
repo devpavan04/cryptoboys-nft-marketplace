@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { HashRouter, Route, Switch } from "react-router-dom";
+import { BrowserRouter, HashRouter, Route, Switch } from "react-router-dom";
 import "./App.css";
 import Web3 from "web3";
 import { toast, ToastContainer } from "react-toastify";
@@ -22,7 +22,8 @@ import PrivateRoute from "./PrivateRoute";
 import { ethers } from "ethers";
 import "react-toastify/dist/ReactToastify.css";
 import Container from "./page/Container";
-import MintNFTForm from "./components/MintNFTForm";
+import MintAsset from "./components/Form/MintAsset";
+import EditAsset from "./components/Form/EditAsset";
 import NFTDetails from "./components/NFTDetails";
 import Explore from "./components/Explore";
 import Listing from "./components/Listing";
@@ -448,7 +449,7 @@ const App = () => {
     //   )}
     // </div>
     // <ProvideAuth>
-    <HashRouter basename="/">
+    <BrowserRouter basename="/">
       <Container auth={loggedIn}>
         <ToastContainer limit={1} autoClose={3000} />
         <Switch>
@@ -499,8 +500,9 @@ const App = () => {
           <Route path="/login" render={() => <Login />} />
           <Route path="/account" render={() => <Account />} />
           <Route path="/settings" render={() => <AccountSettings />} />
-          <Route path="/mint" render={() => <MintNFTForm />} />
-          <Route path="/detail" render={() => <NFTDetails />} />
+          <Route path="/mint" render={() => <MintAsset />} />
+          <Route path="/assets/:id" exact render={() => <NFTDetails />} />
+          <Route path="/assets/edit/:id" exact render={() => <EditAsset />}/>      
           <Route path="/explore" render={() => <Explore />} />
           <Route path="/collection/:id" render={() => <Collection />} />
           <Route path="/listing" render={() => <Listing />} />
@@ -515,7 +517,7 @@ const App = () => {
         /> */}
         </Switch>
       </Container>
-    </HashRouter>
+    </BrowserRouter>
   );
 };
 
