@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import {
   Typography,
@@ -9,10 +9,18 @@ import {
   Upload,
   Modal,
   Switch,
+  Spin,
 } from "antd";
 import { toast } from "react-toastify";
-
-import { PictureFilled, PlusOutlined } from "@ant-design/icons";
+import {
+  PictureFilled,
+  PlusOutlined,
+  LoadingOutlined,
+} from "@ant-design/icons";
+import { useSelector, useDispatch } from "react-redux";
+import { useParams } from "react-router-dom";
+import { fetchAsset } from "../../state/action/assetAction";
+import { useForm, Controller } from "react-hook-form";
 
 const { Title } = Typography;
 const { Option } = Select;
@@ -59,7 +67,10 @@ const StyledImageLayout = styled.div`
   align-items: center;
 `;
 
-const StyledImage = styled(Image)``;
+const StyledImage = styled(Image)`
+  width: 300px;
+  border-radius: 5px;
+`;
 
 const StyledFallback = styled.div`
   display: flex;
@@ -75,151 +86,139 @@ const StyledFallback = styled.div`
   }
 `;
 
-const getBase64 = (file) => {
-  return new Promise((resolve, reject) => {
-    const reader = new FileReader();
-    reader.readAsDataURL(file);
-    reader.onload = () => resolve(reader.result);
-    reader.onerror = (error) => reject(error);
-  });
-};
+const loadingIcon = <LoadingOutlined style={{ fontSize: 70 }} spin />;
 
 const EditAsset = () => {
-  const [fileList, setFileList] = useState([]);
-  const [previewVisible, setPreviewVisible] = useState(false);
-  const [previewImage, setPreviewImage] = useState("");
-  const [previewTitle, setPreviewTitle] = useState("");
-  const [uploadDirectory, setUploadDirectory] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const { id } = useParams();
+  const dispatch = useDispatch();
+  const user = useSelector((state) => state.user);
+  const asset = useSelector((state) => state.asset);
+  const [newCollection, setNewCollection] = useState();
+  const {
+    register,
+    formState: { errors },
+    handleSubmit,
+    control,
+  } = useForm();
 
-  //#region Handle Image
-  const handleCancel = () => setPreviewVisible(false);
-  const handlePreview = async (file) => {
-    if (!file.url && !file.preview) {
-      file.preview = await getBase64(file.originFileObj);
+  useEffect(() => {
+    if (asset == "" || asset == undefined) {
+      dispatch(fetchAsset(id))
+        .then((res) => {
+          setNewCollection(res.currentCollection._id);
+          setLoading(false);
+        })
+        .catch(() => {
+          toast.error("Cannot found the asset");
+        });
+    } else {
+      setLoading(false);
+      setNewCollection(asset.currentCollection._id);
     }
-
-    setPreviewImage(file.url || file.preview);
-    setPreviewTitle(
-      file.name || file.url.substring(file.url.lastIndexOf("/") + 1)
-    );
-    setPreviewVisible(true);
-  };
-  const handleChange = ({ fileList }) => setFileList(fileList);
-  const uploadButton = (
-    <div>
-      <PlusOutlined />
-      <div style={{ marginTop: 8 }}>UPLOAD</div>
-    </div>
-  );
-  //#endregion
-
-  const switchChange = (checked) => {
-    setUploadDirectory(checked);
-  };
+  }, [asset]);
 
   //will comeback to this later
-  const handleSubmit = async () => {
-    const formData = new FormData();
-    formData.append("title", previewTitle);
-    formData.append("description", previewImage);
-    formData.append("image", fileList[0].originFileObj);
+  const onUpdateSubmit = (data) => {
+    console.log(data);
+    console.log(newCollection);
+  };
 
-    fileList.forEach((file) => {
-      formData.append("files[]", file);
-    });
-
-    try {
-      const response = await fetch("/api/mint", {
-        method: "POST",
-        body: formData,
-      });
-      const data = await response.json();
-      if (data.success) {
-        toast.success("Successfully minted NFT");
-      } else {
-        toast.error("Failed to mint NFT");
-      }
-    } catch (error) {
-      toast.error("Failed to mint NFT");
-    }
+  const onCollectionChange = (value) => {
+    setNewCollection(value);
   };
 
   return (
-    <StyledLayout>
-      <Title>Edit Assets</Title>
-      <StyledLabel>Images, Videos, Gifs</StyledLabel>
-      <div style={{ marginBottom: "10px" }}>
-        Upload directory <Switch onChange={switchChange} size="small" />
-      </div>
-      <Upload
-        listType="picture-card"
-        fileList={fileList}
-        onPreview={handlePreview}
-        onChange={handleChange}
-        onRemove={(file) => {
-          const index = fileList.indexOf(file);
-          const newFileList = fileList.slice();
-          newFileList.splice(index, 1);
-          setFileList(newFileList);
-        }}
-        beforeUpload={(file) => {
-          const isJPG = file.type === "image/jpeg";
-          const isPNG = file.type === "image/png";
-          const isGIF = file.type === "image/gif";
-          const isMP3 = file.type === "audio/mp3";
-          const isMP4 = file.type === "video/mp4";
-
-          if (!isJPG && !isPNG && !isGIF && !isMP3 && !isMP4) {
-            toast.error("You can only upload JPG/PNG/GIF/MP3/MP4 files!");
-            return false;
-          }
-          setFileList([...fileList, file]);
-          return false;
-        }}
-        directory={uploadDirectory}
-      >
-        {uploadButton}
-      </Upload>
-      <Modal
-        visible={previewVisible}
-        title={previewTitle}
-        footer={null}
-        onCancel={handleCancel}
-      >
-        <img alt="example" style={{ width: "100%" }} src={previewImage} />
-      </Modal>
-      <StyledLabel>Name</StyledLabel>
-      <Input
-        style={{ borderRadius: "5px" }}
-        size="large"
-        placeholder="NFT's name"
-        disabled={fileList.length > 1 ? true : false}
-      />
-      <StyledLabel>Description</StyledLabel>
-      <StyledTextArea
-        placeholder="Provide a detailed description of your NFT"
-        rows={5}
-      />
-      <StyledLabel>Collection</StyledLabel>
-      <StyledSelect
-        showSearch
-        placeholder="Select a collection"
-        optionFilterProp="children"
-        filterOption={(input, option) =>
-          option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
-        }
-        style={{
-          width: "100%",
-          borderRadius: "5px",
-        }}
-      >
-        <Option value="jack">Jack</Option>
-        <Option value="lucy">Lucy</Option>
-        <Option value="tom">Tom</Option>
-      </StyledSelect>
-      <br />
-      <StyledButton type="primary">Create</StyledButton>
-    </StyledLayout>
+    <>
+      {loading ? (
+        <StyledLayout style={{ textAlign: "center" }}>
+          <Spin indicator={loadingIcon} />
+        </StyledLayout>
+      ) : (
+        <StyledLayout>
+          <form>
+            <Title>Edit Your Asset</Title>
+            <StyledLabel>Images, GIFs, Videos</StyledLabel>
+            <StyledImage
+              width={200}
+              src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png"
+            />
+            <StyledLabel>Name</StyledLabel>
+            <Controller
+              name="name"
+              control={control}
+              defaultValue={asset.name}
+              rules={{
+                required: {
+                  value: true,
+                  message: "Name is required *",
+                },
+                minLength: {
+                  value: 3,
+                  message: "Name must be at least 5 characters *",
+                },
+                maxLength: {
+                  value: 20,
+                  message: "Name cannot be more than 20 characters *",
+                },
+              }}
+              render={({ field: { onChange, onBlur, value } }) => (
+                <Input
+                  placeholder={asset.name}
+                  onChange={onChange}
+                  onBlur={onBlur}
+                  value={value}
+                  style={{ borderRadius: "5px" }}
+                  size="large"
+                />
+              )}
+            />
+            <p style={{ color: "red" }}>{errors.name && errors.name.message}</p>
+            <StyledLabel>Description</StyledLabel>
+            <Controller
+              name="description"
+              control={control}
+              defaultValue={asset.description}
+              render={({ field: { onChange, onBlur, value } }) => (
+                <StyledTextArea
+                  rows={5}
+                  onChange={onChange}
+                  onBlur={onBlur}
+                  value={value}
+                  {...register("description")}
+                />
+              )}
+            />
+            <StyledLabel>Collection</StyledLabel>
+            <StyledSelect
+              showSearch
+              placeholder="Select a collection"
+              optionFilterProp="children"
+              filterOption={(input, option) =>
+                option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+              }
+              style={{
+                width: "100%",
+                borderRadius: "5px",
+              }}
+              defaultValue={asset.currentCollection._id}
+              onChange={onCollectionChange}
+            >
+              {user &&
+                user.ownedCollections.map((collection) => (
+                  <Option key={collection._id} value={collection._id}>
+                    {collection.name}
+                  </Option>
+                ))}
+            </StyledSelect>
+            <br />
+            <StyledButton type="primary" onClick={handleSubmit(onUpdateSubmit)}>
+              Update
+            </StyledButton>
+          </form>
+        </StyledLayout>
+      )}
+    </>
   );
 };
 
