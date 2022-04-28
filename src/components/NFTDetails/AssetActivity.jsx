@@ -55,7 +55,7 @@ const columns = [
           ) : (
             <StyledIcon component={FireOutlined} style={{ color: "red" }} />
           )}{" "}
-          {text.toUpperCase()}
+          {text}
         </span>
       );
     },
@@ -102,7 +102,11 @@ const columns = [
     title: "To",
     key: "to",
     dataIndex: "to",
-    render: (text) => <StyledLink>{text.walletAddress}</StyledLink>,
+    render: (text) => (
+      <Link to={`/account/${text.walletAddress}`}>
+        <StyledLink>{text.walletAddress}</StyledLink>
+      </Link>
+    ),
   },
   {
     title: "Date",

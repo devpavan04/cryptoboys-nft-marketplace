@@ -32,7 +32,7 @@ const SellerDesc = () => {
       <StyledCollaped defaultActiveKey={["1"]} expandIconPosition="right">
         <Panel header="About me" key="1">
           <p>
-            {asset && asset.currentOwner
+            {asset && asset.currentOwner.bio !== ""
               ? asset.currentOwner.bio
               : "Not provided by seller."}
           </p>

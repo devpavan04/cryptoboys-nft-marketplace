@@ -54,22 +54,24 @@ const Login = () => {
   };
 
   const checkLoggedIn = async () => {
-    const provider = new ethers.providers.Web3Provider(window.ethereum);
-    const signer = provider.getSigner();
-    try {
-      const address = await signer.getAddress();
-      if (address != null) {
-        dispatch(login(address)).catch((err) => {
-          return toast.error(err);
-        });
-        history.push("/account");
+    if (window.ethereum) {
+      const provider = new ethers.providers.Web3Provider(window.ethereum);
+      const signer = provider.getSigner();
+      try {
+        const address = await signer.getAddress();
+        if (address != null) {
+          dispatch(login(address)).catch((err) => {
+            return toast.error(err);
+          });
+          history.push(`/my-account`);
+        }
+        // UserService.loginService(address).then(res => {
+        //   history.push("/account/" + res._id || "")
+        // })
+        // history.push("/account");
+      } catch {
+        return false;
       }
-      // UserService.loginService(address).then(res => {
-      //   history.push("/account/" + res._id || "")
-      // })
-      // history.push("/account");
-    } catch {
-      return false;
     }
   };
 
@@ -81,7 +83,6 @@ const Login = () => {
       });
       window.location.reload();
     } catch (e) {
-      console.log(e);
       toast.error("Cannot connect to Metamask");
     }
   };

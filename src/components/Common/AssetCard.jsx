@@ -43,7 +43,7 @@ const StyledCardInfo = styled.span`
 const EthereumIcon = (props) => <Icon component={Ethereum} {...props} />;
 
 const AssetCard = (props) => {
-  const {asset} = props;
+  const { asset } = props;
   const dispatch = useDispatch();
   const history = useHistory();
   // const title = props.title;
@@ -58,7 +58,7 @@ const AssetCard = (props) => {
 
   return (
     <StyledCard
-      onClick={()=>{
+      onClick={() => {
         console.log(asset);
         dispatch(setAsset(asset));
         history.push(`/assets/${asset._id}`);
@@ -66,7 +66,7 @@ const AssetCard = (props) => {
       hoverable={true}
       style={{
         width: "300px",
-        height:  "420px",
+        height: "420px",
       }}
       cover={
         <img
@@ -74,7 +74,7 @@ const AssetCard = (props) => {
           src="https://os.alipayobjects.com/rmsportal/QBnOOoLaAfKPirc.png"
           style={{
             width: "300px",
-            height:  "310px",
+            height: "310px",
             borderRadius: "10px 10px 0px 0px",
           }}
         />
@@ -86,7 +86,9 @@ const AssetCard = (props) => {
           size={0}
           style={{ marginLeft: "10px" }}
         >
-          <p style={{ marginBottom: "0px", color: "gray" }}>{asset.currentCollection.name}</p>
+          <p style={{ marginBottom: "0px", color: "gray" }}>
+            {asset.currentCollection.name}
+          </p>
           <p style={{ fontWeight: "bold" }}>{asset.name}</p>
         </StyledSpace>
 
@@ -96,7 +98,7 @@ const AssetCard = (props) => {
           style={{ marginRight: "5px", textAlign: "right" }}
         >
           <p style={{ marginBottom: "0px", color: "gray" }}>
-            {props.isFixedPrice ? "Price" : "Bid"}
+            {asset.status == "On Auction" ? "Bid" : "Price"}
           </p>
           <Space direction="horizontal" size={0}>
             <EthereumIcon

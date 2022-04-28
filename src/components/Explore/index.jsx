@@ -78,12 +78,7 @@ const Explore = () => {
         <Menu.Item key="video">Video</Menu.Item>
         <Menu.Item key="gif">GIF</Menu.Item>
       </StyledMenu>
-      <StyledContainer>
-        <CollectionCard />
-        <CollectionCard />
-        <CollectionCard />
-        <CollectionCard />
-      </StyledContainer>
+      <StyledContainer></StyledContainer>
     </StyledLayout>
   );
 };

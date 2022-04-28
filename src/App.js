@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { BrowserRouter, HashRouter, Route, Switch } from "react-router-dom";
+import { BrowserRouter, Route, Switch } from "react-router-dom";
 import "./App.css";
 import Web3 from "web3";
 import { toast, ToastContainer } from "react-toastify";
@@ -31,6 +31,7 @@ import PageNotFound from "./components/Common/PageNotFound";
 import ErrorPage from "./components/Common/ErrorPage";
 import SuccessPage from "./components/Common/SuccessPage";
 import Collection from "./components/Collection";
+import UsersAccount from "./components/Account/UsersAccount";
 import { useDispatch, useSelector } from "react-redux";
 import { login } from "./state/action/userAction";
 
@@ -88,7 +89,7 @@ const App = () => {
       const signer = provider.getSigner();
       const address = await signer.getAddress();
       if (address != null) {
-        dispatch(login(address))
+        dispatch(login(address));
       }
     }
   };
@@ -498,11 +499,12 @@ const App = () => {
               )}
             /> */}
           <Route path="/login" render={() => <Login />} />
-          <Route path="/account" render={() => <Account />} />
+          <Route path="/my-account" exact render={() => <Account />} />
+          <Route path="/account/:id" exact render={() => <UsersAccount />} />
           <Route path="/settings" render={() => <AccountSettings />} />
           <Route path="/mint" render={() => <MintAsset />} />
           <Route path="/assets/:id" exact render={() => <NFTDetails />} />
-          <Route path="/assets/edit/:id" exact render={() => <EditAsset />}/>      
+          <Route path="/assets/edit/:id" exact render={() => <EditAsset />} />
           <Route path="/explore" render={() => <Explore />} />
           <Route path="/collection/:id" render={() => <Collection />} />
           <Route path="/listing" render={() => <Listing />} />

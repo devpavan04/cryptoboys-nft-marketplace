@@ -86,7 +86,7 @@ const Navbar = (props) => {
             ) : (
               <Fragment>
                 <li className="mr-3">
-                  <Link to="/account" className="">
+                  <Link to="/my-account" className="">
                     Account
                   </Link>
                 </li>

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { ethers } from "ethers";
 import {
   Select,
@@ -30,6 +30,8 @@ import { getOwnedAsset } from "../../state/action/ownedAssetsAction";
 import { getOwnedCollection } from "../../state/action/ownedCollectionAction";
 import { getFavoriteAsset } from "../../state/action/favoriteAssetsAction";
 import { toast } from "react-toastify";
+import axios from "axios";
+import { useParams } from "react-router-dom";
 const { Header, Sider, Content } = Layout;
 const { Search } = Input;
 const { Option } = Select;
@@ -109,28 +111,39 @@ const Account = () => {
   const [profileImage, setProfileImage] = useState(null);
   const [collapsed, setCollapsed] = useState(false);
   const [ellipsis, setEllipsis] = useState(true);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [menuSelected, setMenuSelected] = useState("1");
-  const user = useSelector((state) => state.user);
+  // const user = useSelector((state) => state.user);
+  const { id } = useParams();
   const ownedAssets = useSelector((state) => state.ownedAssets);
   const ownedCollections = useSelector((state) => state.ownedCollections);
-  const favoriteAssets = useSelector((state) => state.favoriteAssets);
+  // const favoriteAssets = useSelector((state) => state.favoriteAssets);
+  const [user, setUser] = useState({});
+  const [assets, setAssets] = useState([]);
+  const [collections, setCollections] = useState([]);
+  const [favoriteAssets, setFavoriteAssets] = useState([]);
 
   useEffect(() => {
-    if (user != "") {
-      if (ownedAssets.length === 0) {
-        dispatch(getOwnedAsset(user._id));
-      }
-      if (ownedCollections.length === 0) {
-        dispatch(getOwnedCollection(user._id));
-      }
-      if (favoriteAssets.length === 0) {
-        dispatch(getFavoriteAsset(user._id));
-      }
+    getUser();
+    setLoading(false);
+  }, [getUser]);
+
+  useEffect(() => {
+    if (Object.keys(user).length !== 0) {
+      getAssetsAndCollections(user._id);
       setImg();
     }
-    setLoading(false);
   }, [user]);
+
+  const getUser = async () => {
+    await axios
+      .get(
+        `${process.env.REACT_APP_API_URL}/users/get-user?walletAddress=${id}`
+      )
+      .then((res) => {
+        setUser(res.data);
+      });
+  };
 
   const setImg = () => {
     if (user.bannerImg) {
@@ -140,6 +153,43 @@ const Account = () => {
     if (user.profileImg) {
       setProfileImage(user.profileImage);
     }
+  };
+
+  const getAssetsAndCollections = async (id) => {
+    // dispatch(getOwnedAsset(id)).catch(() => {
+    //   toast.error("Error fetching owned assets");
+    // });
+    await axios
+      .get(`${process.env.REACT_APP_API_URL}/users/owned-assets?id=${id}`)
+      .then(({ data }) => {
+        setAssets(data.ownedAssets);
+      })
+      .catch(() => {
+        toast.error("Error fetching collected assets");
+      });
+    await axios
+      .get(`${process.env.REACT_APP_API_URL}/users/owned-collections?id=${id}`)
+      .then(({ data }) => {
+        setCollections(data.ownedCollections);
+      })
+      .catch(() => {
+        toast.error("Error fetching owned collections");
+      });
+    await axios
+      .get(`${process.env.REACT_APP_API_URL}/users/favorite-assets?id=${id}`)
+      .then(({ data }) => {
+        setFavoriteAssets(data.favoriteAssets);
+      })
+      .catch(() => {
+        toast.error("Error fetching favorite assets");
+      });
+
+    // dispatch(getOwnedCollection(id)).catch(() => {
+    //   toast.error("Error fetching owned collections");
+    // });
+    // dispatch(getFavoriteAsset(id)).catch(() => {
+    //   toast.error("Error fetching favorite assets");
+    // });
   };
 
   const toggleSider = () => {
@@ -163,15 +213,13 @@ const Account = () => {
       case "1":
         return (
           <>
-            {ownedAssets.length > 0 ? (
-              ownedAssets.map((asset) => (
-                <AssetCard key={asset._id} asset={asset} />
-              ))
+            {assets.length > 0 ? (
+              assets
+                .filter((asset) => asset.status != "Not Listing")
+                .map((asset) => <AssetCard key={asset._id} asset={asset} />)
             ) : (
               <div style={{ width: "90%", margin: "0 auto" }}>
-                <Empty
-                  description={<span>You don't have any assets yet.</span>}
-                />
+                <Empty description={<span>User don't have any assets.</span>} />
               </div>
             )}
           </>
@@ -186,7 +234,7 @@ const Account = () => {
             ) : (
               <div style={{ width: "90%", margin: "0 auto" }}>
                 <Empty
-                  description={<span>You don't have any favorite yet.</span>}
+                  description={<span>User don't have any favorites.</span>}
                 />
               </div>
             )}
@@ -195,14 +243,14 @@ const Account = () => {
       case "3":
         return (
           <>
-            {ownedCollections.length > 0 ? (
-              ownedCollections.map((collection) => (
+            {collections.length > 0 ? (
+              collections.map((collection) => (
                 <CollectionCard key={collection._id} collection={collection} />
               ))
             ) : (
               <div style={{ width: "90%", margin: "0 auto" }}>
                 <Empty
-                  description={<span>You don't have any collections yet.</span>}
+                  description={<span>User don't have any collections</span>}
                 />
               </div>
             )}
