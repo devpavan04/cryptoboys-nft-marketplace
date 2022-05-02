@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react';
-import { ethers } from 'ethers';
+import React, { useEffect, useState } from "react";
+import { ethers } from "ethers";
 import {
   Select,
   Layout,
@@ -12,15 +12,21 @@ import {
   Typography,
   Empty,
   Spin,
-} from 'antd';
-import { MenuUnfoldOutlined, MenuFoldOutlined, LoadingOutlined } from '@ant-design/icons';
-import { useParams } from 'react-router-dom';
-import styled from 'styled-components';
-import AssetCard from '../Common/AssetCard.jsx';
-import FilterSider from '../Common/FilterSider';
-import { useSelector, useDispatch } from 'react-redux';
-import { fetchCollection } from '../../state/action/collectionAction';
-import { toast } from 'react-toastify';
+  Affix,
+  Button,
+} from "antd";
+import {
+  MenuUnfoldOutlined,
+  MenuFoldOutlined,
+  LoadingOutlined,
+} from "@ant-design/icons";
+import { useParams, useHistory } from "react-router-dom";
+import styled from "styled-components";
+import AssetCard from "../Common/AssetCard.jsx";
+import FilterSider from "../Common/FilterSider";
+import { useSelector, useDispatch } from "react-redux";
+import { fetchCollection } from "../../state/action/collectionAction";
+import { toast } from "react-toastify";
 const { Header, Sider, Content } = Layout;
 const { Search } = Input;
 const { Option } = Select;
@@ -50,7 +56,7 @@ const StyledBannerImage = styled(Image)`
 
 const StyledFallback = styled.div`
   background-color: #e8e6e6;
-  width: 100vw;
+  width: 100%;
   height: 30vh;
 `;
 
@@ -97,10 +103,30 @@ const StyledContainer = styled.div`
   margin: 0 auto;
 `;
 
+const OptionLayout = styled.div`
+  width: 100%;
+  height: 65px;
+  background-color: rgba(251, 253, 255);
+  border-bottom: 1px solid #e8e8e8;
+  display: flex;
+  flex-direction: row-reverse;
+`;
+
+const StyledButton = styled(Button)`
+  border-radius: 10px;
+  font-size: 20px;
+  width: 150px;
+  height: fit-content;
+  font-weight: bold;
+  margin-right: 8rem;
+  margin-top: 10px;
+`;
+
 const loadingIcon = <LoadingOutlined style={{ fontSize: 70 }} spin />;
 
 const Collection = () => {
   const { id } = useParams();
+  const history = useHistory();
   const [bannerImage, setBannerImage] = useState(null);
   const [collapsed, setCollapsed] = useState(false);
   const [ellipsis, setEllipsis] = useState(true);
@@ -108,16 +134,17 @@ const Collection = () => {
   const [loading, setLoading] = useState(true);
   const dispatch = useDispatch();
   const collection = useSelector((state) => state.collection);
+  const user = useSelector((state) => state.user);
 
   // useEffect(() => {
   //   setBannerImage("https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png")
   // });
 
   useEffect(() => {
-    if (collection == null || collection == '') {
+    if (collection == null || collection == "") {
       setLoading(true);
       dispatch(fetchCollection(id)).catch(() => {
-        toast.error('Error getting collection');
+        toast.error("Error getting collection");
         setNotFound(true);
       });
       setLoading(false);
@@ -137,27 +164,62 @@ const Collection = () => {
     console.log(`search ${value}`);
   };
 
+  const onEditClick = () => {
+    history.push(`/collection/edit/${id}`);
+  };
+
   return (
     <Spin spinning={loading} indicator={loadingIcon}>
       {notFound ? (
         <Empty
           description={
             <span>
-              <Paragraph>Sorry, we couldn't find the collection you are looking for.</Paragraph>
+              <Paragraph>
+                Sorry, we couldn't find the collection you are looking for.
+              </Paragraph>
               <Paragraph>Please check the URL and try again.</Paragraph>
             </span>
           }
         />
       ) : (
         <>
+          {collection && user && user._id == collection.owner._id && (
+            <Affix>
+              <OptionLayout>
+                <StyledButton
+                  type="primary"
+                  style={{
+                    marginRight: "10px",
+                    backgroundColor: "white",
+                    color: "#038cfc",
+                  }}
+                  onClick={() => onEditClick()}
+                >
+                  Edit
+                </StyledButton>
+              </OptionLayout>
+            </Affix>
+          )}
           <div>
-            {bannerImage ? <StyledBannerImage src={bannerImage} /> : <StyledFallback />}
+            {bannerImage ? (
+              <StyledBannerImage src={bannerImage} />
+            ) : (
+              <StyledFallback />
+            )}
             <StyledProfileLayout>
-              <div style={{ width: '50%', wordBreak: 'break-all' }}>
-                <Space direction="vertical" size={0} style={{ marginLeft: '10px' }}>
+              <div style={{ width: "50%", wordBreak: "break-all" }}>
+                <Space
+                  direction="vertical"
+                  size={0}
+                  style={{ marginLeft: "10px" }}
+                >
                   <Title level={3}>{collection.name}</Title>
                   <Paragraph
-                    ellipsis={ellipsis ? { rows: 2, expandable: true, symbol: 'more' } : false}
+                    ellipsis={
+                      ellipsis
+                        ? { rows: 2, expandable: true, symbol: "more" }
+                        : false
+                    }
                   >
                     {collection.description}
                   </Paragraph>
@@ -187,21 +249,34 @@ const Collection = () => {
                   align="center"
                   split={<Divider type="vertical" />}
                   size="small"
-                  style={{ marginTop: '5px' }}
+                  style={{ marginTop: "5px" }}
                 >
                   {collapsed ? (
-                    <MenuUnfoldOutlined onClick={toggleSider} style={{ fontSize: '25px' }} />
+                    <MenuUnfoldOutlined
+                      onClick={toggleSider}
+                      style={{ fontSize: "25px" }}
+                    />
                   ) : (
-                    <MenuFoldOutlined onClick={toggleSider} style={{ fontSize: '25px' }} />
+                    <MenuFoldOutlined
+                      onClick={toggleSider}
+                      style={{ fontSize: "25px" }}
+                    />
                   )}
-                  <Search placeholder="Search" allowClear enterButton style={{ width: '300px' }} />
+                  <Search
+                    placeholder="Search"
+                    allowClear
+                    enterButton
+                    style={{ width: "300px" }}
+                  />
                 </Space>
               </StyledHeader>
               <StyledContent>
                 {collection && collection.assets.length > 0 ? (
-                  collection.assets.map((asset) => <AssetCard asset={asset} key={asset._id} />)
+                  collection.assets.map((asset) => (
+                    <AssetCard asset={asset} key={asset._id} />
+                  ))
                 ) : (
-                  <div style={{ width: '90%', margin: '0 auto' }}>
+                  <div style={{ width: "90%", margin: "0 auto" }}>
                     <Empty description={<span>No assets found.</span>} />
                   </div>
                 )}

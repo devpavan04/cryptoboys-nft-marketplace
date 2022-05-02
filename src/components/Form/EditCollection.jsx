@@ -1,26 +1,13 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
-import {
-  Typography,
-  Input,
-  Button,
-  Select,
-  Image,
-  Upload,
-  Modal,
-  Switch,
-  Spin,
-} from "antd";
+import { Typography, Input, Button, Select, Image, Upload, Spin } from "antd";
+import { UploadOutlined, LoadingOutlined } from "@ant-design/icons";
 import { toast } from "react-toastify";
-import {
-  PictureFilled,
-  PlusOutlined,
-  LoadingOutlined,
-} from "@ant-design/icons";
 import { useSelector, useDispatch } from "react-redux";
-import { useParams } from "react-router-dom";
-import { fetchAsset } from "../../state/action/assetAction";
 import { useForm, Controller } from "react-hook-form";
+import { fetchCollection } from "../../state/action/collectionAction";
+import { useParams } from "react-router-dom";
+import axios from "axios";
 
 const { Title } = Typography;
 const { Option } = Select;
@@ -88,13 +75,14 @@ const StyledFallback = styled.div`
 
 const loadingIcon = <LoadingOutlined style={{ fontSize: 70 }} spin />;
 
-const EditAsset = () => {
-  const [loading, setLoading] = useState(true);
+const EditCollection = () => {
   const { id } = useParams();
+  const [loading, setLoading] = useState(true);
+  const collection = useSelector((state) => state.collection);
+  const [image, setImage] = useState(null);
+  const [category, setCategory] = useState(null);
+  const [fetchCategory, setFetchCategory] = useState([]);
   const dispatch = useDispatch();
-  const user = useSelector((state) => state.user);
-  const asset = useSelector((state) => state.asset);
-  const [newCollection, setNewCollection] = useState();
   const {
     register,
     formState: { errors },
@@ -102,30 +90,45 @@ const EditAsset = () => {
     control,
   } = useForm();
 
-  useEffect(() => {
-    if (asset == "" || asset == undefined) {
-      dispatch(fetchAsset(id))
-        .then((res) => {
-          setNewCollection(res.currentCollection._id);
-          setLoading(false);
-        })
-        .catch(() => {
-          toast.error("Cannot found the asset");
-        });
-    } else {
-      setLoading(false);
-      setNewCollection(asset.currentCollection._id);
-    }
-  }, [asset]);
-
   //will comeback to this later
   const onUpdateSubmit = (data) => {
     console.log(data);
-    console.log(newCollection);
+    console.log(category);
   };
 
-  const onCollectionChange = (value) => {
-    setNewCollection(value);
+  const fetchCategoryData = async () => {
+    await axios
+      .get(`${process.env.REACT_APP_API_URL}/categories/list`)
+      .then((res) => {
+        setFetchCategory(res.data);
+      })
+      .catch((err) => {
+        toast.error("Can't fetch category data");
+      });
+  };
+
+  useEffect(() => {
+    fetchCategoryData();
+  }, []);
+
+  useEffect(() => {
+    if (collection == "" || collection == undefined) {
+      dispatch(fetchCollection(id))
+        .then((res) => {
+          // setCategory(res.category);
+          setLoading(false);
+        })
+        .catch(() => {
+          toast.error("Cannot found the collection");
+        });
+    } else {
+      setLoading(false);
+      setCategory(collection.category);
+    }
+  }, [collection]);
+
+  const onCategoryChange = (value) => {
+    setCategory(value);
   };
 
   return (
@@ -137,17 +140,16 @@ const EditAsset = () => {
       ) : (
         <StyledLayout>
           <form>
-            <Title>Edit Your Asset</Title>
-            <StyledLabel>Images, GIFs, Videos</StyledLabel>
+            <Title>Edit Collection</Title>
+            <StyledLabel>Banner Image</StyledLabel>
             <StyledImage
               width={200}
               src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png"
             />
-            <StyledLabel>Name</StyledLabel>
+            <StyledLabel>Collection's Name</StyledLabel>
             <Controller
               name="name"
               control={control}
-              defaultValue={asset.name}
               rules={{
                 required: {
                   value: true,
@@ -162,9 +164,10 @@ const EditAsset = () => {
                   message: "Name cannot be more than 20 characters *",
                 },
               }}
+              defaultValue={collection.name}
               render={({ field: { onChange, onBlur, value } }) => (
                 <Input
-                  placeholder={asset.name}
+                  placeholder={collection.name}
                   onChange={onChange}
                   onBlur={onBlur}
                   value={value}
@@ -178,9 +181,10 @@ const EditAsset = () => {
             <Controller
               name="description"
               control={control}
-              defaultValue={asset.description}
+              defaultValue={collection.description}
               render={({ field: { onChange, onBlur, value } }) => (
                 <StyledTextArea
+                  placeholder={collection.description}
                   rows={5}
                   onChange={onChange}
                   onBlur={onBlur}
@@ -188,10 +192,10 @@ const EditAsset = () => {
                 />
               )}
             />
-            <StyledLabel>Collection</StyledLabel>
+            <StyledLabel>Category</StyledLabel>
             <StyledSelect
               showSearch
-              placeholder="Select a collection"
+              placeholder="Select a category"
               optionFilterProp="children"
               filterOption={(input, option) =>
                 option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
@@ -200,13 +204,13 @@ const EditAsset = () => {
                 width: "100%",
                 borderRadius: "5px",
               }}
-              defaultValue={asset.currentCollection._id}
-              onChange={onCollectionChange}
+              onChange={onCategoryChange}
+              defaultValue={collection.category ? collection.category : null}
             >
-              {user &&
-                user.ownedCollections.map((collection) => (
-                  <Option key={collection._id} value={collection._id}>
-                    {collection.name}
+              {fetchCategory.length > 0 &&
+                fetchCategory.map((item) => (
+                  <Option key={item._id} value={item._id}>
+                    {item.name}
                   </Option>
                 ))}
             </StyledSelect>
@@ -221,4 +225,4 @@ const EditAsset = () => {
   );
 };
 
-export default EditAsset;
+export default EditCollection;

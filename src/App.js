@@ -31,6 +31,8 @@ import PageNotFound from "./components/Common/PageNotFound";
 import ErrorPage from "./components/Common/ErrorPage";
 import SuccessPage from "./components/Common/SuccessPage";
 import Collection from "./components/Collection";
+import CreateCollection from "./components/Form/CreateCollection";
+import EditCollection from "./components/Form/EditCollection";
 import UsersAccount from "./components/Account/UsersAccount";
 import { useDispatch, useSelector } from "react-redux";
 import { login } from "./state/action/userAction";
@@ -506,7 +508,17 @@ const App = () => {
           <Route path="/assets/:id" exact render={() => <NFTDetails />} />
           <Route path="/assets/edit/:id" exact render={() => <EditAsset />} />
           <Route path="/explore" render={() => <Explore />} />
-          <Route path="/collection/:id" render={() => <Collection />} />
+          <Route
+            path="/collection/create"
+            exact
+            render={() => <CreateCollection />}
+          />
+          <Route
+            path="/collection/edit/:id"
+            exact
+            render={() => <EditCollection />}
+          />
+          <Route path="/collection/:id" exact render={() => <Collection />} />
           <Route path="/listing" render={() => <Listing />} />
           <Route path="/error" render={() => <ErrorPage />} />
           <Route path="/success" render={() => <SuccessPage />} />
