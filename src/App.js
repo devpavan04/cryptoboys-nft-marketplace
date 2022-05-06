@@ -3,7 +3,7 @@ import { BrowserRouter, Route, Switch } from "react-router-dom";
 import "./App.css";
 import Web3 from "web3";
 import { toast, ToastContainer } from "react-toastify";
-import CryptoBoys from "./abis/CryptoBoys.json";
+// import CryptoBoys from "./abis/CryptoBoys.json";
 import FormAndPreview from "./components/FormAndPreview/FormAndPreview";
 import AllCryptoBoys from "./components/AllCryptoBoys/AllCryptoBoys";
 import AccountDetails from "./components/AccountSettings";

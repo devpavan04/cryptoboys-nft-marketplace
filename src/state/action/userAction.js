@@ -13,7 +13,7 @@ export const login = (walletAddress) => {
         });
       })
       .catch((e) => {
-        throw e.response.data.message;
+        throw e;
       });
   };
 };

@@ -1,5 +1,6 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
+import { BigNumber, ethers } from "ethers";
 import {
   Typography,
   Input,
@@ -9,12 +10,32 @@ import {
   Upload,
   Modal,
   Switch,
+  Spin,
 } from "antd";
 import { toast } from "react-toastify";
 import { useSelector } from "react-redux";
 import { useForm, Controller } from "react-hook-form";
+import { PlusOutlined, LoadingOutlined } from "@ant-design/icons";
+import axios from "axios";
+import NFTMarketplace from "../../build/abis/NFTMarketplace.json";
+import NFT from "../../build/abis/NFT.json";
 
-import { PlusOutlined } from "@ant-design/icons";
+//#region IPFS
+const ipfsClient = require("ipfs-http-client");
+const infuraAuth =
+  "Basic " +
+  window.btoa(
+    `${process.env.REACT_APP_PROJECT_ID}:${process.env.REACT_APP_PROJECT_SECRET}`
+  );
+const ipfs = ipfsClient({
+  host: "ipfs.infura.io",
+  port: 5001,
+  protocol: "https",
+  headers: {
+    authorization: infuraAuth,
+  },
+});
+//#endregion
 
 const { Title } = Typography;
 const { Option } = Select;
@@ -77,6 +98,8 @@ const StyledFallback = styled.div`
   }
 `;
 
+const loadingIcon = <LoadingOutlined spin />;
+
 const getBase64 = (file) => {
   return new Promise((resolve, reject) => {
     const reader = new FileReader();
@@ -94,12 +117,16 @@ const MintAsset = () => {
   const [uploadDirectory, setUploadDirectory] = useState(false);
   const user = useSelector((state) => state.user);
   const [newCollection, setNewCollection] = useState(null);
+  const [loading, setLoading] = useState(false);
   const {
-    register,
     formState: { errors },
     handleSubmit,
     control,
   } = useForm();
+
+  useEffect(() => {
+    if (user) setNewCollection(user.ownedCollections[0]._id);
+  }, [user]);
 
   //#region Handle Image
   const handleCancel = () => setPreviewVisible(false);
@@ -127,166 +154,279 @@ const MintAsset = () => {
     setUploadDirectory(checked);
   };
 
-  //will comeback to this later
-  const onCreateSubmit = async (data) => {
-    console.log(data);
-    console.log(newCollection);
-
-    const formData = new FormData();
-
-    //will comeback to this for ipfs
-    if (fileList.length === 0) {
-      toast.error("Please upload an image");
-      return;
-    } else if (fileList === 1) {
-      // formData.append("image", fileList[0].originFileObj);
-      formData.append("image", fileList[0]);
-    }
-
-    // const formData = new FormData();
-    // formData.append("title", previewTitle);
-    // formData.append("description", previewImage);
-    // formData.append("image", fileList[0].originFileObj);
-
-    // fileList.forEach((file) => {
-    //   formData.append("files[]", file);
-    // });
-
-    // try {
-    //   const response = await fetch("/api/mint", {
-    //     method: "POST",
-    //     body: formData,
-    //   });
-    //   const data = await response.json();
-    //   if (data.success) {
-    //     toast.success("Successfully minted NFT");
-    //   } else {
-    //     toast.error("Failed to mint NFT");
-    //   }
-    // } catch (error) {
-    //   toast.error("Failed to mint NFT");
-    // }
-  };
-
   const onCollectionChange = (value) => {
     setNewCollection(value);
   };
 
-  return (
-    <StyledLayout>
-      <form>
-        <Title>Create New NFT</Title>
-        <StyledLabel>Images, Videos, Gifs</StyledLabel>
-        <div style={{ marginBottom: "10px" }}>
-          Upload directory <Switch onChange={switchChange} size="small" />
-        </div>
-        <Upload
-          listType="picture-card"
-          fileList={fileList}
-          onPreview={handlePreview}
-          onChange={handleChange}
-          onRemove={(file) => {
-            const index = fileList.indexOf(file);
-            const newFileList = fileList.slice();
-            newFileList.splice(index, 1);
-            setFileList(newFileList);
-          }}
-          beforeUpload={(file) => {
-            const isJPG = file.type === "image/jpeg";
-            const isPNG = file.type === "image/png";
-            const isGIF = file.type === "image/gif";
-            const isMP3 = file.type === "audio/mp3";
-            const isMP4 = file.type === "video/mp4";
+  const getNFTContract = () => {
+    const provider = new ethers.providers.Web3Provider(window.ethereum);
+    const signer = provider.getSigner();
+    const contractAddress = process.env.REACT_APP_NFT_CONTRACT_ADDRESS;
+    const nftContract = new ethers.Contract(contractAddress, NFT.abi, signer);
 
-            if (!isJPG && !isPNG && !isGIF && !isMP3 && !isMP4) {
-              toast.error("You can only upload JPG/PNG/GIF/MP3/MP4 files!");
-              return false;
-            }
-            setFileList([...fileList, file]);
-            return false;
-          }}
-          directory={uploadDirectory}
-        >
-          {uploadButton}
-        </Upload>
-        <Modal
-          visible={previewVisible}
-          title={previewTitle}
-          footer={null}
-          onCancel={handleCancel}
-        >
-          <img alt="example" style={{ width: "100%" }} src={previewImage} />
-        </Modal>
-        <StyledLabel>Name</StyledLabel>
-        <Controller
-          name="name"
-          control={control}
-          rules={{
-            required: {
-              value: !uploadDirectory && fileList.length == 1,
-              message: "Name is required *",
-            },
-            minLength: {
-              value: 3,
-              message: "Name must be at least 5 characters *",
-            },
-            maxLength: {
-              value: 20,
-              message: "Name cannot be more than 20 characters *",
-            },
-          }}
-          render={({ field: { onChange, onBlur, value } }) => (
-            <Input
-              disabled={uploadDirectory || fileList.length > 1}
-              onChange={onChange}
-              onBlur={onBlur}
-              value={value}
-              style={{ borderRadius: "5px" }}
-              size="large"
-            />
-          )}
-        />
-        <p style={{ color: "red" }}>{errors.name && errors.name.message}</p>
-        <StyledLabel>Description</StyledLabel>
-        <Controller
-          name="description"
-          control={control}
-          render={({ field: { onChange, onBlur, value } }) => (
-            <StyledTextArea
-              rows={5}
-              onChange={onChange}
-              onBlur={onBlur}
-              value={value}
-            />
-          )}
-        />
-        <StyledLabel>Collection</StyledLabel>
-        <StyledSelect
-          showSearch
-          placeholder="Select a collection"
-          optionFilterProp="children"
-          filterOption={(input, option) =>
-            option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+    return nftContract;
+  };
+
+  const onCreateSubmit = async (data) => {
+    setLoading(true);
+
+    if (fileList.length === 0) {
+      toast.error("No Image Found");
+    } else if (fileList.length === 1) {
+      const assetPath = await uploadToIPFS(fileList[0].originFileObj);
+      const url = `${process.env.REACT_APP_IPFS_URL}/${assetPath}`;
+
+      //create token by smart contract
+      const nft = getNFTContract();
+      let transaction = await nft.createToken(`${url}`).catch((err) => {
+        toast.error("Transaction Failed");
+      });
+      const tokenId = await getEventAndReturnId(transaction);
+
+      //upload token to backend
+      await uploadToServer(data, tokenId, url).then((res) => {
+        if (res.status !== 200) {
+          toast.error("Error Uploading Asset");
+        }
+        toast.success("Minted Asset Successfully");
+      });
+    } else {
+      fileList.map(async (file) => {
+        const assetPath = await uploadToIPFS(file.originFileObj);
+        const url = `${process.env.REACT_APP_IPFS_URL}/${assetPath}`;
+
+        //create token by smart contract
+        const nft = getNFTContract();
+        let transaction = await nft.createToken(`${url}`).catch((err) => {
+          toast.error("Transaction Failed");
+        });
+        const tokenId = await getEventAndReturnId(transaction);
+
+        //upload token to backend
+        await uploadMultipleToServer(
+          file.originFileObj.name,
+          tokenId,
+          url
+        ).then((res) => {
+          if (res.status !== 200) {
+            toast.error("Error Uploading Asset");
           }
-          style={{
-            width: "100%",
-            borderRadius: "5px",
-          }}
-          onChange={onCollectionChange}
+          toast.success("Minted Asset Successfully");
+        });
+      });
+    }
+
+    setLoading(false);
+  };
+
+  const uploadToServer = async (data, tokenId, url) => {
+    const newAsset = {
+      tokenId: tokenId,
+      name: data.name,
+      description: data.description,
+      uriID: url,
+      currentOwnerID: user._id,
+      currentCollectionID: newCollection,
+    };
+
+    const res = await axios.post(
+      `${process.env.REACT_APP_API_URL}/assets/mint`,
+      newAsset
+    );
+
+    return res;
+  };
+
+  const uploadMultipleToServer = async (name, tokenId, url) => {
+    const newAsset = {
+      tokenId: tokenId,
+      name: name,
+      description: "",
+      uriID: url,
+      currentOwnerID: user._id,
+      currentCollectionID: newCollection,
+    };
+
+    const res = await axios.post(
+      `${process.env.REACT_APP_API_URL}/assets/mint`,
+      newAsset
+    );
+
+    return res;
+  };
+
+  const uploadToIPFS = async (file) => {
+    const result = await ipfs.add(file);
+    return result.path;
+  };
+
+  const getEventAndReturnId = async (transaction) => {
+    try {
+      let tx = await transaction.wait();
+      let event = tx.events[0];
+      let value = event.args[2];
+      let tokenId = value.toNumber();
+
+      return tokenId;
+    } catch {
+      toast.error("Transaction Failed");
+      return null;
+    }
+  };
+
+  const getMarketplaceContract = () => {
+    const provider = new ethers.providers.Web3Provider(window.ethereum);
+    const signer = provider.getSigner();
+    const contractAddress = process.env.REACT_APP_MARKETPLACE_CONTRACT_ADDRESSS;
+    const marketplaceContract = new ethers.Contract(
+      contractAddress,
+      NFTMarketplace.abi,
+      signer
+    );
+
+    return marketplaceContract;
+  };
+
+  return (
+    <>
+      {user ? (
+        <Spin
+          spinning={loading}
+          indicator={loadingIcon}
+          tip="Minting your asset(s)"
         >
-          {user &&
-            user.ownedCollections.map((collection) => (
-              <Option key={collection._id} value={collection._id}>
-                {collection.name}
-              </Option>
-            ))}
-        </StyledSelect>
-        <br />
-        <StyledButton type="primary" onClick={handleSubmit(onCreateSubmit)}>
-          Create
-        </StyledButton>
-      </form>
-    </StyledLayout>
+          <StyledLayout>
+            <form>
+              <Title>Create New NFT</Title>
+              <StyledLabel>Images, Videos, Gifs</StyledLabel>
+              <div style={{ marginBottom: "10px" }}>
+                Upload directory <Switch onChange={switchChange} size="small" />
+              </div>
+              <Upload
+                listType="picture-card"
+                fileList={fileList}
+                onPreview={handlePreview}
+                onChange={handleChange}
+                onRemove={(file) => {
+                  const index = fileList.indexOf(file);
+                  const newFileList = fileList.slice();
+                  newFileList.splice(index, 1);
+                  setFileList(newFileList);
+                }}
+                beforeUpload={(file) => {
+                  const isJPG = file.type === "image/jpeg";
+                  const isPNG = file.type === "image/png";
+                  const isGIF = file.type === "image/gif";
+                  const isMP3 = file.type === "audio/mp3";
+                  const isMP4 = file.type === "video/mp4";
+
+                  if (!isJPG && !isPNG && !isGIF && !isMP3 && !isMP4) {
+                    toast.error(
+                      "You can only upload JPG/PNG/GIF/MP3/MP4 files!"
+                    );
+                    return false;
+                  }
+                  setFileList([...fileList, file]);
+                  return false;
+                }}
+                directory={uploadDirectory}
+              >
+                {uploadButton}
+              </Upload>
+              <Modal
+                visible={previewVisible}
+                title={previewTitle}
+                footer={null}
+                onCancel={handleCancel}
+              >
+                <img
+                  alt="example"
+                  style={{ width: "100%" }}
+                  src={previewImage}
+                />
+              </Modal>
+              <StyledLabel>Name</StyledLabel>
+              <Controller
+                name="name"
+                control={control}
+                rules={{
+                  required: {
+                    value: !uploadDirectory && fileList.length == 1,
+                    message: "Name is required *",
+                  },
+                  minLength: {
+                    value: 3,
+                    message: "Name must be at least 5 characters *",
+                  },
+                  maxLength: {
+                    value: 20,
+                    message: "Name cannot be more than 20 characters *",
+                  },
+                }}
+                render={({ field: { onChange, onBlur, value } }) => (
+                  <Input
+                    disabled={uploadDirectory || fileList.length > 1}
+                    onChange={onChange}
+                    onBlur={onBlur}
+                    value={value}
+                    style={{ borderRadius: "5px" }}
+                    size="large"
+                  />
+                )}
+              />
+              <p style={{ color: "red" }}>
+                {errors.name && errors.name.message}
+              </p>
+              <StyledLabel>Description</StyledLabel>
+              <Controller
+                name="description"
+                control={control}
+                render={({ field: { onChange, onBlur, value } }) => (
+                  <StyledTextArea
+                    rows={5}
+                    onChange={onChange}
+                    onBlur={onBlur}
+                    value={value}
+                  />
+                )}
+              />
+              <StyledLabel>Collection</StyledLabel>
+              <StyledSelect
+                showSearch
+                placeholder="Select a collection"
+                optionFilterProp="children"
+                filterOption={(input, option) =>
+                  option.children.toLowerCase().indexOf(input.toLowerCase()) >=
+                  0
+                }
+                style={{
+                  width: "100%",
+                  borderRadius: "5px",
+                }}
+                onChange={onCollectionChange}
+                defaultValue={user.ownedCollections[0]._id}
+              >
+                {user &&
+                  user.ownedCollections.map((collection) => (
+                    <Option key={collection._id} value={collection._id}>
+                      {collection.name}
+                    </Option>
+                  ))}
+              </StyledSelect>
+              <br />
+              <StyledButton
+                type="primary"
+                onClick={handleSubmit(onCreateSubmit)}
+              >
+                Create
+              </StyledButton>
+            </form>
+          </StyledLayout>
+        </Spin>
+      ) : (
+        <Spin>Loading...</Spin>
+      )}
+    </>
   );
 };
 

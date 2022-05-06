@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 
 // File: @openzeppelin/contracts/utils/Context.sol
-pragma solidity >=0.6.0 <0.8.0;
+pragma solidity ^0.8.0;
 
 /*
  * @dev Provides information about the current execution context, including the
@@ -15,7 +15,7 @@ pragma solidity >=0.6.0 <0.8.0;
  */
 abstract contract Context {
     function _msgSender() internal view virtual returns (address payable) {
-        return msg.sender;
+        return payable(msg.sender);
     }
 
     function _msgData() internal view virtual returns (bytes memory) {
@@ -26,7 +26,7 @@ abstract contract Context {
 
 // File: @openzeppelin/contracts/introspection/IERC165.sol
 
-pragma solidity >=0.6.0 <0.8.0;
+pragma solidity ^0.8.0;
 
 /**
  * @dev Interface of the ERC165 standard, as defined in the
@@ -50,7 +50,7 @@ interface IERC165 {
 }
 
 // File: @openzeppelin/contracts/token/ERC721/IERC721.sol
-pragma solidity >=0.6.2 <0.8.0;
+pragma solidity ^0.8.0;
 
 
 /**
@@ -178,7 +178,7 @@ interface IERC721 is IERC165 {
 }
 
 // File: @openzeppelin/contracts/token/ERC721/IERC721Metadata.sol
-pragma solidity >=0.6.2 <0.8.0;
+pragma solidity ^0.8.0;
 
 
 /**
@@ -206,7 +206,7 @@ interface IERC721Metadata is IERC721 {
 // File: @openzeppelin/contracts/token/ERC721/IERC721Enumerable.sol
 
 
-pragma solidity >=0.6.2 <0.8.0;
+pragma solidity ^0.8.0;
 
 
 /**
@@ -236,7 +236,7 @@ interface IERC721Enumerable is IERC721 {
 // File: @openzeppelin/contracts/token/ERC721/IERC721Receiver.sol
 
 
-pragma solidity >=0.6.0 <0.8.0;
+pragma solidity ^0.8.0;
 
 /**
  * @title ERC721 token receiver interface
@@ -257,7 +257,7 @@ interface IERC721Receiver {
 }
 
 // File: @openzeppelin/contracts/introspection/ERC165.sol
-pragma solidity >=0.6.0 <0.8.0;
+pragma solidity ^0.8.0;
 
 
 /**
@@ -310,7 +310,7 @@ abstract contract ERC165 is IERC165 {
 }
 
 // File: @openzeppelin/contracts/math/SafeMath.sol
-pragma solidity >=0.6.0 <0.8.0;
+pragma solidity ^0.8.0;
 
 /**
  * @dev Wrappers over Solidity's arithmetic operations with added overflow
@@ -524,7 +524,7 @@ library SafeMath {
 }
 
 // File: @openzeppelin/contracts/utils/Address.sol
-pragma solidity >=0.6.2 <0.8.0;
+pragma solidity ^0.8.0;
 
 /**
  * @dev Collection of functions related to the address type
@@ -713,7 +713,7 @@ library Address {
 }
 
 // File: @openzeppelin/contracts/utils/EnumerableSet.sol
-pragma solidity >=0.6.0 <0.8.0;
+pragma solidity ^0.8.0;
 
 /**
  * @dev Library for managing
@@ -1010,7 +1010,7 @@ library EnumerableSet {
 }
 
 // File: @openzeppelin/contracts/utils/EnumerableMap.sol
-pragma solidity >=0.6.0 <0.8.0;
+pragma solidity ^0.8.0;
 
 /**
  * @dev Library for managing an enumerable variant of Solidity's
@@ -1276,7 +1276,7 @@ library EnumerableMap {
 }
 
 // File: @openzeppelin/contracts/utils/Strings.sol
-pragma solidity >=0.6.0 <0.8.0;
+pragma solidity ^0.8.0;
 
 /**
  * @dev String operations.
@@ -1310,7 +1310,7 @@ library Strings {
 }
 
 // File: @openzeppelin/contracts/token/ERC721/ERC721.sol
-pragma solidity >=0.6.0 <0.8.0;
+pragma solidity ^0.8.0;
 
 /**
  * @title ERC721 Non-Fungible Token Standard basic implementation
