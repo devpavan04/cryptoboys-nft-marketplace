@@ -82350,8 +82350,8 @@
     "version": "0.7.0+commit.9e61f92b.Emscripten.clang"
   },
   "networks": {},
-  "schemaVersion": "3.4.5",
-  "updatedAt": "2022-04-06T01:03:59.340Z",
+  "schemaVersion": "3.4.7",
+  "updatedAt": "2022-05-09T15:16:27.013Z",
   "devdoc": {
     "details": "Required interface of an ERC721 compliant contract.",
     "events": {
