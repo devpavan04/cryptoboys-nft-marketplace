@@ -1,9 +1,8 @@
 import React, { useState } from "react";
-import { Card, Space, Tooltip } from "antd";
+import { Card, Space } from "antd";
 import styled from "styled-components";
-import Icon, { HeartOutlined, HeartTwoTone } from "@ant-design/icons";
+import Icon from "@ant-design/icons";
 import { ReactComponent as Ethereum } from "../../assets/icons/ethereum.svg";
-import { setAsset } from "../../state/action/assetAction";
 import { useDispatch } from "react-redux";
 import { useHistory } from "react-router-dom";
 
@@ -27,14 +26,8 @@ const StyledSpace = styled(Space)`
   margin-top: 10px;
 `;
 
-const HeartStyle = {
-  marginLeft: "10px",
-  fontSize: "20px",
-};
-
 const StyledCardInfo = styled.span`
-  position: relative;
-  left: 180px;
+  margin-left: 10px;
   font-size: 12px;
   font-weight: bold;
   color: gray;
@@ -43,12 +36,7 @@ const StyledCardInfo = styled.span`
 const EthereumIcon = (props) => <Icon component={Ethereum} {...props} />;
 
 const AssetCard = (props) => {
-  const { asset } = props;
-  const dispatch = useDispatch();
-  const history = useHistory();
-  // const title = props.title;
-  // const desc = props.desc;
-  // const image = props.image;
+  const { asset, price, isFixedPrice } = props;
   const collapsed = props.collapsed;
   const [favorited, setFavorited] = useState(false);
 
@@ -58,11 +46,6 @@ const AssetCard = (props) => {
 
   return (
     <StyledCard
-      onClick={() => {
-        console.log(asset);
-        dispatch(setAsset(asset));
-        history.push(`/assets/${asset._id}`);
-      }}
       hoverable={true}
       style={{
         width: "300px",
@@ -98,7 +81,7 @@ const AssetCard = (props) => {
           style={{ marginRight: "5px", textAlign: "right" }}
         >
           <p style={{ marginBottom: "0px", color: "gray" }}>
-            {asset.status == "On Auction" ? "Bid" : "Price"}
+            {isFixedPrice ? "Price" : "Starting Bid"}
           </p>
           <Space direction="horizontal" size={0}>
             <EthereumIcon
@@ -109,23 +92,12 @@ const AssetCard = (props) => {
                 left: "-5px",
               }}
             />
-            <p style={{ fontWeight: "bold" }}>
-              {asset.currentPrice !== 0 ? asset.currentPrice : 0}
-            </p>
+            <p style={{ fontWeight: "bold" }}>{price ? price : 0}</p>
           </Space>
         </StyledSpace>
       </StyledCardContent>
       <hr style={{ marginTop: "5px", marginBottom: "2px" }} />
-      <Tooltip placement="right" title="Favorite">
-        {favorited ? (
-          <HeartTwoTone style={HeartStyle} onClick={() => addToFavorite()} />
-        ) : (
-          <HeartOutlined style={HeartStyle} onClick={() => addToFavorite()} />
-        )}
-      </Tooltip>
-      <StyledCardInfo style={{ left: props.isFixedPrice ? "230px" : "180px" }}>
-        {asset.status}
-      </StyledCardInfo>
+      <StyledCardInfo>{isFixedPrice ? "Sale" : "On Auction"}</StyledCardInfo>
     </StyledCard>
   );
 };

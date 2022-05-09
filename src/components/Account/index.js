@@ -118,15 +118,9 @@ const Account = () => {
 
   useEffect(() => {
     if (user != "") {
-      if (ownedAssets.length === 0) {
-        dispatch(getOwnedAsset(user._id));
-      }
-      if (ownedCollections.length === 0) {
-        dispatch(getOwnedCollection(user._id));
-      }
-      if (favoriteAssets.length === 0) {
-        dispatch(getFavoriteAsset(user._id));
-      }
+      dispatch(getOwnedAsset(user._id));
+      dispatch(getOwnedCollection(user._id));
+      dispatch(getFavoriteAsset(user._id));
       setImg();
     }
     setLoading(false);

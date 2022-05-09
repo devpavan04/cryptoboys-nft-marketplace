@@ -1,13 +1,13 @@
-import React, { useEffect, useState } from 'react';
-import styled from 'styled-components';
-import AssetImage from './AssetImage.jsx';
-import AssetDetails from './AssetDetails.jsx';
-import AssetActivity from './AssetActivity.jsx';
-import { Row, Col, Affix, Button, Empty, Typography } from 'antd';
-import { useHistory, useParams } from 'react-router-dom';
-import { useDispatch, useSelector } from 'react-redux';
-import { fetchAsset } from '../../state/action/assetAction.js';
-import { toast } from 'react-toastify';
+import React, { useEffect, useState } from "react";
+import styled from "styled-components";
+import AssetImage from "./AssetImage.jsx";
+import AssetDetails from "./AssetDetails.jsx";
+import AssetActivity from "./AssetActivity.jsx";
+import { Row, Col, Affix, Button, Empty, Typography, Spin } from "antd";
+import { useHistory, useParams } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchAsset } from "../../state/action/assetAction.js";
+import { toast } from "react-toastify";
 
 const StyledLayout = styled.div`
   padding: 0.5rem 1rem;
@@ -50,6 +50,7 @@ const NFTDetails = () => {
   const asset = useSelector((state) => state.asset);
   const user = useSelector((state) => state.user);
   const [notFound, setNotFound] = useState(false);
+  const [loading, setLoading] = useState(true);
   const dispatch = useDispatch();
   const colProps = {
     xs: 24,
@@ -57,7 +58,7 @@ const NFTDetails = () => {
   };
 
   const onSellClick = () => {
-    history.push('/listing');
+    history.push(`/listing/${asset._id}`);
   };
 
   const onEditClick = () => {
@@ -65,13 +66,12 @@ const NFTDetails = () => {
   };
 
   useEffect(() => {
-    if (asset == '' || asset == undefined) {
-      dispatch(fetchAsset(id)).catch(() => {
-        toast.error('Cannot found the asset');
-        setNotFound(true);
-      });
-    }
-  }, [asset]);
+    dispatch(fetchAsset(id)).catch(() => {
+      toast.error("Cannot found the asset");
+      setNotFound(true);
+    });
+    setLoading(false);
+  }, []);
 
   return (
     <>
@@ -79,13 +79,15 @@ const NFTDetails = () => {
         <Empty
           description={
             <span>
-              <Paragraph>Sorry, we couldn't find the asset you are looking for.</Paragraph>
+              <Paragraph>
+                Sorry, we couldn't find the asset you are looking for.
+              </Paragraph>
               <Paragraph>Please check the URL and try again.</Paragraph>
             </span>
           }
         />
       ) : (
-        <>
+        <Spin spinning={loading}>
           {asset && user && user._id == asset.currentOwner._id && (
             <Affix>
               <OptionLayout>
@@ -95,9 +97,9 @@ const NFTDetails = () => {
                 <StyledButton
                   type="primary"
                   style={{
-                    marginRight: '10px',
-                    backgroundColor: 'white',
-                    color: '#038cfc',
+                    marginRight: "10px",
+                    backgroundColor: "white",
+                    color: "#038cfc",
                   }}
                   onClick={() => onEditClick()}
                 >
@@ -119,7 +121,7 @@ const NFTDetails = () => {
               <AssetActivity />
             </Row>
           </StyledLayout>
-        </>
+        </Spin>
       )}
     </>
   );

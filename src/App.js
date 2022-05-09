@@ -519,7 +519,7 @@ const App = () => {
             render={() => <EditCollection />}
           />
           <Route path="/collection/:id" exact render={() => <Collection />} />
-          <Route path="/listing" render={() => <Listing />} />
+          <Route path="/listing/:id" exact render={() => <Listing />} />
           <Route path="/error" render={() => <ErrorPage />} />
           <Route path="/success" render={() => <SuccessPage />} />
           <Route render={() => <PageNotFound />} />

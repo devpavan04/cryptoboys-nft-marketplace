@@ -5,6 +5,7 @@ const collectionReducer = (state = initialState, action) => {
     case "SET_COLLECTION":
       return (state = action.payload);
     case "FETCH_COLLECTION":
+      console.log(action.payload);
       return (state = action.payload);
     default:
       return state;

@@ -17,7 +17,6 @@ import { useSelector } from "react-redux";
 import { useForm, Controller } from "react-hook-form";
 import { PlusOutlined, LoadingOutlined } from "@ant-design/icons";
 import axios from "axios";
-import NFTMarketplace from "../../build/abis/NFTMarketplace.json";
 import NFT from "../../build/abis/NFT.json";
 
 //#region IPFS
@@ -183,13 +182,20 @@ const MintAsset = () => {
       });
       const tokenId = await getEventAndReturnId(transaction);
 
+      console.log(tokenId);
+      console.log(url);
+
       //upload token to backend
-      await uploadToServer(data, tokenId, url).then((res) => {
-        if (res.status !== 200) {
-          toast.error("Error Uploading Asset");
-        }
-        toast.success("Minted Asset Successfully");
-      });
+      if (tokenId && url) {
+        await uploadToServer(data, tokenId, url).then((res) => {
+          if (res.status !== 200) {
+            toast.error("Error Uploading Asset");
+          }
+          toast.success("Minted Asset Successfully");
+        });
+        setLoading(false);
+      }
+      setLoading(false);
     } else {
       fileList.map(async (file) => {
         const assetPath = await uploadToIPFS(file.originFileObj);
@@ -199,24 +205,27 @@ const MintAsset = () => {
         const nft = getNFTContract();
         let transaction = await nft.createToken(`${url}`).catch((err) => {
           toast.error("Transaction Failed");
+          setLoading(false);
         });
         const tokenId = await getEventAndReturnId(transaction);
 
         //upload token to backend
-        await uploadMultipleToServer(
-          file.originFileObj.name,
-          tokenId,
-          url
-        ).then((res) => {
-          if (res.status !== 200) {
-            toast.error("Error Uploading Asset");
-          }
-          toast.success("Minted Asset Successfully");
-        });
+        if (tokenId && url) {
+          await uploadMultipleToServer(
+            file.originFileObj.name,
+            tokenId,
+            url
+          ).then((res) => {
+            if (res.status !== 200) {
+              toast.error("Error Uploading Asset");
+            }
+            toast.success("Minted Asset Successfully");
+          });
+          setLoading(false);
+        }
       });
+      setLoading(false);
     }
-
-    setLoading(false);
   };
 
   const uploadToServer = async (data, tokenId, url) => {
@@ -272,19 +281,6 @@ const MintAsset = () => {
       toast.error("Transaction Failed");
       return null;
     }
-  };
-
-  const getMarketplaceContract = () => {
-    const provider = new ethers.providers.Web3Provider(window.ethereum);
-    const signer = provider.getSigner();
-    const contractAddress = process.env.REACT_APP_MARKETPLACE_CONTRACT_ADDRESSS;
-    const marketplaceContract = new ethers.Contract(
-      contractAddress,
-      NFTMarketplace.abi,
-      signer
-    );
-
-    return marketplaceContract;
   };
 
   return (

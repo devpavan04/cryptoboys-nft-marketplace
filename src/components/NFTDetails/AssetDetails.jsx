@@ -139,7 +139,9 @@ const AssetDetails = () => {
 
   const convertETHtoUSD = () => {
     axios
-      .get(`https://api.coinconvert.net/convert/eth/usd?amount=${0.55}`)
+      .get(
+        `https://api.coinconvert.net/convert/eth/usd?amount=${asset.currentPrice}`
+      )
       .then((res) => {
         setCurrentUSDPrice(res.data.USD);
       });
@@ -147,7 +149,7 @@ const AssetDetails = () => {
 
   useEffect(() => {
     convertETHtoUSD();
-  }, []);
+  }, [asset.currentPrice]);
 
   const showModal = () => {
     setIsModalVisible(true);
@@ -323,7 +325,9 @@ const AssetDetails = () => {
                 marginRight: "5px",
               }}
             />
-            <span style={{ fontSize: "30px", fontWeight: "bold" }}>0.55</span>
+            <span style={{ fontSize: "30px", fontWeight: "bold" }}>
+              {asset.currentPrice}
+            </span>
             <StyledStatistic
               style={{ display: "inline-block" }}
               value={currentUSDPrice}

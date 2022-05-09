@@ -376,4 +376,14 @@ contract NFTMarketplace is ReentrancyGuard {
 
       return items;
   }
+
+  //update the price of a marketplace item
+    function updateMarketplaceItem(uint256 itemId, uint256 price)
+        public
+        payable
+        nonReentrant
+    {
+        require(price > 0, "Price must be at least 1 wei");
+        idToMarketplaceItem[itemId].price = price;
+    }
 }
