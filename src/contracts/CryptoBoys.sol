@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity >=0.4.21 <0.8.0;
+pragma solidity ^0.8.0;
 // pragma abicoder v2;
 pragma experimental ABIEncoderV2;
 
@@ -81,9 +81,9 @@ contract CryptoBoys is ERC721 {
     cryptoBoyCounter,
     _name,
     _tokenURI,
-    msg.sender,
-    msg.sender,
-    address(0),
+    payable(msg.sender),
+    payable(msg.sender),
+    payable(address(0)),
     _price,
     0,
     true);
@@ -148,7 +148,7 @@ contract CryptoBoys is ERC721 {
     // update the token's previous owner
     cryptoboy.previousOwner = cryptoboy.currentOwner;
     // update the token's current owner
-    cryptoboy.currentOwner = msg.sender;
+    cryptoboy.currentOwner = payable(msg.sender);
     // update the how many times this token was transfered
     cryptoboy.numberOfTransfers += 1;
     // set and update that token in the mapping

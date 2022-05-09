@@ -3,10 +3,14 @@ import { Card, Space, Tooltip } from "antd";
 import styled from "styled-components";
 import Icon, { HeartOutlined, HeartTwoTone } from "@ant-design/icons";
 import { ReactComponent as Ethereum } from "../../assets/icons/ethereum.svg";
+import { setAsset } from "../../state/action/assetAction";
+import { useDispatch } from "react-redux";
+import { useHistory } from "react-router-dom";
 
 const StyledCard = styled(Card)`
   border-radius: 10px;
   transition: all 0.3s ease;
+  cursor: pointer;
 
   .ant-card-body {
     padding: 0;
@@ -28,9 +32,20 @@ const HeartStyle = {
   fontSize: "20px",
 };
 
+const StyledCardInfo = styled.span`
+  position: relative;
+  left: 180px;
+  font-size: 12px;
+  font-weight: bold;
+  color: gray;
+`;
+
 const EthereumIcon = (props) => <Icon component={Ethereum} {...props} />;
 
-const CardComponent = (props) => {
+const AssetCard = (props) => {
+  const { asset } = props;
+  const dispatch = useDispatch();
+  const history = useHistory();
   // const title = props.title;
   // const desc = props.desc;
   // const image = props.image;
@@ -43,18 +58,24 @@ const CardComponent = (props) => {
 
   return (
     <StyledCard
+      onClick={() => {
+        console.log(asset);
+        dispatch(setAsset(asset));
+        history.push(`/assets/${asset._id}`);
+      }}
       hoverable={true}
       style={{
-        width: collapsed ? "310px" : "335px",
-        height: collapsed ? "400px" : "420px",
+        width: "300px",
+        height: "420px",
       }}
       cover={
         <img
           alt="example"
           src="https://os.alipayobjects.com/rmsportal/QBnOOoLaAfKPirc.png"
           style={{
-            width: collapsed ? "310px" : "335px",
-            height: collapsed ? "290px" : "310px",
+            width: "300px",
+            height: "310px",
+            borderRadius: "10px 10px 0px 0px",
           }}
         />
       }
@@ -65,8 +86,10 @@ const CardComponent = (props) => {
           size={0}
           style={{ marginLeft: "10px" }}
         >
-          <p style={{ margin: "2px" }}>Collection Name</p>
-          <h4>NFT name</h4>
+          <p style={{ marginBottom: "0px", color: "gray" }}>
+            {asset.currentCollection.name}
+          </p>
+          <p style={{ fontWeight: "bold" }}>{asset.name}</p>
         </StyledSpace>
 
         <StyledSpace
@@ -74,12 +97,21 @@ const CardComponent = (props) => {
           size={0}
           style={{ marginRight: "5px", textAlign: "right" }}
         >
-          <p style={{ margin: "2px" }}>Price</p>
+          <p style={{ marginBottom: "0px", color: "gray" }}>
+            {asset.status == "On Auction" ? "Bid" : "Price"}
+          </p>
           <Space direction="horizontal" size={0}>
             <EthereumIcon
-              style={{ fontSize: "18px", position: "relative", top: "-7px" }}
+              style={{
+                fontSize: "15px",
+                position: "relative",
+                top: "-12px",
+                left: "-5px",
+              }}
             />
-            <h4>0.05</h4>
+            <p style={{ fontWeight: "bold" }}>
+              {asset.currentPrice !== 0 ? asset.currentPrice : 0}
+            </p>
           </Space>
         </StyledSpace>
       </StyledCardContent>
@@ -91,8 +123,11 @@ const CardComponent = (props) => {
           <HeartOutlined style={HeartStyle} onClick={() => addToFavorite()} />
         )}
       </Tooltip>
+      <StyledCardInfo style={{ left: props.isFixedPrice ? "230px" : "180px" }}>
+        {asset.status}
+      </StyledCardInfo>
     </StyledCard>
   );
 };
 
-export default CardComponent;
+export default AssetCard;

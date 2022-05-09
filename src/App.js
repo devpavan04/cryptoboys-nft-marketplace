@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
-import { HashRouter, Route } from "react-router-dom";
+import { BrowserRouter, Route, Switch } from "react-router-dom";
 import "./App.css";
 import Web3 from "web3";
-import { ToastContainer } from "react-toastify";
-import CryptoBoys from "./abis/CryptoBoys.json";
+import { toast, ToastContainer } from "react-toastify";
+// import CryptoBoys from "./abis/CryptoBoys.json";
 import FormAndPreview from "./components/FormAndPreview/FormAndPreview";
 import AllCryptoBoys from "./components/AllCryptoBoys/AllCryptoBoys";
 import AccountDetails from "./components/AccountSettings";
@@ -22,6 +22,20 @@ import PrivateRoute from "./PrivateRoute";
 import { ethers } from "ethers";
 import "react-toastify/dist/ReactToastify.css";
 import Container from "./page/Container";
+import MintAsset from "./components/Form/MintAsset";
+import EditAsset from "./components/Form/EditAsset";
+import NFTDetails from "./components/NFTDetails";
+import Explore from "./components/Explore";
+import Listing from "./components/Listing";
+import PageNotFound from "./components/Common/PageNotFound";
+import ErrorPage from "./components/Common/ErrorPage";
+import SuccessPage from "./components/Common/SuccessPage";
+import Collection from "./components/Collection";
+import CreateCollection from "./components/Form/CreateCollection";
+import EditCollection from "./components/Form/EditCollection";
+import UsersAccount from "./components/Account/UsersAccount";
+import { useDispatch, useSelector } from "react-redux";
+import { login } from "./state/action/userAction";
 
 const ipfsClient = require("ipfs-http-client");
 const ipfs = ipfsClient({
@@ -31,27 +45,63 @@ const ipfs = ipfsClient({
 });
 
 const checkLoggedIn = async () => {
-  const provider = new ethers.providers.Web3Provider(window.ethereum);
-  const signer = await provider.getSigner();
-  try {
-    const address = await signer.getAddress();
-    if (address == null) {
+  if (window.ethereum) {
+    const provider = new ethers.providers.Web3Provider(window.ethereum);
+    const signer = await provider.getSigner();
+    try {
+      const address = await signer.getAddress();
+      if (address == null) {
+        return false;
+      }
+      return true;
+    } catch {
       return false;
     }
-    return true;
-  } catch {
-    return false
   }
-}
+};
 
+const customToastID = "mainToast";
 
 const App = () => {
   const [loggedIn, setLoggedIn] = useState(false);
+  const dispatch = useDispatch();
+  const user = useSelector((state) => state.user);
+
+  if (window.ethereum) {
+    window.ethereum.on("accountsChanged", () => {
+      changedAccount();
+    });
+  }
+
+  const changedAccount = async () => {
+    const provider = new ethers.providers.Web3Provider(window.ethereum);
+    const signer = provider.getSigner();
+    const address = await signer.getAddress();
+    if (address != null) {
+      dispatch(login(address)).catch((err) => {
+        toast.error(err);
+      });
+      toast.success("Account changed successfully", { toastId: customToastID });
+    }
+  };
+
+  const getUser = async () => {
+    if (!user && window.ethereum) {
+      const provider = new ethers.providers.Web3Provider(window.ethereum);
+      const signer = provider.getSigner();
+      const address = await signer.getAddress();
+      if (address != null) {
+        dispatch(login(address));
+      }
+    }
+  };
 
   useEffect(() => {
     checkLoggedIn().then((res) => {
       setLoggedIn(res);
     });
+
+    getUser();
   }, []);
   // constructor(props) {
   //   super(props);
@@ -81,8 +131,6 @@ const App = () => {
   //   // await this.setMetaData();
   //   // await this.setMintBtnTimer();
   // };
-
-
 
   //#region Web3
   // setMintBtnTimer = () => {
@@ -404,11 +452,12 @@ const App = () => {
     //   )}
     // </div>
     // <ProvideAuth>
-    <HashRouter basename="/" >
+    <BrowserRouter basename="/">
       <Container auth={loggedIn}>
         <ToastContainer limit={1} autoClose={3000} />
-        <Route path="/" exact render={() => <LayoutIndex.Homepage />} />
-        {/* <Route
+        <Switch>
+          <Route path="/" exact render={() => <LayoutIndex.Homepage />} />
+          {/* <Route
               path="/mint"
               render={() => (
                 <FormAndPreview
@@ -451,17 +500,38 @@ const App = () => {
                 <Queries cryptoBoysContract={this.state.cryptoBoysContract} />
               )}
             /> */}
-      <Route path="/login" render={() => <Login />} />
-      <Route path="/account" render={() => <Account />} />
-      <Route path="/settings" render={() => <AccountSettings />} />
-      {/* <PrivateRoute path="/account" component={Account} auth={loggedIn} />
+          <Route path="/login" render={() => <Login />} />
+          <Route path="/my-account" exact render={() => <Account />} />
+          <Route path="/account/:id" exact render={() => <UsersAccount />} />
+          <Route path="/settings" render={() => <AccountSettings />} />
+          <Route path="/mint" render={() => <MintAsset />} />
+          <Route path="/assets/:id" exact render={() => <NFTDetails />} />
+          <Route path="/assets/edit/:id" exact render={() => <EditAsset />} />
+          <Route path="/explore" render={() => <Explore />} />
+          <Route
+            path="/collection/create"
+            exact
+            render={() => <CreateCollection />}
+          />
+          <Route
+            path="/collection/edit/:id"
+            exact
+            render={() => <EditCollection />}
+          />
+          <Route path="/collection/:id" exact render={() => <Collection />} />
+          <Route path="/listing/:id" exact render={() => <Listing />} />
+          <Route path="/error" render={() => <ErrorPage />} />
+          <Route path="/success" render={() => <SuccessPage />} />
+          <Route render={() => <PageNotFound />} />
+          {/* <PrivateRoute path="/account" component={Account} auth={loggedIn} />
         <PrivateRoute
           path="/settings"
           component={AccountSettings}
           auth={loggedIn}
         /> */}
+        </Switch>
       </Container>
-    </HashRouter>
+    </BrowserRouter>
   );
 };
 
