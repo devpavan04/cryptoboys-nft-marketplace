@@ -11,7 +11,7 @@ const Navbar = (props) => {
       }}
       className="navbar navbar-expand-sm navbar-dark"
     >
-      <div className="w-100 row pl-2 pr-2 justify-content-around">
+      <div className="w-100 row pl-2 pr-2">
         <div className="col-3">
           <Link to="/">
             <img
@@ -30,12 +30,12 @@ const Navbar = (props) => {
         >
           <span className="navbar-toggler-icon"></span>
         </button>
-        <div className="col-4 pt-2">
-          <Input placeholder="Search items, collections and accounts" />
+        <div className="col-2 pt-2">
+          <Input.Search placeholder="Search items, collections and accounts" />
         </div>
         <div
           id="navbarNav"
-          className="collapse navbar-collapse col-5 pt-2"
+          className="collapse navbar-collapse pt-2 col-12 col-lg-7"
           ref={(element) => {
             return (
               element &&

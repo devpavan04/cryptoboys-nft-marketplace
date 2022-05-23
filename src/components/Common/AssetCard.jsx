@@ -6,6 +6,7 @@ import { ReactComponent as Ethereum } from "../../assets/icons/ethereum.svg";
 import { setAsset } from "../../state/action/assetAction";
 import { useDispatch } from "react-redux";
 import { useHistory } from "react-router-dom";
+import toStream from "it-to-stream";
 
 const StyledCard = styled(Card)`
   border-radius: 10px;
@@ -40,6 +41,12 @@ const StyledCardInfo = styled.span`
   color: gray;
 `;
 
+const ThumbStyle = styled.iframe`
+  html body img {
+    width: 100%
+  }
+`
+
 const EthereumIcon = (props) => <Icon component={Ethereum} {...props} />;
 
 const AssetCard = (props) => {
@@ -56,6 +63,46 @@ const AssetCard = (props) => {
     setFavorited(!favorited);
   };
 
+  const getFrameByTypeThumb = () => {
+    switch (asset.thumb_type) {
+      case 0:
+        return (
+          <img
+            alt="example"
+            src={asset.uriID}
+            style={{
+              width: "300px",
+              height: "310px",
+              borderRadius: "10px 10px 0px 0px",
+            }}
+          />
+        );
+      case 1:
+        return (
+          <ThumbStyle
+            src={asset.uriID}
+            style={{
+              width: "300px",
+              height: "310px",
+              borderRadius: "10px 10px 0px 0px",
+            }}
+          />
+        );
+      default:
+        return (
+          <img
+            alt="example"
+            src={asset.uriID}
+            style={{
+              width: "300px",
+              height: "310px",
+              borderRadius: "10px 10px 0px 0px",
+            }}
+          />
+        );
+    }
+  };
+
   return (
     <StyledCard
       onClick={() => {
@@ -68,17 +115,15 @@ const AssetCard = (props) => {
         width: "300px",
         height: "420px",
       }}
-      cover={
-        <img
-          alt="example"
-          src="https://os.alipayobjects.com/rmsportal/QBnOOoLaAfKPirc.png"
-          style={{
-            width: "300px",
-            height: "310px",
-            borderRadius: "10px 10px 0px 0px",
-          }}
-        />
-      }
+      cover={ <iframe
+        src={asset.uriID}
+        style={{
+          width: "300px",
+          height: "310px",
+          borderRadius: "10px 10px 0px 0px",
+          border: 'none'
+        }}
+      />}
     >
       <StyledCardContent>
         <StyledSpace

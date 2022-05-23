@@ -18,22 +18,9 @@ import { useForm, Controller } from "react-hook-form";
 import { PlusOutlined, LoadingOutlined } from "@ant-design/icons";
 import axios from "axios";
 import NFT from "../../build/abis/NFT.json";
+import { ipfs } from "../../utils/functions";
 
 //#region IPFS
-const ipfsClient = require("ipfs-http-client");
-const infuraAuth =
-  "Basic " +
-  window.btoa(
-    `${process.env.REACT_APP_PROJECT_ID}:${process.env.REACT_APP_PROJECT_SECRET}`
-  );
-const ipfs = ipfsClient({
-  host: "ipfs.infura.io",
-  port: 5001,
-  protocol: "https",
-  headers: {
-    authorization: infuraAuth,
-  },
-});
 //#endregion
 
 const { Title } = Typography;
@@ -117,6 +104,7 @@ const MintAsset = () => {
   const user = useSelector((state) => state.user);
   const [newCollection, setNewCollection] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [fileType, setFileType] = useState(0);
   const {
     formState: { errors },
     handleSubmit,
@@ -236,6 +224,7 @@ const MintAsset = () => {
       uriID: url,
       currentOwnerID: user._id,
       currentCollectionID: newCollection,
+      thumb_type: fileType,
     };
 
     const res = await axios.post(
@@ -315,6 +304,23 @@ const MintAsset = () => {
                   const isGIF = file.type === "image/gif";
                   const isMP3 = file.type === "audio/mp3";
                   const isMP4 = file.type === "video/mp4";
+                  let typeNumber = 0;
+                  switch (true) {
+                    case isGIF: {
+                      typeNumber = 2;
+                      break;
+                    }
+                    case isMP3: {
+                      typeNumber = 1;
+                      break;
+                    }
+                    case isMP4: {
+                      typeNumber = 1;
+                      break;
+                    }
+                    default:
+                      typeNumber = 0;
+                  }
 
                   if (!isJPG && !isPNG && !isGIF && !isMP3 && !isMP4) {
                     toast.error(
@@ -323,6 +329,7 @@ const MintAsset = () => {
                     return false;
                   }
                   setFileList([...fileList, file]);
+                  setFileType(typeNumber);
                   return false;
                 }}
                 directory={uploadDirectory}

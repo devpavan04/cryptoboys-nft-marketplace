@@ -116,6 +116,19 @@ const Account = () => {
   const ownedCollections = useSelector((state) => state.ownedCollections);
   const favoriteAssets = useSelector((state) => state.favoriteAssets);
 
+  // useEffect(async () => {
+  //   if(window.ethereum && window.ethereum.isMetaMask) {
+  //     const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
+  //       const account = accounts[0];
+  //     // .windowethereum.on('accountsChanged', (accounts) => {
+  //     //   console.log(accounts)
+  //     //   // Handle the new accounts, or lack thereof.
+  //     //   // "accounts" will always be an array, but it can be empty.
+  //     // });
+  //   }
+  // }, [window]);
+  console.log
+  (ownedAssets)
   useEffect(() => {
     if (user != "") {
       dispatch(getOwnedAsset(user._id));

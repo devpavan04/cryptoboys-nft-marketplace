@@ -55,12 +55,14 @@ const AssetImage = () => {
       </>
     );
   };
+
   //#endregion
   return (
     <>
       <StyledCard extra={<FavoriteLayout />}>
         <StyledImage
-          src={`https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png`}
+          width={'100%'}
+          src={asset.uriID}
         />
       </StyledCard>
       <AssetDesc />
