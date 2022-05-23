@@ -6,7 +6,6 @@ import { ReactComponent as Ethereum } from "../../assets/icons/ethereum.svg";
 import { setAsset } from "../../state/action/assetAction";
 import { useDispatch } from "react-redux";
 import { useHistory } from "react-router-dom";
-import toStream from "it-to-stream";
 
 const StyledCard = styled(Card)`
   border-radius: 10px;
@@ -107,7 +106,7 @@ const AssetCard = (props) => {
     <StyledCard
       onClick={() => {
         console.log(asset);
-        dispatch(setAsset(asset));
+        // dispatch(setAsset(asset));
         history.push(`/assets/${asset._id}`);
       }}
       hoverable={true}

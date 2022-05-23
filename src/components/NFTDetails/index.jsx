@@ -91,13 +91,15 @@ const NFTDetails = () => {
           {asset && user && user._id == asset.currentOwner._id && (
             <Affix>
               <OptionLayout>
-                <StyledButton type="primary" onClick={() => onSellClick()}>
-                  Sell
-                </StyledButton>
+                {asset.status ==  "Not Listing" && (
+                  <StyledButton type="primary" onClick={() => onSellClick()}>
+                    Sell
+                  </StyledButton>)
+                }
                 <StyledButton
                   type="primary"
                   style={{
-                    marginRight: "10px",
+                    marginRight: asset.status ==  "Not Listing" ? "10px" : "8rem",
                     backgroundColor: "white",
                     color: "#038cfc",
                   }}

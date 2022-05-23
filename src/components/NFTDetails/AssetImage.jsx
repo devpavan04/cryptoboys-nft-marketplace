@@ -3,6 +3,7 @@ import { Card, Image } from 'antd';
 import styled from 'styled-components';
 import { HeartTwoTone } from '@ant-design/icons';
 import AssetDesc from './AssetDesc.jsx';
+import SellerDesc from './SellerDesc.jsx';
 import { useSelector } from 'react-redux';
 
 const StyledCard = styled(Card)`
@@ -66,6 +67,7 @@ const AssetImage = () => {
         />
       </StyledCard>
       <AssetDesc />
+      <SellerDesc />
     </>
   );
 };

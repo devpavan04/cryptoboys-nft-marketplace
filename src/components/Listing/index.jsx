@@ -213,9 +213,9 @@ const Listing = () => {
           setLoading(false);
         });
 
-      const res = await updateToServer(id, data.amount);
+      const res = await updateToServer(id, data.amount,);
       if (res) {
-        toast.success("Listing Successful");
+        toast.success(res.data);
       } else {
         toast.error("Listing Failed");
       }
@@ -226,9 +226,10 @@ const Listing = () => {
 
   const updateToServer = async (id, price) => {
     const res = await axios.patch(
-      `${process.env.REACT_APP_API_URL}/assets/update-price`,
+      `${process.env.REACT_APP_API_URL}/assets/listing`,
       {
         id,
+        status: "Sale",
         price,
       }
     );

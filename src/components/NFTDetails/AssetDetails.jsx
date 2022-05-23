@@ -5,8 +5,11 @@ import Icon, { FieldTimeOutlined, WalletOutlined } from "@ant-design/icons";
 import { ReactComponent as Ethereum } from "../../assets/icons/ethereum.svg";
 import { useForm, Controller } from "react-hook-form";
 import axios from "axios";
-import SellerDesc from "./SellerDesc.jsx";
+import AssetPriceChart from "./AssetPriceChart.jsx";
 import { useSelector } from "react-redux";
+import NFTMarketplace from "../../build/abis/NFTMarketplace.json";
+import { ethers } from "ethers";
+import { toast } from "react-toastify";
 
 const { Countdown } = Statistic;
 const { confirm } = Modal;
@@ -105,6 +108,7 @@ const AssetDetails = () => {
   const [currentUSDPrice, setCurrentUSDPrice] = useState(0);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const asset = useSelector((state) => state.asset);
+  const user = useSelector((state) => state.user);
   const {
     handleSubmit,
     formState: { errors },
@@ -138,18 +142,18 @@ const AssetDetails = () => {
   };
 
   const convertETHtoUSD = () => {
-    axios
-      .get(
+    if (asset.currentPrice !== undefined) {
+      axios.get(
         `https://api.coinconvert.net/convert/eth/usd?amount=${asset.currentPrice}`
-      )
-      .then((res) => {
+      ).then((res) => {
         setCurrentUSDPrice(res.data.USD);
-      });
+      })
+    } 
   };
 
   useEffect(() => {
-    convertETHtoUSD();
-  }, [asset.currentPrice]);
+    convertETHtoUSD(); 
+  }, [asset]);
 
   const showModal = () => {
     setIsModalVisible(true);
@@ -163,8 +167,56 @@ const AssetDetails = () => {
     setIsModalVisible(false);
   };
 
+  const getMarketplaceContract = () => {
+    if (window.ethereum) {
+      const provider = new ethers.providers.Web3Provider(window.ethereum);
+      const signer = provider.getSigner();
+      const contractAddress =
+        process.env.REACT_APP_MARKETPLACE_CONTRACT_ADDRESSS;
+      const marketplaceContract = new ethers.Contract(
+        contractAddress,
+        NFTMarketplace.abi,
+        signer
+      );
+
+      return marketplaceContract;
+    }
+  };
+
+  const updateToServer = async (id, price) => {
+    const res = await axios.patch(
+      `${process.env.REACT_APP_API_URL}/assets/update-price`,
+      {
+        id,
+        price,
+      }
+    );
+    return res;
+  };
+
   const onSubmitBid = (data) => {
     console.log(data);
+  };
+
+  const onSubmitUpdatedPrice = async (data) => {
+    await window.ethereum.enable();
+    const marketplace = getMarketplaceContract();
+    const price = ethers.utils.parseEther(data.updatedPrice);
+
+    try {
+      await marketplace.updateMarketplaceItem(asset.tokenId, price);
+
+      const res = await updateToServer(asset._id, data.updatedPrice);
+      if (res) {
+        toast.success("Update price successful!");
+        setTimeout(() => {
+          window.location.reload();
+        }, 2000);
+      } 
+    } catch (error) {
+      console.log(error);
+      toast.error("Update price failed");
+    }
   };
 
   const renderBidButton = () => {
@@ -304,6 +356,68 @@ const AssetDetails = () => {
     );
   };
 
+  const renderUpdatePriceButton = () => {
+    return (
+      <>
+        <StyledButton type="primary" onClick={showModal}>
+          <WalletOutlined style={{ position: "relative", top: "-5px" }} />
+          Update Price
+        </StyledButton>
+        <form>
+          <StyledModal
+            title="Update asset price"
+            visible={isModalVisible}
+            onOk={handleOk}
+            onCancel={handleCancel}
+            footer={[
+              <StyledButtonModal
+                type="primary"
+                key="enter"
+                onClick={handleSubmit(onSubmitUpdatedPrice)}
+                disabled={errors.updatedPrice}
+              >
+                Update
+              </StyledButtonModal>,
+            ]}
+          >
+            <h6>New Price: </h6>
+
+            <Controller
+              name="updatedPrice"
+              control={control}
+              rules={{
+                required: "Please enter your new price *",
+                min: {
+                  value: 0.1,
+                  message: "Bid must be greater than 0.1 ETH *",
+                },
+              }}
+              render={({ field: { onChange, onBlur, value } }) => (
+                <StyledInput
+                  onChange={onChange}
+                  value={value}
+                  onBlur={onBlur}
+                  type="number"
+                  status="error"
+                  addonBefore={
+                    <EthereumIcon
+                      style={{
+                        fontSize: "15px",
+                        position: "relative",
+                        top: "-3px",
+                      }}
+                    />
+                  }
+                />
+              )}
+            />
+            <p style={{ color: "red" }}>{errors.updatedPrice && errors.updatedPrice.message}</p>
+          </StyledModal>
+        </form>
+      </>
+    );
+  };
+
   return (
     <StyledLayout>
       <p>{asset && asset.currentCollection.name}</p>
@@ -335,11 +449,12 @@ const AssetDetails = () => {
               prefix="$"
             />
           </h3>
-          {asset.status == "On Auction" ? renderBidButton() : renderBuyButton()}
+          {asset.status == "On Auction" ? renderBidButton() : (
+            user && user._id == asset.currentOwner._id ? renderUpdatePriceButton() : renderBuyButton()
+          )}
         </StyledCard>
       )}
-
-      <SellerDesc />
+      <AssetPriceChart />
     </StyledLayout>
   );
 };
