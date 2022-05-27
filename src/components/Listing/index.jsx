@@ -25,6 +25,7 @@ import { useParams } from "react-router-dom";
 import { fetchAsset } from "../../state/action/assetAction";
 import { toast } from "react-toastify";
 import NFTMarketplace from "../../build/abis/NFTMarketplace.json";
+import NFT from "../../build/abis/NFT.json";
 import axios from "axios";
 
 const { Panel } = Collapse;
@@ -187,6 +188,31 @@ const Listing = () => {
     setIsFixedPrice(!isFixedPrice);
   };
 
+  const getNFTContract = () => {
+    const provider = new ethers.providers.Web3Provider(window.ethereum);
+    const signer = provider.getSigner();
+    const contractAddress = process.env.REACT_APP_NFT_CONTRACT_ADDRESS;
+    const nftContract = new ethers.Contract(contractAddress, NFT.abi, signer);
+
+    return nftContract;
+  };
+
+  const getMarketplaceContract = () => {
+    if (window.ethereum) {
+      const provider = new ethers.providers.Web3Provider(window.ethereum);
+      const signer = provider.getSigner();
+      const contractAddress =
+        process.env.REACT_APP_MARKETPLACE_CONTRACT_ADDRESS;
+      const marketplaceContract = new ethers.Contract(
+        contractAddress,
+        NFTMarketplace.abi,
+        signer
+      );
+
+      return marketplaceContract;
+    }
+  };
+
   const onSubmit = async (data) => {
     setLoading(true);
 
@@ -198,29 +224,44 @@ const Listing = () => {
       let listingPrice = await marketplace.getListingPrice();
       listingPrice = listingPrice.toString();
 
-      await marketplace
-        .createMarketplaceItem(
-          `${process.env.REACT_APP_NFT_CONTRACT_ADDRESS}`,
-          asset.tokenId,
-          price,
-          {
-            value: listingPrice,
-          }
-        )
-        .catch((err) => {
-          toast.error("Transaction Failed");
-          console.log(err);
-          setLoading(false);
-        });
+      try {
+        if (asset.currentPrice == 0 || asset.currentPrice == undefined) {
+          await marketplace.createMarketplaceItem(
+            `${process.env.REACT_APP_NFT_CONTRACT_ADDRESS}`,
+            asset.tokenId,
+            price,
+            {
+              value: listingPrice,
+            }
+          );
+        } else {
+          const nft = getNFTContract();
 
-      const res = await updateToServer(id, data.amount,);
-      if (res) {
-        toast.success(res.data);
-      } else {
-        toast.error("Listing Failed");
+          await nft.giveResaleApproval(asset.tokenId);
+
+          await marketplace.resellToken(
+            `${process.env.REACT_APP_NFT_CONTRACT_ADDRESS}`,
+            asset.tokenId,
+            price,
+            {
+              value: listingPrice,
+            }
+          );
+        }
+
+        const res = await updateToServer(id, data.amount);
+        if (res) {
+          toast.success(res.data);
+        } else {
+          toast.error("Listing Failed");
+        }
+
+        setLoading(false);
+      } catch (err) {
+        console.log(err);
+        toast.error("Lisiting failed");
+        setLoading(false);
       }
-
-      setLoading(false);
     }
   };
 
@@ -238,22 +279,6 @@ const Listing = () => {
 
   const onInputChange = (e) => {
     setPriceState(e.target.value);
-  };
-
-  const getMarketplaceContract = () => {
-    if (window.ethereum) {
-      const provider = new ethers.providers.Web3Provider(window.ethereum);
-      const signer = provider.getSigner();
-      const contractAddress =
-        process.env.REACT_APP_MARKETPLACE_CONTRACT_ADDRESSS;
-      const marketplaceContract = new ethers.Contract(
-        contractAddress,
-        NFTMarketplace.abi,
-        signer
-      );
-
-      return marketplaceContract;
-    }
   };
 
   return (

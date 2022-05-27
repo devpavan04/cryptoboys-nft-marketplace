@@ -1,7 +1,11 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
-import { Button, Card, Statistic, Modal, Row, Col, Input } from "antd";
-import Icon, { FieldTimeOutlined, WalletOutlined } from "@ant-design/icons";
+import { Button, Card, Statistic, Modal, Row, Col, Input, Spin } from "antd";
+import Icon, {
+  FieldTimeOutlined,
+  WalletOutlined,
+  LoadingOutlined,
+} from "@ant-design/icons";
 import { ReactComponent as Ethereum } from "../../assets/icons/ethereum.svg";
 import { useForm, Controller } from "react-hook-form";
 import axios from "axios";
@@ -101,12 +105,21 @@ const StyledInput = styled(Input)`
   }
 `;
 
+const StyledSpinningLayout = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+`;
+
 const EthereumIcon = (props) => <Icon component={Ethereum} {...props} />;
+const loadingIcon = <LoadingOutlined style={{ fontSize: 70 }} spin />;
 
 const AssetDetails = () => {
   const [onAuction, setOnAuction] = useState(true);
   const [currentUSDPrice, setCurrentUSDPrice] = useState(0);
   const [isModalVisible, setIsModalVisible] = useState(false);
+  const [loading, setLoading] = useState(false);
   const asset = useSelector((state) => state.asset);
   const user = useSelector((state) => state.user);
   const {
@@ -141,18 +154,20 @@ const AssetDetails = () => {
     );
   };
 
-  const convertETHtoUSD = () => {
+  const convertETHtoUSD = async () => {
     if (asset.currentPrice !== undefined) {
-      axios.get(
-        `https://api.coinconvert.net/convert/eth/usd?amount=${asset.currentPrice}`
-      ).then((res) => {
-        setCurrentUSDPrice(res.data.USD);
-      })
-    } 
+      await axios
+        .get(
+          `https://api.coinconvert.net/convert/eth/usd?amount=${asset.currentPrice}`
+        )
+        .then((res) => {
+          setCurrentUSDPrice(res.data.USD);
+        });
+    }
   };
 
   useEffect(() => {
-    convertETHtoUSD(); 
+    convertETHtoUSD();
   }, [asset]);
 
   const showModal = () => {
@@ -164,7 +179,9 @@ const AssetDetails = () => {
   };
 
   const handleCancel = () => {
-    setIsModalVisible(false);
+    if (!loading) {
+      setIsModalVisible(false);
+    }
   };
 
   const getMarketplaceContract = () => {
@@ -172,7 +189,7 @@ const AssetDetails = () => {
       const provider = new ethers.providers.Web3Provider(window.ethereum);
       const signer = provider.getSigner();
       const contractAddress =
-        process.env.REACT_APP_MARKETPLACE_CONTRACT_ADDRESSS;
+        process.env.REACT_APP_MARKETPLACE_CONTRACT_ADDRESS;
       const marketplaceContract = new ethers.Contract(
         contractAddress,
         NFTMarketplace.abi,
@@ -204,7 +221,7 @@ const AssetDetails = () => {
     const price = ethers.utils.parseEther(data.updatedPrice);
 
     try {
-      await marketplace.updateMarketplaceItem(asset.tokenId, price);
+      await marketplace.updateMarketplaceItemPrice(asset.tokenId, price);
 
       const res = await updateToServer(asset._id, data.updatedPrice);
       if (res) {
@@ -212,11 +229,49 @@ const AssetDetails = () => {
         setTimeout(() => {
           window.location.reload();
         }, 2000);
-      } 
+      }
     } catch (error) {
       console.log(error);
       toast.error("Update price failed");
     }
+  };
+
+  const onSubmitBuy = async (data) => {
+    setLoading(true);
+    if (window.ethereum) {
+      await window.ethereum.enable();
+      const marketplace = getMarketplaceContract();
+      const price = ethers.utils.parseEther(`${asset.currentPrice}`);
+
+      try {
+        await marketplace.createMarketplaceSale(
+          process.env.REACT_APP_NFT_CONTRACT_ADDRESS,
+          asset.tokenId,
+          {
+            value: price,
+          }
+        );
+        await axios
+          .post(`${process.env.REACT_APP_API_URL}/assets/transaction`, {
+            currentOwnerId: asset.currentOwner._id,
+            id: asset._id,
+            price: asset.currentPrice,
+            newOwnerId: user._id,
+          })
+          .then((res) => {
+            toast.success("Asset sold successfully!");
+            setTimeout(() => {
+              window.location.reload();
+            }, 2000);
+          });
+        const owner = await marketplace.getOwner(asset.tokenId);
+        console.log(owner);
+      } catch (error) {
+        console.log(error);
+        toast.error("Transaction failed");
+      }
+    }
+    setLoading(false);
   };
 
   const renderBidButton = () => {
@@ -288,70 +343,79 @@ const AssetDetails = () => {
           <WalletOutlined style={{ position: "relative", top: "-5px" }} />
           Buy now
         </StyledButton>
-        <StyledModal
-          title="Confirm purchase"
-          visible={isModalVisible}
-          onOk={handleOk}
-          onCancel={handleCancel}
-          footer={[
-            <StyledButtonModal type="primary" key="enter" onClick={handleOk}>
-              Confirm
-            </StyledButtonModal>,
-          ]}
-        >
-          <StyledRow style={{ fontWeight: "bold" }}>
-            <Col span={12}>
-              <p>Item</p>
-            </Col>
-            <Col span={12} style={{ textAlign: "right" }}>
-              <p>Subtotal</p>
-            </Col>
-          </StyledRow>
-          <hr style={{ margin: "0px" }} />
-          <StyledRow style={{ marginTop: "5px" }}>
-            <Col span={12}>
-              <p>ItemName</p>
-            </Col>
-            <Col span={12} style={{ textAlign: "right" }}>
-              <EthereumIcon
-                style={{
-                  fontSize: "15px",
-                  position: "relative",
-                  top: "-3px",
-                  marginRight: "5px",
-                }}
-              />
-              <span>0.05</span>
-              <StyledStatistic
-                value={currentUSDPrice}
-                precision={2}
-                prefix="$"
-              />
-            </Col>
-          </StyledRow>
-          <hr style={{ margin: "0px" }} />
-          <StyledRow style={{ marginTop: "5px", fontWeight: "bold" }}>
-            <Col span={12}>
-              <p>Total</p>
-            </Col>
-            <Col span={12} style={{ textAlign: "right" }}>
-              <EthereumIcon
-                style={{
-                  fontSize: "15px",
-                  position: "relative",
-                  top: "-3px",
-                  marginRight: "5px",
-                }}
-              />
-              <span>0.05</span>
-              <StyledStatistic
-                value={currentUSDPrice}
-                precision={2}
-                prefix="$"
-              />
-            </Col>
-          </StyledRow>
-        </StyledModal>
+        <form>
+          <StyledModal
+            title="Confirm purchase"
+            visible={isModalVisible}
+            onOk={handleOk}
+            onCancel={handleCancel}
+            footer={[
+              <StyledButtonModal
+                type="primary"
+                key="enter"
+                onClick={handleSubmit(onSubmitBuy)}
+                disabled={loading}
+              >
+                Confirm
+              </StyledButtonModal>,
+            ]}
+          >
+            <Spin spinning={loading} indicator={loadingIcon}>
+              <StyledRow style={{ fontWeight: "bold" }}>
+                <Col span={12}>
+                  <p>Item</p>
+                </Col>
+                <Col span={12} style={{ textAlign: "right" }}>
+                  <p>Subtotal</p>
+                </Col>
+              </StyledRow>
+              <hr style={{ margin: "0px" }} />
+              <StyledRow style={{ marginTop: "5px" }}>
+                <Col span={12}>
+                  <p>{asset.name}</p>
+                </Col>
+                <Col span={12} style={{ textAlign: "right" }}>
+                  <EthereumIcon
+                    style={{
+                      fontSize: "15px",
+                      position: "relative",
+                      top: "-3px",
+                      marginRight: "5px",
+                    }}
+                  />
+                  <span>{asset.currentPrice}</span>
+                  <StyledStatistic
+                    value={currentUSDPrice}
+                    precision={2}
+                    prefix="$"
+                  />
+                </Col>
+              </StyledRow>
+              <hr style={{ margin: "0px" }} />
+              <StyledRow style={{ marginTop: "5px", fontWeight: "bold" }}>
+                <Col span={12}>
+                  <p>Total</p>
+                </Col>
+                <Col span={12} style={{ textAlign: "right" }}>
+                  <EthereumIcon
+                    style={{
+                      fontSize: "15px",
+                      position: "relative",
+                      top: "-3px",
+                      marginRight: "5px",
+                    }}
+                  />
+                  <span>{asset.currentPrice}</span>
+                  <StyledStatistic
+                    value={currentUSDPrice}
+                    precision={2}
+                    prefix="$"
+                  />
+                </Col>
+              </StyledRow>
+            </Spin>
+          </StyledModal>
+        </form>
       </>
     );
   };
@@ -411,7 +475,9 @@ const AssetDetails = () => {
                 />
               )}
             />
-            <p style={{ color: "red" }}>{errors.updatedPrice && errors.updatedPrice.message}</p>
+            <p style={{ color: "red" }}>
+              {errors.updatedPrice && errors.updatedPrice.message}
+            </p>
           </StyledModal>
         </form>
       </>
@@ -419,43 +485,55 @@ const AssetDetails = () => {
   };
 
   return (
-    <StyledLayout>
-      <p>{asset && asset.currentCollection.name}</p>
-      <StyledHeader>{asset && asset.name}</StyledHeader>
-      <p>Currently owned by: {asset && asset.currentOwner.name}</p>
-      {asset.status !== "Not Listing" && (
-        <StyledCard
-          title={asset.status == "On Auction" ? <CardTitleLayout /> : null}
-        >
-          <p>
-            {asset.status == "On Auction" ? "Current Bid:" : "Current Price: "}
-          </p>
-          <h3>
-            <EthereumIcon
-              style={{
-                fontSize: "30px",
-                position: "relative",
-                top: "-7px",
-                marginRight: "5px",
-              }}
-            />
-            <span style={{ fontSize: "30px", fontWeight: "bold" }}>
-              {asset.currentPrice}
-            </span>
-            <StyledStatistic
-              style={{ display: "inline-block" }}
-              value={currentUSDPrice}
-              precision={2}
-              prefix="$"
-            />
-          </h3>
-          {asset.status == "On Auction" ? renderBidButton() : (
-            user && user._id == asset.currentOwner._id ? renderUpdatePriceButton() : renderBuyButton()
+    <>
+      {!asset ? (
+        <StyledSpinningLayout>
+          <Spin spinning indicator={loadingIcon} />
+        </StyledSpinningLayout>
+      ) : (
+        <StyledLayout>
+          <p>{asset && asset.currentCollection.name}</p>
+          <StyledHeader>{asset && asset.name}</StyledHeader>
+          <p>Currently owned by: {asset && asset.currentOwner.name}</p>
+          {asset.status !== "Not Listing" && (
+            <StyledCard
+              title={asset.status == "On Auction" ? <CardTitleLayout /> : null}
+            >
+              <p>
+                {asset.status == "On Auction"
+                  ? "Current Bid:"
+                  : "Current Price: "}
+              </p>
+              <h3>
+                <EthereumIcon
+                  style={{
+                    fontSize: "30px",
+                    position: "relative",
+                    top: "-7px",
+                    marginRight: "5px",
+                  }}
+                />
+                <span style={{ fontSize: "30px", fontWeight: "bold" }}>
+                  {asset.currentPrice}
+                </span>
+                <StyledStatistic
+                  style={{ display: "inline-block" }}
+                  value={currentUSDPrice !== undefined ? currentUSDPrice : 0}
+                  precision={2}
+                  prefix="$"
+                />
+              </h3>
+              {asset.status == "On Auction"
+                ? renderBidButton()
+                : user && user._id == asset.currentOwner._id
+                ? renderUpdatePriceButton()
+                : renderBuyButton()}
+            </StyledCard>
           )}
-        </StyledCard>
+          <AssetPriceChart />
+        </StyledLayout>
       )}
-      <AssetPriceChart />
-    </StyledLayout>
+    </>
   );
 };
 

@@ -1,4 +1,4 @@
-import React, { useState,useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import { Collapse } from "antd";
 import { useSelector } from "react-redux";
@@ -11,8 +11,8 @@ import {
   Title,
   Tooltip,
   Legend,
-} from 'chart.js';
-import { Line } from 'react-chartjs-2';
+} from "chart.js";
+import { Line } from "react-chartjs-2";
 import moment from "moment";
 
 const { Panel } = Collapse;
@@ -46,27 +46,26 @@ const StyledCollaped = styled(Collapse)`
   }
 `;
 
-
-
 const AssetPriceChart = () => {
   const asset = useSelector((state) => state.asset);
-  const [chartData, setChartData] = useState([]);
+  const [chartData, setChartData] = useState(undefined);
 
   useEffect(() => {
-    if(asset)
-    {
+    if (asset) {
       const data = {
-        labels: asset.prevPrice.map((price) => moment(price.updatedAt).format("M/D")),
-        datasets : [
+        labels: asset.prevPrice.map((price) =>
+          moment(price.updatedAt).format("M/D")
+        ),
+        datasets: [
           {
-            label: 'Price in ETH',
+            label: "Price in ETH",
             data: asset.prevPrice.map((price) => price.price),
-            backgroundColor: 'rgba(255, 99, 132, 0.2)',
-            borderColor: 'rgba(255, 99, 132, 1)',
-            cubicInterpolationMode: 'monotone',
-            tension: 0.4
-          }
-        ]
+            backgroundColor: "rgba(255, 99, 132, 0.2)",
+            borderColor: "rgba(255, 99, 132, 1)",
+            cubicInterpolationMode: "monotone",
+            tension: 0.4,
+          },
+        ],
       };
 
       setChartData(data);
@@ -77,13 +76,13 @@ const AssetPriceChart = () => {
     responsive: true,
     plugins: {
       legend: {
-        position: 'bottom',
+        position: "bottom",
       },
       scales: {
-      x: {
-        type: 'linear'
-      }
-      }
+        x: {
+          type: "linear",
+        },
+      },
     },
   };
 
@@ -91,7 +90,11 @@ const AssetPriceChart = () => {
     <StyledLayout>
       <StyledCollaped defaultActiveKey={["1"]} expandIconPosition="right">
         <Panel header="Price History" key="1">
-          {chartData.length !== 0 && (<Line options={options} data={chartData} />)}
+          {asset.prevPrice.length !== 0 ? (
+            chartData && <Line data={chartData} options={options} />
+          ) : (
+            <p>There is no price history yet</p>
+          )}
         </Panel>
       </StyledCollaped>
     </StyledLayout>

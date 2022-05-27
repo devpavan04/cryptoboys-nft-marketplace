@@ -377,13 +377,34 @@ contract NFTMarketplace is ReentrancyGuard {
       return items;
   }
 
-  //update the price of a marketplace item
-    function updateMarketplaceItem(uint256 itemId, uint256 price)
+    //update the price of a marketplace item
+    function updateMarketplaceItemPrice(uint256 itemId, uint256 price)
         public
         payable
         nonReentrant
     {
-        require(price > 0, "Price must be at least 1 wei");
+        require(
+            idToMarketplaceItem[itemId].owner == msg.sender,
+            "You must be the owner of the item to update the price"
+        );
+        require(
+            price > 0,
+            "Price must be at least 1 wei"
+        );
         idToMarketplaceItem[itemId].price = price;
     }
+
+    function resellToken(address nftContract, uint256 tokenId, uint256 price) public payable {
+      require(idToMarketplaceItem[tokenId].owner == msg.sender, "Only item owner can perform this operation");
+      require(msg.value == listingPrice, "Price must be equal to listing price");
+      idToMarketplaceItem[tokenId].sold = false;
+      idToMarketplaceItem[tokenId].price = price;
+      idToMarketplaceItem[tokenId].seller = payable(msg.sender);
+      idToMarketplaceItem[tokenId].owner = payable(address(this));
+      _soldItems.decrement();
+
+      IERC721(nftContract).transferFrom(msg.sender, address(this), tokenId);
+    }
+
+    
 }
