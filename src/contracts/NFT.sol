@@ -10,11 +10,13 @@ contract NFT is ERC721URIStorage {
     using Counters for Counters.Counter;
     Counters.Counter private _tokenIds;
     address contractAddress;
+    address auctionAddress;
 
     event Mint(uint256 tokenId);
 
-    constructor(address marketplaceAddress) ERC721("Huflit Token", "HUFT") {
+    constructor(address marketplaceAddress, address auctionAdd) ERC721("Huflit Token", "HUFT") {
         contractAddress = marketplaceAddress;
+        auctionAddress = auctionAdd;
     }
 
     function createToken(string memory tokenURI) public returns (uint) {
@@ -24,6 +26,7 @@ contract NFT is ERC721URIStorage {
         _mint(msg.sender, newItemId);
         _setTokenURI(newItemId, tokenURI);
         setApprovalForAll(contractAddress, true);
+        setApprovalForAll(auctionAddress, true);
         emit Mint(newItemId);
         return newItemId;
     }

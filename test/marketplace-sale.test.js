@@ -7,16 +7,7 @@ require("chai")
   .use(require("chai-as-promised"))
   .should();
 
-const getEventAndReturnId = async (transaction) => {
-  //   let tx = await transaction.call();
-  let event = transaction.events[0];
-  let value = event.args[2];
-  let tokenId = value.toNumber();
-
-  return tokenId;
-};
-
-contract("NFT", async (accounts) => {
+contract("Marketplace", async (accounts) => {
   let nft, marketplace, listingPrice;
   const zero_address = "0x0000000000000000000000000000000000000000";
 
@@ -28,9 +19,9 @@ contract("NFT", async (accounts) => {
   console.log("Account 0: ", accounts[0]);
   console.log("Account 1: ", accounts[1]);
 
-  describe("application features", async () => {
+  describe("basic mint features", async () => {
     it("allows users to mint ERC721 token", async () => {
-      const transaction = await nft.createToken("myCBNFT", {
+      await nft.createToken("myCBNFT", {
         from: accounts[0],
       });
     });
@@ -43,6 +34,14 @@ contract("NFT", async (accounts) => {
     it("returns address of the token's owner", async () => {
       const tokenOwner = await nft.ownerOf(1);
       assert.equal(tokenOwner, accounts[0]);
+    });
+  });
+
+  describe("application features", async () => {
+    it("allows users to mint ERC721 token", async () => {
+      await nft.createToken("myCBNFT", {
+        from: accounts[0],
+      });
     });
 
     it("returns the token's URI", async () => {
