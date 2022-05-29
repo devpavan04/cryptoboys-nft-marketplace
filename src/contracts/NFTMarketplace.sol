@@ -384,8 +384,8 @@ contract NFTMarketplace is ReentrancyGuard {
         nonReentrant
     {
         require(
-            idToMarketplaceItem[itemId].owner == msg.sender,
-            "You must be the owner of the item to update the price"
+            idToMarketplaceItem[itemId].owner == address(this),
+            "Item must be list on marketplace to be updated price"
         );
         require(
             price > 0,

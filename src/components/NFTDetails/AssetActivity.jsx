@@ -49,8 +49,8 @@ const columns = [
     key: "type",
     render: (text) => {
       return (
-        <span>
-          {text === "Sale" ? (
+        <span style={{ textTransform: "uppercase", fontWeight: "bold" }}>
+          {text === "transfer" ? (
             <StyledIcon component={DollarOutlined} style={{ color: "green" }} />
           ) : (
             <StyledIcon component={FireOutlined} style={{ color: "red" }} />
