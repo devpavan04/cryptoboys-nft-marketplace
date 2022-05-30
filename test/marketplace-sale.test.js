@@ -123,6 +123,26 @@ contract("Marketplace", async (accounts) => {
       });
     });
 
+    //Account 1 update price
+    it("reapprove smart contract 3rd", async () => {
+      await nft.giveResaleApproval(1, {
+        from: accounts[1],
+      });
+    });
+
+    //Update price
+    it("resell the token and update price", async () => {
+      const price = web3.utils.toWei("2", "Ether");
+      await marketplace.resellToken(nft.address, 1, price, {
+        value: listingPrice,
+        from: accounts[1],
+      });
+
+      await marketplace.updateMarketplaceItemPrice(1, price, {
+        from: accounts[1],
+      });
+    });
+
     // // returns tokenURI of the token
     // it("returns metadata of a token", async () => {
     //   const tokenMetaData = await cryptoBoys.getTokenMetaData(2);
