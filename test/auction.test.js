@@ -25,31 +25,18 @@ contract("Auction", async (accounts) => {
   console.log("Account 0: ", accounts[0]);
   console.log("Account 1: ", accounts[1]);
 
-  describe("basic mint features", async () => {
-    it("allows users to mint ERC721 token", async () => {
-      await nft.createToken("myCBNFT", {
-        from: accounts[0],
-      });
-    });
-
-    it("get listing price", async () => {
-      listingPrice = await marketplace.getListingPrice();
-      console.log(listingPrice);
-    });
-
-    it("returns address of the token's owner", async () => {
-      const tokenOwner = await nft.ownerOf(tokenId);
-      assert.equal(tokenOwner, accounts[0]);
-    });
-  });
-
   describe("Mint and Auction", async () => {
     const price = web3.utils.toWei("1", "Ether");
-    const duration = Date.now() + 86400 * 1000;
+    const duration = Date.now() + 86400;
     it("allows users to mint ERC721 token", async () => {
       await nft.createToken("myCBNFT", {
         from: accounts[0],
       });
+    });
+
+    it("get nft owner", async () => {
+      const owner = await nft.ownerOf(tokenId);
+      console.log(owner);
     });
 
     it("create auction", async () => {
@@ -58,55 +45,130 @@ contract("Auction", async (accounts) => {
       });
     });
 
-    it("get auction detail", async () => {
-      const auctionDetail = await auction.getTokenAuctionDetails(
-        nft.address,
-        tokenId
-      );
-      console.log(auctionDetail);
+    it("get nft owner", async () => {
+      const owner = await nft.ownerOf(tokenId);
+      console.log(owner);
     });
 
     it("1st bid", async () => {
-      const price = web3.utils.toWei("2", "Ether");
-      auction.bid(nft.address, tokenId, {
+      const price = web3.utils.toWei("10", "Ether");
+      await auction.bid(nft.address, tokenId, {
         from: accounts[1],
         value: price,
       });
     });
 
-    it("2nd bid", async () => {
-      const price = web3.utils.toWei("3", "Ether");
+    it("get balance", async () => {
+      const balance = await web3.eth.getBalance(accounts[1]);
+      console.log(balance);
+    });
+
+    it("excute sale", async () => {
+      await auction.executeSale(nft.address, tokenId, {
+        from: accounts[0],
+      });
+    });
+
+    it("get balance", async () => {
+      const balance = await web3.eth.getBalance(accounts[0]);
+      console.log(balance);
+    });
+
+    it("get auction details", async () => {
+      const auctionDetails = await auction.getTokenAuctionDetails(
+        nft.address,
+        tokenId
+      );
+      console.log(auctionDetails);
+    });
+
+    it("get nft owner", async () => {
+      const owner = await nft.ownerOf(tokenId);
+      console.log(owner);
+    });
+
+    it("reapprove smart contract ", async () => {
+      await nft.giveResaleApproval(tokenId, {
+        from: accounts[1],
+      });
+    });
+
+    it("create auction", async () => {
+      await auction.recreateTokenAuction(
+        nft.address,
+        tokenId,
+        price,
+        duration,
+        {
+          from: accounts[1],
+        }
+      );
+    });
+
+    it("get nft owner", async () => {
+      const owner = await nft.ownerOf(tokenId);
+      console.log(owner);
+    });
+
+    it("1st bid", async () => {
+      const price = web3.utils.toWei("2", "Ether");
       await auction.bid(nft.address, tokenId, {
         from: accounts[2],
         value: price,
       });
     });
 
-    it("3rd bid", async () => {
-      const price = web3.utils.toWei("4", "Ether");
+    it("excute sale", async () => {
+      await auction.executeSale(nft.address, tokenId, {
+        from: accounts[1],
+      });
+    });
+
+    it("get nft owner", async () => {
+      const owner = await nft.ownerOf(tokenId);
+      console.log(owner);
+    });
+
+    it("reapprove smart contract ", async () => {
+      await nft.giveResaleApproval(tokenId, {
+        from: accounts[2],
+      });
+    });
+
+    it("create auction", async () => {
+      await auction.recreateTokenAuction(
+        nft.address,
+        tokenId,
+        price,
+        duration,
+        {
+          from: accounts[2],
+        }
+      );
+    });
+
+    it("get nft owner", async () => {
+      const owner = await nft.ownerOf(tokenId);
+      console.log(owner);
+    });
+
+    it("1st bid", async () => {
+      const price = web3.utils.toWei("2", "Ether");
       await auction.bid(nft.address, tokenId, {
         from: accounts[3],
         value: price,
       });
     });
 
-    it("get auction detail after bid", async () => {
-      const auctionDetail = await auction.getTokenAuctionDetails(
-        nft.address,
-        tokenId
-      );
-      console.log(auctionDetail);
-    });
-
-    it("execute sale", async () => {
+    it("excute sale", async () => {
       await auction.executeSale(nft.address, tokenId, {
-        from: accounts[0],
+        from: accounts[2],
       });
     });
 
-    it("get new token owner", async () => {
-      const tokenOwner = await nft.ownerOf(tokenId);
-      assert.equal(tokenOwner, accounts[3]);
+    it("get nft owner", async () => {
+      const owner = await nft.ownerOf(tokenId);
+      console.log(owner);
     });
   });
 });

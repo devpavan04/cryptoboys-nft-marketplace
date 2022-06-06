@@ -25,13 +25,15 @@ contract NFTAuction is IERC721Receiver {
         address nftContractAddress,
         uint256 tokenId,
         address bidder,
-        uint256 ethAmount
+        uint256 ethAmount,
+        uint256 timeStamp
     );
 
     event AuctionSettled(
         address nftContractAddress,
         uint256 tokenId,
-        address maxBidUser
+        address maxBidUser,
+        uint256 timeStamp
     );
 
     event AuctionCancelled(
@@ -92,16 +94,16 @@ contract NFTAuction is IERC721Receiver {
         auction.users.push(msg.sender);
         auction.bidAmounts.push(msg.value);
 
-        emit BidMade(_nft, _tokenId, msg.sender, msg.value);
+        emit BidMade(_nft, _tokenId, msg.sender, msg.value, block.timestamp);
     }
     /**
        Called by the seller when the auction duration is over the hightest bid user get's the nft and other bidders get eth back
     */
-    function executeSale(address _nft, uint256 _tokenId) external {
+    function executeSale(address _nft, uint256 _tokenId) external payable {
         tokenDetails storage auction = tokenToAuction[_nft][_tokenId];
         // require(auction.duration <= block.timestamp, "Deadline did not pass yet");
         // require(auction.seller == msg.sender, "Not seller");
-        require(auction.isActive, "auction not active");
+        // require(auction.isActive, "auction not active");
         auction.isActive = false;
         if (auction.bidAmounts.length == 0) {
             ERC721(_nft).safeTransferFrom(
@@ -110,10 +112,12 @@ contract NFTAuction is IERC721Receiver {
                 _tokenId
             );
 
-            emit AuctionSettled(_nft, _tokenId, auction.seller);
+            emit AuctionSettled(_nft, _tokenId, auction.seller,block.timestamp);
         } else {
-            (bool success, ) = auction.seller.call{value: auction.maxBid}("");
-            require(success);
+            bool success;
+            // (bool success, ) = auction.seller.call{value: auction.maxBid}("");
+            // require(success);
+            payable(auction.seller).transfer(auction.maxBid);
             for (uint256 i = 0; i < auction.users.length; i++) {
                 if (auction.users[i] != auction.maxBidUser) {
                     (success, ) = auction.users[i].call{
@@ -122,37 +126,40 @@ contract NFTAuction is IERC721Receiver {
                     require(success);
                 }
             }
+            auction.seller = auction.maxBidUser;
             ERC721(_nft).safeTransferFrom(
                 address(this),
                 auction.maxBidUser,
                 _tokenId
             );
 
-            emit AuctionSettled(_nft, _tokenId, auction.maxBidUser);
+            emit AuctionSettled(_nft, _tokenId, auction.maxBidUser,block.timestamp);
         }
-    }
-
-    /**
-       Called by the seller if they want to cancel the auction for their nft so the bidders get back the locked eeth and the seller get's back the nft
-    */
-    function cancelAuction(address _nft, uint256 _tokenId) external {
-        tokenDetails storage auction = tokenToAuction[_nft][_tokenId];
-        require(auction.seller == msg.sender, "Not seller");
-        require(auction.isActive, "auction not active");
-        auction.isActive = false;
-        bool success;
-        for (uint256 i = 0; i < auction.users.length; i++) {
-        (success, ) = auction.users[i].call{value: bids[_nft][_tokenId][auction.users[i]]}("");        
-        require(success);
-        }
-        ERC721(_nft).safeTransferFrom(address(this), auction.seller, _tokenId);
-
-        emit AuctionCancelled(_nft, _tokenId, auction.seller);
     }
 
     function getTokenAuctionDetails(address _nft, uint256 _tokenId) public view returns (tokenDetails memory) {
         tokenDetails memory auction = tokenToAuction[_nft][_tokenId];
         return auction;
+    }
+
+    function recreateTokenAuction(
+        address _nft,
+        uint256 _tokenId,
+        uint128 _price,
+        uint256 _duration
+    ) external {
+        tokenDetails storage auction = tokenToAuction[_nft][_tokenId];
+        require(_nft != address(0), "Invalid Address");
+        require(_price > 0, "Price should be more than 0");
+        require(_duration > 0, "Invalid duration value");
+        auction.price = uint128(_price);
+        auction.duration = _duration;
+        auction.isActive = true;
+        auction.bidAmounts = new uint256[](0);
+        auction.users = new address[](0);
+        auction.maxBid = 0;
+        auction.maxBidUser = address(0);
+        ERC721(_nft).safeTransferFrom(msg.sender, address(this), _tokenId);
     }
 
     function onERC721Received(

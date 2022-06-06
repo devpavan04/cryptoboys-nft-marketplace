@@ -54,7 +54,7 @@ const AssetCard = (props) => {
       cover={
         <img
           alt="example"
-          src="https://os.alipayobjects.com/rmsportal/QBnOOoLaAfKPirc.png"
+          src={asset.uriID}
           style={{
             width: "300px",
             height: "310px",

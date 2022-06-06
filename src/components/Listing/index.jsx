@@ -21,12 +21,15 @@ import { CalendarOutlined } from "@ant-design/icons";
 import PreviewAssetCard from "../Common/PreviewAssetCard.jsx";
 import { useSelector, useDispatch } from "react-redux";
 import { useForm, Controller } from "react-hook-form";
-import { useParams } from "react-router-dom";
+import { useParams, useHistory } from "react-router-dom";
 import { fetchAsset } from "../../state/action/assetAction";
 import { toast } from "react-toastify";
-import NFTMarketplace from "../../build/abis/NFTMarketplace.json";
-import NFT from "../../build/abis/NFT.json";
 import axios from "axios";
+import {
+  getNFTContract,
+  getMarketplaceContract,
+  getAuctionContract,
+} from "../../contractInstances";
 
 const { Panel } = Collapse;
 const { RangePicker } = DatePicker;
@@ -134,10 +137,13 @@ const Listing = () => {
   const [loading, setLoading] = useState(false);
   const [dates, setDates] = useState([]);
   const [hackValue, setHackValue] = useState();
+  const [isOwner, setIsOwner] = useState(false);
   const [value, setValue] = useState();
   const [priceState, setPriceState] = useState(0);
   const [notFound, setNotFound] = useState(false);
   const asset = useSelector((state) => state.asset);
+  const user = useSelector((state) => state.user);
+  const history = useHistory();
   const dispatch = useDispatch();
   const { id } = useParams();
   const {
@@ -146,6 +152,9 @@ const Listing = () => {
     control,
     getValues,
   } = useForm();
+  const auction = getAuctionContract();
+  const nft = getNFTContract();
+  const marketplace = getMarketplaceContract();
 
   useEffect(() => {
     if (asset == "" || asset == undefined) {
@@ -156,75 +165,25 @@ const Listing = () => {
     }
   }, [asset]);
 
-  //#region handle date picker
-  const disabledDate = (current) => {
-    if (!dates || dates.length === 0) {
-      return current.isBefore(moment() - 1, "day");
-    }
-    const tooLate = dates[0] && current.diff(dates[0], "days") > dateRangeValue;
-    const tooEarly =
-      dates[1] && dates[1].diff(current, "days") > dateRangeValue;
-    return tooEarly || tooLate;
+  const handleTimeSelect = (value) => {
+    setValue(value);
   };
-
-  const handleDateRangeSelect = (value) => {
-    setHackValue([]);
-    setDates([]);
-    setValue(null);
-    setDateRangeValue(value);
-  };
-
-  const onOpenChange = (open) => {
-    if (open) {
-      setHackValue([]);
-      setDates([]);
-    } else {
-      setHackValue(undefined);
-    }
-  };
-  //#endregion
 
   const onButtonClick = () => {
     setIsFixedPrice(!isFixedPrice);
   };
 
-  const getNFTContract = () => {
-    const provider = new ethers.providers.Web3Provider(window.ethereum);
-    const signer = provider.getSigner();
-    const contractAddress = process.env.REACT_APP_NFT_CONTRACT_ADDRESS;
-    const nftContract = new ethers.Contract(contractAddress, NFT.abi, signer);
-
-    return nftContract;
-  };
-
-  const getMarketplaceContract = () => {
-    if (window.ethereum) {
-      const provider = new ethers.providers.Web3Provider(window.ethereum);
-      const signer = provider.getSigner();
-      const contractAddress =
-        process.env.REACT_APP_MARKETPLACE_CONTRACT_ADDRESS;
-      const marketplaceContract = new ethers.Contract(
-        contractAddress,
-        NFTMarketplace.abi,
-        signer
-      );
-
-      return marketplaceContract;
-    }
-  };
-
   const onSubmit = async (data) => {
     setLoading(true);
-
     await window.ethereum.enable();
-    const marketplace = getMarketplaceContract();
-    const price = ethers.utils.parseEther(data.amount);
 
-    if (isFixedPrice) {
-      let listingPrice = await marketplace.getListingPrice();
-      listingPrice = listingPrice.toString();
+    try {
+      const price = ethers.utils.parseEther(data.amount);
 
-      try {
+      if (isFixedPrice) {
+        let listingPrice = await marketplace.getListingPrice();
+        listingPrice = listingPrice.toString();
+
         if (asset.currentPrice == 0 || asset.currentPrice == undefined) {
           await marketplace.createMarketplaceItem(
             `${process.env.REACT_APP_NFT_CONTRACT_ADDRESS}`,
@@ -235,10 +194,7 @@ const Listing = () => {
             }
           );
         } else {
-          const nft = getNFTContract();
-
           await nft.giveResaleApproval(asset.tokenId);
-
           await marketplace.resellToken(
             `${process.env.REACT_APP_NFT_CONTRACT_ADDRESS}`,
             asset.tokenId,
@@ -248,29 +204,49 @@ const Listing = () => {
             }
           );
         }
-
-        const res = await updateToServer(id, data.amount);
-        if (res) {
-          toast.success(res.data);
+      } else {
+        const duration = moment().unix() + value * 60;
+        if (asset.currentPrice == 0 || asset.currentPrice == undefined) {
+          await auction.createTokenAuction(
+            `${process.env.REACT_APP_NFT_CONTRACT_ADDRESS}`,
+            asset.tokenId,
+            price,
+            duration
+          );
         } else {
-          toast.error("Listing Failed");
+          await nft.giveResaleApproval(asset.tokenId);
+          await auction.recreateTokenAuction(
+            `${process.env.REACT_APP_NFT_CONTRACT_ADDRESS}`,
+            asset.tokenId,
+            price,
+            duration
+          );
         }
-
-        setLoading(false);
-      } catch (err) {
-        console.log(err);
-        toast.error("Lisiting failed");
-        setLoading(false);
       }
+
+      const res = await updateToServer(asset._id, data.amount);
+      if (res) {
+        toast.success(res.data);
+      } else {
+        toast.error("Listing Failed");
+      }
+    } catch (err) {
+      console.log(err);
+      toast.error("Lisiting failed");
+      setLoading(false);
     }
+
+    setLoading(false);
   };
 
   const updateToServer = async (id, price) => {
+    const status = isFixedPrice ? "Sale" : "On Auction";
+
     const res = await axios.patch(
       `${process.env.REACT_APP_API_URL}/assets/listing`,
       {
         id,
-        status: "Sale",
+        status: status,
         price,
       }
     );
@@ -284,7 +260,7 @@ const Listing = () => {
   return (
     <>
       {!notFound ? (
-        asset && (
+        asset && user && asset.currentOwner._id == user._id ? (
           <Spin spinning={loading} tip="Listing your asset">
             <StyledLayout>
               <h3 style={{ fontWeight: "bold", marginBottom: "15px" }}>
@@ -310,7 +286,7 @@ const Listing = () => {
                           onClick={() => onButtonClick()}
                           style={{ borderRadius: "0px 10px 10px 0px" }}
                         >
-                          Auction
+                          Flash Auction
                         </StyledButton>
                       </Space>
                     </StyledContainer>
@@ -356,60 +332,24 @@ const Listing = () => {
 
                     {!isFixedPrice && (
                       <>
-                        <StyledLabel>Duration</StyledLabel>
+                        <StyledLabel>Auction Duration</StyledLabel>
                         <StyledCollaped
                           defaultActiveKey={["1"]}
                           expandIconPosition="right"
                           collapsible="disabled"
                         >
-                          <Panel
-                            header="Select Date Range"
-                            key="1"
-                            style={{ height: "430px" }}
-                          >
+                          <Panel header="Select Duration" key="1">
                             <StyledHeader>
-                              Date Range
+                              Time
                               <StyledSelect
-                                defaultValue={1}
-                                onChange={handleDateRangeSelect}
-                                value={
-                                  value
-                                    ? `${value[1].diff(value[0], "days")} days`
-                                    : `${dateRangeValue} days`
-                                }
+                                placeholder="Select Time"
+                                onChange={handleTimeSelect}
                               >
-                                <Option value={1}>1 day</Option>
-                                <Option value={3}>3 days</Option>
-                                <Option value={7}>7 days</Option>
-                                <Option value={30}>1 month</Option>
-                                <Option value={90}>3 months</Option>
+                                <Option value={5}>5 minutes</Option>
+                                <Option value={10}>10 minutes</Option>
+                                <Option value={15}>15 minutes</Option>
                               </StyledSelect>
                             </StyledHeader>
-
-                            <StyledRangePicker
-                              value={hackValue || value}
-                              disabledDate={disabledDate}
-                              onCalendarChange={(val) => setDates(val)}
-                              onChange={(val) => setValue(val)}
-                              onOpenChange={onOpenChange}
-                              placement="bottomRight"
-                              showTime={{
-                                hideDisabledOptions: true,
-                                defaultValue: [
-                                  moment("00:00:00", "HH:mm"),
-                                  moment("11:59:59", "HH:mm"),
-                                ],
-                              }}
-                              format="dddd DD-MM-YYYY HH:mm a"
-                            />
-                            <Result
-                              icon={<CalendarOutlined />}
-                              title={
-                                value
-                                  ? `Thank you for your selection.`
-                                  : "Please choose date range above!"
-                              }
-                            />
                           </Panel>
                         </StyledCollaped>
                       </>
@@ -441,6 +381,17 @@ const Listing = () => {
               </Row>
             </StyledLayout>
           </Spin>
+        ) : (
+          <Result
+            status="403"
+            title="403"
+            subTitle="Sorry, you are not authorized to access this page."
+            extra={
+              <Button type="primary" onClick={() => history.push("/")}>
+                Back Home
+              </Button>
+            }
+          />
         )
       ) : (
         <Empty />
