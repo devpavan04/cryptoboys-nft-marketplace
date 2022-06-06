@@ -155,11 +155,13 @@ const MintAsset = () => {
   };
 
   const onCreateSubmit = async (data) => {
-    setLoading(true);
-
     if (fileList.length === 0) {
       toast.error("No Image Found");
-    } else if (fileList.length === 1) {
+      return;
+    }
+
+    if (fileList.length === 1) {
+      setLoading(true);
       const assetPath = await uploadToIPFS(fileList[0].originFileObj);
       const url = `${process.env.REACT_APP_IPFS_URL}/${assetPath}`;
 

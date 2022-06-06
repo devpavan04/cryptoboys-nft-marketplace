@@ -88,7 +88,10 @@ const AssetPriceChart = () => {
 
   return (
     <StyledLayout>
-      <StyledCollaped defaultActiveKey={["1"]} expandIconPosition="right">
+      <StyledCollaped
+        defaultActiveKey={asset.status != "On Auction" && ["1"]}
+        expandIconPosition="right"
+      >
         <Panel header="Price History" key="1">
           {asset.prevPrice.length !== 0 ? (
             chartData && <Line data={chartData} options={options} />

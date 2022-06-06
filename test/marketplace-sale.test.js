@@ -19,7 +19,7 @@ contract("Marketplace", async (accounts) => {
   console.log("Account 0: ", accounts[0]);
   console.log("Account 1: ", accounts[1]);
 
-  describe("application features", async () => {
+  describe("basic mint features", async () => {
     it("allows users to mint ERC721 token", async () => {
       await nft.createToken("myCBNFT", {
         from: accounts[0],
@@ -34,6 +34,14 @@ contract("Marketplace", async (accounts) => {
     it("returns address of the token's owner", async () => {
       const tokenOwner = await nft.ownerOf(1);
       assert.equal(tokenOwner, accounts[0]);
+    });
+  });
+
+  describe("application features", async () => {
+    it("allows users to mint ERC721 token", async () => {
+      await nft.createToken("myCBNFT", {
+        from: accounts[0],
+      });
     });
 
     it("returns the token's URI", async () => {
