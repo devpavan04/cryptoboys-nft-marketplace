@@ -139,10 +139,7 @@ const EditAsset = () => {
           <form>
             <Title>Edit Your Asset</Title>
             <StyledLabel>Images, GIFs, Videos</StyledLabel>
-            <StyledImage
-              width={200}
-              src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png"
-            />
+            <StyledImage width={200} src={asset.uriID} />
             <StyledLabel>Name</StyledLabel>
             <Controller
               name="name"

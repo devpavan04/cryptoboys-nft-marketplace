@@ -77,6 +77,7 @@ const NFTDetails = () => {
     <>
       {notFound ? (
         <Empty
+          style={{ marginTop: "5rem" }}
           description={
             <span>
               <Paragraph>
@@ -91,15 +92,16 @@ const NFTDetails = () => {
           {asset && user && user._id == asset.currentOwner._id && (
             <Affix>
               <OptionLayout>
-                {asset.status ==  "Not Listing" && (
+                {asset.status == "Not Listing" && (
                   <StyledButton type="primary" onClick={() => onSellClick()}>
                     Sell
-                  </StyledButton>)
-                }
+                  </StyledButton>
+                )}
                 <StyledButton
                   type="primary"
                   style={{
-                    marginRight: asset.status ==  "Not Listing" ? "10px" : "8rem",
+                    marginRight:
+                      asset.status == "Not Listing" ? "10px" : "8rem",
                     backgroundColor: "white",
                     color: "#038cfc",
                   }}

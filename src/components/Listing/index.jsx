@@ -13,11 +13,12 @@ import {
   Result,
   Empty,
   Spin,
+  Typography,
 } from "antd";
 import { ReactComponent as Ethereum } from "../../assets/icons/ethereum.svg";
-import Icon from "@ant-design/icons";
+import Icon, { LoadingOutlined } from "@ant-design/icons";
 import moment from "moment";
-import { CalendarOutlined } from "@ant-design/icons";
+import SuccessPage from "../Common/SuccessPage";
 import PreviewAssetCard from "../Common/PreviewAssetCard.jsx";
 import { useSelector, useDispatch } from "react-redux";
 import { useForm, Controller } from "react-hook-form";
@@ -34,6 +35,7 @@ import {
 const { Panel } = Collapse;
 const { RangePicker } = DatePicker;
 const { Option } = Select;
+const { Paragraph } = Typography;
 
 //#region Styled Components
 const StyledLayout = styled.div`
@@ -127,6 +129,8 @@ const StyledSelect = styled(Select)`
   }
 `;
 
+const loadingIcon = <LoadingOutlined spin />;
+
 //#endregion
 
 const EthereumIcon = (props) => <Icon component={Ethereum} {...props} />;
@@ -140,7 +144,7 @@ const Listing = () => {
   const [isOwner, setIsOwner] = useState(false);
   const [value, setValue] = useState();
   const [priceState, setPriceState] = useState(0);
-  const [notFound, setNotFound] = useState(false);
+  const [componentState, setComponentState] = useState("FETCHING");
   const asset = useSelector((state) => state.asset);
   const user = useSelector((state) => state.user);
   const history = useHistory();
@@ -157,13 +161,25 @@ const Listing = () => {
   const marketplace = getMarketplaceContract();
 
   useEffect(() => {
-    if (asset == "" || asset == undefined) {
-      dispatch(fetchAsset(id)).catch(() => {
-        toast.error("Cannot found the asset");
-        setNotFound(true);
-      });
+    dispatch(fetchAsset(id)).catch(() => {
+      toast.error("Cannot found the asset");
+      setComponentState("NOT_FOUND");
+    });
+  }, []);
+
+  useEffect(() => {
+    if (asset && user) {
+      if (asset.status != "Not Listing") {
+        return setComponentState("ALREADY_LISTED");
+      }
+
+      if (asset.currentOwner._id == user._id) {
+        setComponentState("FETCHED");
+      } else {
+        setComponentState("NOT_OWNER");
+      }
     }
-  }, [asset]);
+  }, [asset, user]);
 
   const handleTimeSelect = (value) => {
     setValue(value);
@@ -224,16 +240,12 @@ const Listing = () => {
         }
       }
 
-      const res = await updateToServer(asset._id, data.amount);
-      if (res) {
-        toast.success(res.data);
-      } else {
-        toast.error("Listing Failed");
-      }
+      await updateToServer(asset._id, data.amount);
+
+      setComponentState("COMPLETED");
     } catch (err) {
       console.log(err);
       toast.error("Lisiting failed");
-      setLoading(false);
     }
 
     setLoading(false);
@@ -257,11 +269,73 @@ const Listing = () => {
     setPriceState(e.target.value);
   };
 
-  return (
-    <>
-      {!notFound ? (
-        asset && user && asset.currentOwner._id == user._id ? (
-          <Spin spinning={loading} tip="Listing your asset">
+  console.log(componentState);
+
+  const renderComponentState = () => {
+    switch (componentState) {
+      case "FETCHING":
+        return (
+          <StyledLayout style={{ textAlign: "center" }}>
+            <Spin indicator={loadingIcon} />
+          </StyledLayout>
+        );
+      case "NOT_FOUND":
+        return (
+          <Empty
+            style={{ marginTop: "5rem" }}
+            description={
+              <span>
+                <Paragraph>
+                  Sorry, we couldn't find the asset you are looking for.
+                </Paragraph>
+                <Paragraph>Please check the URL and try again.</Paragraph>
+              </span>
+            }
+          />
+        );
+      case "NOT_OWNER":
+        return (
+          <Result
+            status="403"
+            title="403"
+            subTitle="Sorry, you are not authorized to access this page."
+            extra={
+              <Button type="primary" onClick={() => history.push("/")}>
+                Back Home
+              </Button>
+            }
+          />
+        );
+      case "COMPLETED":
+        return (
+          <SuccessPage
+            title={"Successfully listed on the marketplace"}
+            subTitle={
+              "Your token has been successfully listed. Please return to profile to view your token."
+            }
+          />
+        );
+      case "ALREADY_LISTED":
+        return (
+          <Result
+            title="Your token is already listed on the marketplace"
+            extra={
+              <StyledButton
+                type="primary"
+                onClick={() => history.push(`/assets/${id}`)}
+              >
+                Go to your token
+              </StyledButton>
+            }
+          />
+        );
+      case "FETCHED":
+        return (
+          <Spin
+            spinning={loading}
+            indicator={loadingIcon}
+            tip="Listing your asset"
+          >
             <StyledLayout>
               <h3 style={{ fontWeight: "bold", marginBottom: "15px" }}>
                 List item for sale
@@ -381,23 +455,11 @@ const Listing = () => {
               </Row>
             </StyledLayout>
           </Spin>
-        ) : (
-          <Result
-            status="403"
-            title="403"
-            subTitle="Sorry, you are not authorized to access this page."
-            extra={
-              <Button type="primary" onClick={() => history.push("/")}>
-                Back Home
-              </Button>
-            }
-          />
-        )
-      ) : (
-        <Empty />
-      )}
-    </>
-  );
+        );
+    }
+  };
+
+  return <>{renderComponentState()}</>;
 };
 
 export default Listing;
