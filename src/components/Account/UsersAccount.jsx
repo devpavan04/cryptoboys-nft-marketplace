@@ -1,5 +1,4 @@
-import React, { useEffect, useState, useCallback } from "react";
-import { ethers } from "ethers";
+import React, { useEffect, useState } from "react";
 import {
   Select,
   Layout,
@@ -25,10 +24,6 @@ import styled from "styled-components";
 import AssetCard from "../Common/AssetCard.jsx";
 import FilterSider from "../Common/FilterSider";
 import CollectionCard from "../Common/CollectionCard";
-import { useDispatch, useSelector } from "react-redux";
-import { getOwnedAsset } from "../../state/action/ownedAssetsAction";
-import { getOwnedCollection } from "../../state/action/ownedCollectionAction";
-import { getFavoriteAsset } from "../../state/action/favoriteAssetsAction";
 import { toast } from "react-toastify";
 import axios from "axios";
 import { useParams } from "react-router-dom";
@@ -106,18 +101,13 @@ const StyledContent = styled(Content)`
 const loadingIcon = <LoadingOutlined style={{ fontSize: 70 }} spin />;
 
 const Account = () => {
-  const dispatch = useDispatch();
   const [bannerImage, setBannerImage] = useState(null);
   const [profileImage, setProfileImage] = useState(null);
   const [collapsed, setCollapsed] = useState(false);
   const [ellipsis, setEllipsis] = useState(true);
   const [loading, setLoading] = useState(true);
   const [menuSelected, setMenuSelected] = useState("1");
-  // const user = useSelector((state) => state.user);
   const { id } = useParams();
-  const ownedAssets = useSelector((state) => state.ownedAssets);
-  const ownedCollections = useSelector((state) => state.ownedCollections);
-  // const favoriteAssets = useSelector((state) => state.favoriteAssets);
   const [user, setUser] = useState({});
   const [assets, setAssets] = useState([]);
   const [collections, setCollections] = useState([]);
@@ -125,13 +115,13 @@ const Account = () => {
 
   useEffect(() => {
     getUser();
-    setLoading(false);
-  }, [getUser]);
+  }, []);
 
   useEffect(() => {
     if (Object.keys(user).length !== 0) {
       getAssetsAndCollections(user._id);
       setImg();
+      setLoading(false);
     }
   }, [user]);
 
@@ -156,9 +146,6 @@ const Account = () => {
   };
 
   const getAssetsAndCollections = async (id) => {
-    // dispatch(getOwnedAsset(id)).catch(() => {
-    //   toast.error("Error fetching owned assets");
-    // });
     await axios
       .get(`${process.env.REACT_APP_API_URL}/users/owned-assets?id=${id}`)
       .then(({ data }) => {
@@ -183,13 +170,6 @@ const Account = () => {
       .catch(() => {
         toast.error("Error fetching favorite assets");
       });
-
-    // dispatch(getOwnedCollection(id)).catch(() => {
-    //   toast.error("Error fetching owned collections");
-    // });
-    // dispatch(getFavoriteAsset(id)).catch(() => {
-    //   toast.error("Error fetching favorite assets");
-    // });
   };
 
   const toggleSider = () => {
@@ -214,9 +194,7 @@ const Account = () => {
         return (
           <>
             {assets.length > 0 ? (
-              assets
-                .filter((asset) => asset.status != "Not Listing")
-                .map((asset) => <AssetCard key={asset._id} asset={asset} />)
+              assets.map((asset) => <AssetCard key={asset._id} asset={asset} />)
             ) : (
               <div style={{ width: "90%", margin: "0 auto" }}>
                 <Empty description={<span>User don't have any assets.</span>} />
@@ -277,7 +255,7 @@ const Account = () => {
           )}
           <div style={{ width: "50%", wordBreak: "break-all" }}>
             <Space direction="vertical" size={0} style={{ marginLeft: "10px" }}>
-              <Title level={3}>{user.name ? user.name : "Default"}</Title>
+              <Title level={3}>{user.name ? user.name : "No Name"}</Title>
               <Title level={5}>
                 {user.walletAddress ? user.walletAddress : "0x0000"}
               </Title>
@@ -367,14 +345,6 @@ const Account = () => {
           </StyledHeader>
           <StyledContent>
             {renderAssetsAndCollection()}
-
-            {/* <AssetCard collapsed={collapsed} />
-            <AssetCard collapsed={collapsed} />
-            <AssetCard collapsed={collapsed} />
-            <AssetCard collapsed={collapsed} />
-            <AssetCard collapsed={collapsed} />
-            <AssetCard collapsed={collapsed} />
-            <AssetCard collapsed={collapsed} /> */}
           </StyledContent>
         </Layout>
       </StyledLayout>

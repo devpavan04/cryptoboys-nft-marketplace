@@ -17,10 +17,10 @@ const Navbar = (props) => {
             <img
               style={{ width: "50px" }}
               className="mr-4"
-              src={"https://opensea.io/static/images/logos/opensea.svg"}
-              alt=""
+              src="/logo.png"
+              alt="logo"
             />
-            <span className="h4 font-weight-bold">Crypto boyz</span>
+            <span className="h2 font-weight-bold">HUFT Marketplace</span>
           </Link>
         </div>
         <button
@@ -55,16 +55,6 @@ const Navbar = (props) => {
             <li className="mr-3">
               <Link to="/mint" className="">
                 Mint NFT
-              </Link>
-            </li>
-            <li className="mr-3">
-              <Link to="/assets" className="">
-                Assets
-              </Link>
-            </li>
-            <li className="mr-3">
-              <Link to="/marketplace" className="">
-                Marketplace
               </Link>
             </li>
             {/* <li className="mr-3">

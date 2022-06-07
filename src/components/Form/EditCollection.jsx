@@ -1,15 +1,27 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
-import { Typography, Input, Button, Select, Image, Upload, Spin } from "antd";
+import {
+  Typography,
+  Input,
+  Button,
+  Select,
+  Image,
+  Upload,
+  Spin,
+  Empty,
+} from "antd";
 import { UploadOutlined, LoadingOutlined } from "@ant-design/icons";
 import { toast } from "react-toastify";
 import { useSelector, useDispatch } from "react-redux";
 import { useForm, Controller } from "react-hook-form";
-import { fetchCollection } from "../../state/action/collectionAction";
+import {
+  fetchCollection,
+  setCollection,
+} from "../../state/action/collectionAction";
 import { useParams } from "react-router-dom";
 import axios from "axios";
 
-const { Title } = Typography;
+const { Title, Paragraph } = Typography;
 const { Option } = Select;
 const { TextArea } = Input;
 
@@ -82,6 +94,7 @@ const EditCollection = () => {
   const [image, setImage] = useState(null);
   const [category, setCategory] = useState(null);
   const [fetchCategory, setFetchCategory] = useState([]);
+  const [notFound, setNotFound] = useState(false);
   const dispatch = useDispatch();
   const {
     register,
@@ -91,9 +104,27 @@ const EditCollection = () => {
   } = useForm();
 
   //will comeback to this later
-  const onUpdateSubmit = (data) => {
-    console.log(data);
-    console.log(category);
+  const onUpdateSubmit = async (data) => {
+    const newCollection = {
+      id,
+      ...data,
+      categoryId: category,
+    };
+
+    try {
+      await axios
+        .patch(
+          `${process.env.REACT_APP_API_URL}/collections/update`,
+          newCollection
+        )
+        .then((res) => {
+          toast.success("Collection updated successfully");
+          dispatch(setCollection(newCollection));
+        });
+    } catch (err) {
+      toast.error("Error updating collection");
+      console.log(err);
+    }
   };
 
   const fetchCategoryData = async () => {
@@ -102,7 +133,7 @@ const EditCollection = () => {
       .then((res) => {
         setFetchCategory(res.data);
       })
-      .catch((err) => {
+      .catch(() => {
         toast.error("Can't fetch category data");
       });
   };
@@ -115,10 +146,12 @@ const EditCollection = () => {
     if (collection == "" || collection == undefined) {
       dispatch(fetchCollection(id))
         .then((res) => {
-          // setCategory(res.category);
+          setImage(res.collectionBanner);
+          setCategory(res.category);
           setLoading(false);
         })
         .catch(() => {
+          setNotFound(true);
           toast.error("Cannot found the collection");
         });
     } else {
@@ -131,6 +164,21 @@ const EditCollection = () => {
     setCategory(value);
   };
 
+  if (notFound) {
+    return (
+      <Empty
+        description={
+          <span>
+            <Paragraph>
+              Sorry, we couldn't find the collection you are looking for.
+            </Paragraph>
+            <Paragraph>Please check the URL and try again.</Paragraph>
+          </span>
+        }
+      />
+    );
+  }
+
   return (
     <>
       {loading ? (
@@ -142,10 +190,7 @@ const EditCollection = () => {
           <form>
             <Title>Edit Collection</Title>
             <StyledLabel>Banner Image</StyledLabel>
-            <StyledImage
-              width={200}
-              src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png"
-            />
+            <StyledImage width={400} src={image} />
             <StyledLabel>Collection's Name</StyledLabel>
             <Controller
               name="name"
@@ -160,8 +205,8 @@ const EditCollection = () => {
                   message: "Name must be at least 5 characters *",
                 },
                 maxLength: {
-                  value: 20,
-                  message: "Name cannot be more than 20 characters *",
+                  value: 30,
+                  message: "Name cannot be more than 30 characters *",
                 },
               }}
               defaultValue={collection.name}

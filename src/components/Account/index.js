@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import { ethers } from "ethers";
 import {
   Select,
   Layout,
@@ -29,7 +28,9 @@ import { useDispatch, useSelector } from "react-redux";
 import { getOwnedAsset } from "../../state/action/ownedAssetsAction";
 import { getOwnedCollection } from "../../state/action/ownedCollectionAction";
 import { getFavoriteAsset } from "../../state/action/favoriteAssetsAction";
-import { toast } from "react-toastify";
+
+
+
 const { Header, Sider, Content } = Layout;
 const { Search } = Input;
 const { Option } = Select;
@@ -127,8 +128,7 @@ const Account = () => {
   //     // });
   //   }
   // }, [window]);
-  console.log
-  (ownedAssets)
+
   useEffect(() => {
     if (user != "") {
       dispatch(getOwnedAsset(user._id));
@@ -236,7 +236,7 @@ const Account = () => {
           )}
           <div style={{ width: "50%", wordBreak: "break-all" }}>
             <Space direction="vertical" size={0} style={{ marginLeft: "10px" }}>
-              <Title level={3}>{user.name ? user.name : "Default"}</Title>
+              <Title level={3}>{user.name ? user.name : "No Name"}</Title>
               <Title level={5}>
                 {user.walletAddress ? user.walletAddress : "0x0000"}
               </Title>
@@ -326,14 +326,6 @@ const Account = () => {
           </StyledHeader>
           <StyledContent>
             {renderAssetsAndCollection()}
-
-            {/* <AssetCard collapsed={collapsed} />
-            <AssetCard collapsed={collapsed} />
-            <AssetCard collapsed={collapsed} />
-            <AssetCard collapsed={collapsed} />
-            <AssetCard collapsed={collapsed} />
-            <AssetCard collapsed={collapsed} />
-            <AssetCard collapsed={collapsed} /> */}
           </StyledContent>
         </Layout>
       </StyledLayout>
