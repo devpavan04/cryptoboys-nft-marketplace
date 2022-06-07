@@ -17,7 +17,7 @@ import LayoutIndex from "./page";
 import "./style/index.css";
 import Login from "./components/Login/index";
 import AccountSettings from "./components/AccountSettings/index";
-import Account from "./components/Account";
+import Account from "./components/Account/index";
 import PrivateRoute from "./PrivateRoute";
 import { ethers } from "ethers";
 import "react-toastify/dist/ReactToastify.css";
@@ -501,8 +501,7 @@ const App = () => {
               )}
             /> */}
           <Route path="/login" render={() => <Login />} />
-          <Route path="/my-account" exact render={() => <Account />} />
-          <Route path="/account/:id" exact render={() => <UsersAccount />} />
+          <Route path="/account/:id" exact render={() => <Account />} />
           <Route path="/settings" render={() => <AccountSettings />} />
           <Route path="/mint" render={() => <MintAsset />} />
           <Route path="/assets/:id" exact render={() => <NFTDetails />} />

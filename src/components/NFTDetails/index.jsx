@@ -73,60 +73,60 @@ const NFTDetails = () => {
     setLoading(false);
   }, []);
 
+  if (notFound) {
+    return (
+      <Empty
+        description={
+          <span>
+            <Paragraph>
+              Sorry, we couldn't find the collection you are looking for.
+            </Paragraph>
+            <Paragraph>Please check the URL and try again.</Paragraph>
+          </span>
+        }
+      />
+    );
+  }
+
   return (
     <>
-      {notFound ? (
-        <Empty
-          style={{ marginTop: "5rem" }}
-          description={
-            <span>
-              <Paragraph>
-                Sorry, we couldn't find the asset you are looking for.
-              </Paragraph>
-              <Paragraph>Please check the URL and try again.</Paragraph>
-            </span>
-          }
-        />
-      ) : (
-        <Spin spinning={loading}>
-          {asset && user && user._id == asset.currentOwner._id && (
-            <Affix>
-              <OptionLayout>
-                {asset.status == "Not Listing" && (
-                  <StyledButton type="primary" onClick={() => onSellClick()}>
-                    Sell
-                  </StyledButton>
-                )}
-                <StyledButton
-                  type="primary"
-                  style={{
-                    marginRight:
-                      asset.status == "Not Listing" ? "10px" : "8rem",
-                    backgroundColor: "white",
-                    color: "#038cfc",
-                  }}
-                  onClick={() => onEditClick()}
-                >
-                  Edit
+      <Spin spinning={loading}>
+        {asset && user && user._id == asset.currentOwner._id && (
+          <Affix>
+            <OptionLayout>
+              {asset.status == "Not Listing" && (
+                <StyledButton type="primary" onClick={() => onSellClick()}>
+                  Sell
                 </StyledButton>
-              </OptionLayout>
-            </Affix>
-          )}
-          <StyledLayout>
-            <Row>
-              <Col {...colProps} md={10}>
-                <AssetImage />
-              </Col>
-              <Col {...colProps} md={14}>
-                <AssetDetails />
-              </Col>
-            </Row>
-            <Row md={24}>
-              <AssetActivity />
-            </Row>
-          </StyledLayout>
-        </Spin>
-      )}
+              )}
+              <StyledButton
+                type="primary"
+                style={{
+                  marginRight: asset.status == "Not Listing" ? "10px" : "8rem",
+                  backgroundColor: "white",
+                  color: "#038cfc",
+                }}
+                onClick={() => onEditClick()}
+              >
+                Edit
+              </StyledButton>
+            </OptionLayout>
+          </Affix>
+        )}
+        <StyledLayout>
+          <Row>
+            <Col {...colProps} md={10}>
+              <AssetImage />
+            </Col>
+            <Col {...colProps} md={14}>
+              <AssetDetails />
+            </Col>
+          </Row>
+          <Row md={24}>
+            <AssetActivity />
+          </Row>
+        </StyledLayout>
+      </Spin>
     </>
   );
 };

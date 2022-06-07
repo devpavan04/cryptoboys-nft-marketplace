@@ -2,8 +2,10 @@ import React, { Fragment } from "react";
 import icon from "./favicon-32x32.png";
 import { Link } from "react-router-dom";
 import { Input, Space } from "antd";
+import { useSelector } from "react-redux";
 
 const Navbar = (props) => {
+  const user = useSelector((state) => state.user);
   return (
     <nav
       style={{
@@ -20,7 +22,7 @@ const Navbar = (props) => {
               src="/logo.png"
               alt="logo"
             />
-            <span className="h2 font-weight-bold">HUFT Marketplace</span>
+            <span className="h3 font-weight-bold">HUFT Marketplace</span>
           </Link>
         </div>
         <button
@@ -76,7 +78,7 @@ const Navbar = (props) => {
             ) : (
               <Fragment>
                 <li className="mr-3">
-                  <Link to="/my-account" className="">
+                  <Link to={`/account/${user.walletAddress}`} className="">
                     Account
                   </Link>
                 </li>

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import {
   Select,
   Layout,
@@ -25,11 +25,8 @@ import AssetCard from "../Common/AssetCard.jsx";
 import FilterSider from "../Common/FilterSider";
 import CollectionCard from "../Common/CollectionCard";
 import { useDispatch, useSelector } from "react-redux";
-import { getOwnedAsset } from "../../state/action/ownedAssetsAction";
-import { getOwnedCollection } from "../../state/action/ownedCollectionAction";
-import { getFavoriteAsset } from "../../state/action/favoriteAssetsAction";
-
-
+import axios from "axios";
+import { toast } from "react-toastify";
 
 const { Header, Sider, Content } = Layout;
 const { Search } = Input;
@@ -104,18 +101,20 @@ const StyledContent = styled(Content)`
 
 const loadingIcon = <LoadingOutlined style={{ fontSize: 70 }} spin />;
 
-const Account = () => {
-  const dispatch = useDispatch();
+const MyAccount = () => {
   const [bannerImage, setBannerImage] = useState(null);
   const [profileImage, setProfileImage] = useState(null);
   const [collapsed, setCollapsed] = useState(false);
   const [ellipsis, setEllipsis] = useState(true);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [menuSelected, setMenuSelected] = useState("1");
   const user = useSelector((state) => state.user);
-  const ownedAssets = useSelector((state) => state.ownedAssets);
-  const ownedCollections = useSelector((state) => state.ownedCollections);
-  const favoriteAssets = useSelector((state) => state.favoriteAssets);
+  const [ownedAssets, setOwnedAssets] = useState([]);
+  const [ownedCollections, setOwnedCollections] = useState([]);
+  const [favoriteAssets, setFavoriteAssets] = useState([]);
+  let assets = useRef([]);
+  let collections = useRef([]);
+  let favorAssets = useRef([]);
 
   // useEffect(async () => {
   //   if(window.ethereum && window.ethereum.isMetaMask) {
@@ -131,12 +130,10 @@ const Account = () => {
 
   useEffect(() => {
     if (user != "") {
-      dispatch(getOwnedAsset(user._id));
-      dispatch(getOwnedCollection(user._id));
-      dispatch(getFavoriteAsset(user._id));
+      getAssetsAndCollections(user._id);
       setImg();
+      setLoading(false);
     }
-    setLoading(false);
   }, [user]);
 
   const setImg = () => {
@@ -153,16 +150,73 @@ const Account = () => {
     setCollapsed(!collapsed);
   };
 
-  const handleCategoriesChange = (value) => {
-    console.log(`selected ${value}`);
-  };
-
-  const handleCategoriesSearch = (value) => {
-    console.log(`search ${value}`);
-  };
-
   const handleMenuSelect = (e) => {
     setMenuSelected(e.key);
+  };
+
+  const getAssetsAndCollections = async (id) => {
+    await axios
+      .get(`${process.env.REACT_APP_API_URL}/users/owned-assets?id=${id}`)
+      .then(({ data }) => {
+        setOwnedAssets(data.ownedAssets);
+        assets.current = [...data.ownedAssets];
+      })
+      .catch(() => {
+        toast.error("Error fetching collected assets");
+      });
+    await axios
+      .get(`${process.env.REACT_APP_API_URL}/users/owned-collections?id=${id}`)
+      .then(({ data }) => {
+        setOwnedCollections(data.ownedCollections);
+        collections.current = [...data.ownedCollections];
+      })
+      .catch(() => {
+        toast.error("Error fetching owned collections");
+      });
+    await axios
+      .get(`${process.env.REACT_APP_API_URL}/users/favorite-assets?id=${id}`)
+      .then(({ data }) => {
+        setFavoriteAssets(data.favoriteAssets);
+        favorAssets.current = [...data.favoriteAssets];
+      })
+      .catch(() => {
+        toast.error("Error fetching favorite assets");
+      });
+  };
+
+  const onSearch = (value) => {
+    if (value === "") {
+      setOwnedAssets(assets.current);
+      setOwnedCollections(collections.current);
+      setFavoriteAssets(favorAssets.current);
+    } else {
+      switch (menuSelected) {
+        case "1":
+          return setOwnedAssets((ownedAssets) =>
+            ownedAssets.filter((asset) =>
+              asset.name.toLowerCase().includes(value.toLowerCase())
+            )
+          );
+        case "2":
+          return setFavoriteAssets((favoriteAssets) =>
+            favoriteAssets.filter((asset) =>
+              asset.name.toLowerCase().includes(value.toLowerCase())
+            )
+          );
+        case "3":
+          return setOwnedCollections((ownedCollections) =>
+            ownedCollections.filter((collection) =>
+              collection.name.toLowerCase().includes(value.toLowerCase())
+            )
+          );
+        default:
+          return setOwnedAssets((ownedAssets) =>
+            ownedAssets.filter((asset) =>
+              asset.name.toLowerCase().includes(value.toLowerCase())
+            )
+          );
+      }
+    }
   };
 
   const renderAssetsAndCollection = () => {
@@ -301,36 +355,20 @@ const Account = () => {
                   style={{ fontSize: "25px" }}
                 />
               )}
-              <StyledSelect
-                showSearch
-                placeholder="Select category"
-                optionFilterProp="children"
-                onChange={handleCategoriesChange}
-                onSearch={handleCategoriesSearch}
-                filterOption={(input, option) =>
-                  option.children.toLowerCase().indexOf(input.toLowerCase()) >=
-                  0
-                }
-              >
-                <Option value="jack">Jack</Option>
-                <Option value="lucy">Lucy</Option>
-                <Option value="tom">Tom</Option>
-              </StyledSelect>
               <Search
                 placeholder="Search"
                 allowClear
                 enterButton
+                onSearch={onSearch}
                 style={{ width: "300px" }}
               />
             </Space>
           </StyledHeader>
-          <StyledContent>
-            {renderAssetsAndCollection()}
-          </StyledContent>
+          <StyledContent>{renderAssetsAndCollection()}</StyledContent>
         </Layout>
       </StyledLayout>
     </Spin>
   );
 };
 
-export default Account;
+export default MyAccount;
