@@ -25,11 +25,12 @@ const UploadImageAndSaveService = data => {
     }
     formData.append("field_name", data.field_name);
     formData.append("collection_name", data.collection_name);
-    return axios.post(ENV_CONFIG.API_URL + Urls.firebase_upload_save, formData)
+    return axios.post(ENV_CONFIG.API_URL + Urls.firebase_upload_save.replace(":id", data.id || ""), formData)
 }
 
 const UploadService = {
-    UploadImageService
+    UploadImageService,
+    UploadImageAndSaveService
 }
 
 export default UploadService;

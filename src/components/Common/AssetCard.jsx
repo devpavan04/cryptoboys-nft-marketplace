@@ -42,9 +42,9 @@ const StyledCardInfo = styled.span`
 
 const ThumbStyle = styled.iframe`
   html body img {
-    width: 100%
+    width: 100%;
   }
-`
+`;
 
 const EthereumIcon = (props) => <Icon component={Ethereum} {...props} />;
 
@@ -70,6 +70,7 @@ const AssetCard = (props) => {
             alt="example"
             src={asset.uriID}
             style={{
+              objectFit: "contain",
               width: "300px",
               height: "310px",
               borderRadius: "10px 10px 0px 0px",
@@ -104,8 +105,8 @@ const AssetCard = (props) => {
 
   return (
     <StyledCard
+      className={props.className}
       onClick={() => {
-        console.log(asset);
         // dispatch(setAsset(asset));
         history.push(`/assets/${asset._id}`);
       }}
@@ -114,15 +115,7 @@ const AssetCard = (props) => {
         width: "300px",
         height: "420px",
       }}
-      cover={ <iframe
-        src={asset.uriID}
-        style={{
-          width: "300px",
-          height: "310px",
-          borderRadius: "10px 10px 0px 0px",
-          border: 'none'
-        }}
-      />}
+      cover={getFrameByTypeThumb()}
     >
       <StyledCardContent>
         <StyledSpace
