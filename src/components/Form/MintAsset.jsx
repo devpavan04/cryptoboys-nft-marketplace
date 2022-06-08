@@ -17,16 +17,15 @@ import { useSelector } from "react-redux";
 import { useForm, Controller } from "react-hook-form";
 import { PlusOutlined, LoadingOutlined } from "@ant-design/icons";
 import axios from "axios";
-import NFT from "../../build/abis/NFT.json";
+import { getNFTContract } from "../../contractInstances";
 import { ipfs } from "../../utils/functions";
-
-//#region IPFS
-//#endregion
+import SuccessPage from "../Common/SuccessPage";
 
 const { Title } = Typography;
 const { Option } = Select;
 const { TextArea } = Input;
 
+// #region Styled Components
 const StyledLayout = styled.div`
   padding: 0.5rem 1rem;
   margin-top: 3rem;
@@ -86,6 +85,8 @@ const StyledFallback = styled.div`
 
 const loadingIcon = <LoadingOutlined spin />;
 
+// #endregion
+
 const getBase64 = (file) => {
   return new Promise((resolve, reject) => {
     const reader = new FileReader();
@@ -105,11 +106,13 @@ const MintAsset = () => {
   const [newCollection, setNewCollection] = useState(null);
   const [loading, setLoading] = useState(false);
   const [fileType, setFileType] = useState(0);
+  const [completed, setCompleted] = useState(false);
   const {
     formState: { errors },
     handleSubmit,
     control,
   } = useForm();
+  const nft = getNFTContract();
 
   useEffect(() => {
     if (user) setNewCollection(user.ownedCollections[0]._id);
@@ -145,77 +148,67 @@ const MintAsset = () => {
     setNewCollection(value);
   };
 
-  const getNFTContract = () => {
-    const provider = new ethers.providers.Web3Provider(window.ethereum);
-    const signer = provider.getSigner();
-    const contractAddress = process.env.REACT_APP_NFT_CONTRACT_ADDRESS;
-    const nftContract = new ethers.Contract(contractAddress, NFT.abi, signer);
-
-    return nftContract;
-  };
-
   const onCreateSubmit = async (data) => {
     if (fileList.length === 0) {
       toast.error("No Image Found");
       return;
     }
 
+    setLoading(true);
+
     if (fileList.length === 1) {
-      setLoading(true);
       const assetPath = await uploadToIPFS(fileList[0].originFileObj);
       const url = `${process.env.REACT_APP_IPFS_URL}/${assetPath}`;
 
       //create token by smart contract
-      const nft = getNFTContract();
-      let transaction = await nft.createToken(`${url}`).catch((err) => {
+      try {
+        let transaction = await nft.createToken(`${url}`);
+        const tokenId = await getEventAndReturnId(transaction);
+
+        //upload token to backend
+        if (tokenId && url) {
+          await uploadToServer(data, tokenId, url).then((res) => {
+            if (res.status !== 200) {
+              toast.error("Error Uploading Asset");
+            }
+          });
+          setCompleted(true);
+        } else {
+          toast.error("There are no TokenId or Url");
+        }
+      } catch {
         toast.error("Transaction Failed");
-      });
-      const tokenId = await getEventAndReturnId(transaction);
-
-      console.log(tokenId);
-      console.log(url);
-
-      //upload token to backend
-      if (tokenId && url) {
-        await uploadToServer(data, tokenId, url).then((res) => {
-          if (res.status !== 200) {
-            toast.error("Error Uploading Asset");
-          }
-          toast.success("Minted Asset Successfully");
-        });
-        setLoading(false);
       }
-      setLoading(false);
     } else {
       fileList.map(async (file) => {
         const assetPath = await uploadToIPFS(file.originFileObj);
         const url = `${process.env.REACT_APP_IPFS_URL}/${assetPath}`;
 
         //create token by smart contract
-        const nft = getNFTContract();
-        let transaction = await nft.createToken(`${url}`).catch((err) => {
-          toast.error("Transaction Failed");
-          setLoading(false);
-        });
-        const tokenId = await getEventAndReturnId(transaction);
+        try {
+          let transaction = await nft.createToken(`${url}`);
+          const tokenId = await getEventAndReturnId(transaction);
 
-        //upload token to backend
-        if (tokenId && url) {
-          await uploadMultipleToServer(
-            file.originFileObj.name,
-            tokenId,
-            url
-          ).then((res) => {
-            if (res.status !== 200) {
-              toast.error("Error Uploading Asset");
-            }
-            toast.success("Minted Asset Successfully");
-          });
-          setLoading(false);
+          //upload token to backend
+          if (tokenId && url) {
+            await uploadMultipleToServer(
+              file.originFileObj.name,
+              tokenId,
+              url
+            ).then((res) => {
+              if (res.status !== 200) {
+                toast.error("Error Uploading Asset");
+              }
+            });
+          }
+        } catch {
+          toast.error("Transaction Failed");
         }
       });
-      setLoading(false);
+      setCompleted(true);
     }
+
+    setLoading(false);
   };
 
   const uploadToServer = async (data, tokenId, url) => {
@@ -282,154 +275,167 @@ const MintAsset = () => {
           indicator={loadingIcon}
           tip="Minting your asset(s)"
         >
-          <StyledLayout>
-            <form>
-              <Title>Create New NFT</Title>
-              <StyledLabel>Images, Videos, Gifs</StyledLabel>
-              <div style={{ marginBottom: "10px" }}>
-                Upload directory <Switch onChange={switchChange} size="small" />
-              </div>
-              <Upload
-                listType="picture-card"
-                fileList={fileList}
-                onPreview={handlePreview}
-                onChange={handleChange}
-                onRemove={(file) => {
-                  const index = fileList.indexOf(file);
-                  const newFileList = fileList.slice();
-                  newFileList.splice(index, 1);
-                  setFileList(newFileList);
-                }}
-                beforeUpload={(file) => {
-                  const isJPG = file.type === "image/jpeg";
-                  const isPNG = file.type === "image/png";
-                  const isGIF = file.type === "image/gif";
-                  const isMP3 = file.type === "audio/mp3";
-                  const isMP4 = file.type === "video/mp4";
-                  let typeNumber = 0;
-                  switch (true) {
-                    case isGIF: {
-                      typeNumber = 2;
-                      break;
+          {!completed ? (
+            <StyledLayout>
+              <form>
+                <Title>Create New NFT</Title>
+                <StyledLabel>Images, Videos, Gifs</StyledLabel>
+                <div style={{ marginBottom: "10px" }}>
+                  Upload directory{" "}
+                  <Switch onChange={switchChange} size="small" />
+                </div>
+                <Upload
+                  listType="picture-card"
+                  fileList={fileList}
+                  onPreview={handlePreview}
+                  onChange={handleChange}
+                  onRemove={(file) => {
+                    const index = fileList.indexOf(file);
+                    const newFileList = fileList.slice();
+                    newFileList.splice(index, 1);
+                    setFileList(newFileList);
+                  }}
+                  beforeUpload={(file) => {
+                    const isJPG = file.type === "image/jpeg";
+                    const isPNG = file.type === "image/png";
+                    const isGIF = file.type === "image/gif";
+                    const isMP3 = file.type === "audio/mp3";
+                    const isMP4 = file.type === "video/mp4";
+                    let typeNumber = 0;
+                    switch (true) {
+                      case isGIF: {
+                        typeNumber = 2;
+                        break;
+                      }
+                      case isMP3: {
+                        typeNumber = 1;
+                        break;
+                      }
+                      case isMP4: {
+                        typeNumber = 1;
+                        break;
+                      }
+                      default:
+                        typeNumber = 0;
                     }
-                    case isMP3: {
-                      typeNumber = 1;
-                      break;
-                    }
-                    case isMP4: {
-                      typeNumber = 1;
-                      break;
-                    }
-                    default:
-                      typeNumber = 0;
-                  }
 
-                  if (!isJPG && !isPNG && !isGIF && !isMP3 && !isMP4) {
-                    toast.error(
-                      "You can only upload JPG/PNG/GIF/MP3/MP4 files!"
-                    );
+                    if (!isJPG && !isPNG && !isGIF && !isMP3 && !isMP4) {
+                      toast.error(
+                        "You can only upload JPG/PNG/GIF/MP3/MP4 files!"
+                      );
+                      return false;
+                    }
+                    setFileList([...fileList, file]);
+                    setFileType(typeNumber);
                     return false;
-                  }
-                  setFileList([...fileList, file]);
-                  setFileType(typeNumber);
-                  return false;
-                }}
-                directory={uploadDirectory}
-              >
-                {uploadButton}
-              </Upload>
-              <Modal
-                visible={previewVisible}
-                title={previewTitle}
-                footer={null}
-                onCancel={handleCancel}
-              >
-                <img
-                  alt="example"
-                  style={{ width: "100%" }}
-                  src={previewImage}
+                  }}
+                  directory={uploadDirectory}
+                >
+                  {uploadButton}
+                </Upload>
+                <Modal
+                  visible={previewVisible}
+                  title={previewTitle}
+                  footer={null}
+                  onCancel={handleCancel}
+                >
+                  <img
+                    alt="example"
+                    style={{ width: "100%" }}
+                    src={previewImage}
+                  />
+                </Modal>
+                <StyledLabel>Name</StyledLabel>
+                <Controller
+                  name="name"
+                  control={control}
+                  rules={{
+                    required: {
+                      value: !uploadDirectory && fileList.length == 1,
+                      message: "Name is required *",
+                    },
+                    minLength: {
+                      value: 3,
+                      message: "Name must be at least 5 characters *",
+                    },
+                    maxLength: {
+                      value: 20,
+                      message: "Name cannot be more than 20 characters *",
+                    },
+                  }}
+                  render={({ field: { onChange, onBlur, value } }) => (
+                    <Input
+                      disabled={uploadDirectory || fileList.length > 1}
+                      onChange={onChange}
+                      onBlur={onBlur}
+                      value={value}
+                      style={{ borderRadius: "5px" }}
+                      size="large"
+                    />
+                  )}
                 />
-              </Modal>
-              <StyledLabel>Name</StyledLabel>
-              <Controller
-                name="name"
-                control={control}
-                rules={{
-                  required: {
-                    value: !uploadDirectory && fileList.length == 1,
-                    message: "Name is required *",
-                  },
-                  minLength: {
-                    value: 3,
-                    message: "Name must be at least 5 characters *",
-                  },
-                  maxLength: {
-                    value: 20,
-                    message: "Name cannot be more than 20 characters *",
-                  },
-                }}
-                render={({ field: { onChange, onBlur, value } }) => (
-                  <Input
-                    disabled={uploadDirectory || fileList.length > 1}
-                    onChange={onChange}
-                    onBlur={onBlur}
-                    value={value}
-                    style={{ borderRadius: "5px" }}
-                    size="large"
-                  />
-                )}
-              />
-              <p style={{ color: "red" }}>
-                {errors.name && errors.name.message}
-              </p>
-              <StyledLabel>Description</StyledLabel>
-              <Controller
-                name="description"
-                control={control}
-                render={({ field: { onChange, onBlur, value } }) => (
-                  <StyledTextArea
-                    rows={5}
-                    onChange={onChange}
-                    onBlur={onBlur}
-                    value={value}
-                  />
-                )}
-              />
-              <StyledLabel>Collection</StyledLabel>
-              <StyledSelect
-                showSearch
-                placeholder="Select a collection"
-                optionFilterProp="children"
-                filterOption={(input, option) =>
-                  option.children.toLowerCase().indexOf(input.toLowerCase()) >=
-                  0
-                }
-                style={{
-                  width: "100%",
-                  borderRadius: "5px",
-                }}
-                onChange={onCollectionChange}
-                defaultValue={user.ownedCollections[0]._id}
-              >
-                {user &&
-                  user.ownedCollections.map((collection) => (
-                    <Option key={collection._id} value={collection._id}>
-                      {collection.name}
-                    </Option>
-                  ))}
-              </StyledSelect>
-              <br />
-              <StyledButton
-                type="primary"
-                onClick={handleSubmit(onCreateSubmit)}
-              >
-                Create
-              </StyledButton>
-            </form>
-          </StyledLayout>
+                <p style={{ color: "red" }}>
+                  {errors.name && errors.name.message}
+                </p>
+                <StyledLabel>Description</StyledLabel>
+                <Controller
+                  name="description"
+                  control={control}
+                  render={({ field: { onChange, onBlur, value } }) => (
+                    <StyledTextArea
+                      rows={5}
+                      onChange={onChange}
+                      onBlur={onBlur}
+                      value={value}
+                    />
+                  )}
+                />
+                <StyledLabel>Collection</StyledLabel>
+                <StyledSelect
+                  showSearch
+                  placeholder="Select a collection"
+                  optionFilterProp="children"
+                  filterOption={(input, option) =>
+                    option.children
+                      .toLowerCase()
+                      .indexOf(input.toLowerCase()) >= 0
+                  }
+                  style={{
+                    width: "100%",
+                    borderRadius: "5px",
+                  }}
+                  onChange={onCollectionChange}
+                  defaultValue={user.ownedCollections[0]._id}
+                >
+                  {user &&
+                    user.ownedCollections.map((collection) => (
+                      <Option key={collection._id} value={collection._id}>
+                        {collection.name}
+                      </Option>
+                    ))}
+                </StyledSelect>
+                <br />
+                <StyledButton
+                  type="primary"
+                  onClick={handleSubmit(onCreateSubmit)}
+                >
+                  Create
+                </StyledButton>
+              </form>
+            </StyledLayout>
+          ) : (
+            <SuccessPage
+              title={"Successfully Mint Token"}
+              subTitle={
+                "Your token has been successfully minted. Please return to profile to view your token."
+              }
+            />
+          )}
         </Spin>
       ) : (
-        <Spin>Loading...</Spin>
+        <StyledLayout style={{ textAlign: "center" }}>
+          <Spin indicator={loadingIcon} />
+        </StyledLayout>
       )}
     </>
   );

@@ -2,8 +2,10 @@ import React, { Fragment } from "react";
 import icon from "./favicon-32x32.png";
 import { Link } from "react-router-dom";
 import { Input, Space } from "antd";
+import { useSelector } from "react-redux";
 
 const Navbar = (props) => {
+  const user = useSelector((state) => state.user);
   return (
     <nav
       style={{
@@ -17,10 +19,10 @@ const Navbar = (props) => {
             <img
               style={{ width: "50px" }}
               className="mr-4"
-              src={"https://opensea.io/static/images/logos/opensea.svg"}
-              alt=""
+              src="/logo.png"
+              alt="logo"
             />
-            <span className="h4 font-weight-bold">Crypto boyz</span>
+            <span className="h3 font-weight-bold">HUFT Marketplace</span>
           </Link>
         </div>
         <button
@@ -57,16 +59,6 @@ const Navbar = (props) => {
                 Mint NFT
               </Link>
             </li>
-            <li className="mr-3">
-              <Link to="/assets" className="">
-                Assets
-              </Link>
-            </li>
-            <li className="mr-3">
-              <Link to="/marketplace" className="">
-                Marketplace
-              </Link>
-            </li>
             {/* <li className="mr-3">
               <Link to="/my-tokens" className="">
                 My Tokens
@@ -86,7 +78,7 @@ const Navbar = (props) => {
             ) : (
               <Fragment>
                 <li className="mr-3">
-                  <Link to="/my-account" className="">
+                  <Link to={`/account/${user.walletAddress}`} className="">
                     Account
                   </Link>
                 </li>

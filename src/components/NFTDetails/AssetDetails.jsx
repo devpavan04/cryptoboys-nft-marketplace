@@ -420,7 +420,7 @@ const AssetDetails = () => {
           `${process.env.REACT_APP_API_URL}/assets/update-price`,
           {
             id: asset._id,
-            price,
+            price: data.updatedPrice,
           }
         );
 

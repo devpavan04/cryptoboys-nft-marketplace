@@ -1,14 +1,11 @@
 import React, { useEffect, useState } from "react";
-import { ethers } from "ethers";
 import {
-  Select,
   Layout,
   Menu,
   Image,
   Input,
   Divider,
   Space,
-  Avatar,
   Typography,
   Empty,
   Spin,
@@ -24,12 +21,12 @@ import { useParams, useHistory } from "react-router-dom";
 import styled from "styled-components";
 import AssetCard from "../Common/AssetCard.jsx";
 import FilterSider from "../Common/FilterSider";
-import { useSelector, useDispatch } from "react-redux";
-import { fetchCollection } from "../../state/action/collectionAction";
 import { toast } from "react-toastify";
+import axios from "axios";
+import { useSelector } from "react-redux";
+
 const { Header, Sider, Content } = Layout;
 const { Search } = Input;
-const { Option } = Select;
 const { Title, Paragraph } = Typography;
 
 const StyledLayout = styled(Layout)`
@@ -43,12 +40,6 @@ const StyledProfileLayout = styled.div`
   height: 200px;
 `;
 
-const StyledAvatar = styled(Avatar)`
-  position: relative;
-  border: 2px solid #fff;
-  top: -70px;
-`;
-
 const StyledBannerImage = styled(Image)`
   width: 100vw;
   height: 30vh;
@@ -58,16 +49,6 @@ const StyledFallback = styled.div`
   background-color: #e8e6e6;
   width: 100%;
   height: 30vh;
-`;
-
-const StyledSelect = styled(Select)`
-  width: 300px;
-  border: 1px solid #d9d9d9;
-  border-radius: 3px;
-
-  .ant-select-selector {
-    border: none !important;
-  }
 `;
 
 const StyledHeader = styled(Header)`
@@ -96,11 +77,6 @@ const StyledContent = styled(Content)`
   @media (max-width: 912px) {
     padding-left: 50px;
   }
-`;
-
-const StyledContainer = styled.div`
-  width: 95%;
-  margin: 0 auto;
 `;
 
 const OptionLayout = styled.div`
@@ -132,44 +108,53 @@ const Collection = () => {
   const [ellipsis, setEllipsis] = useState(true);
   const [notFound, setNotFound] = useState(false);
   const [loading, setLoading] = useState(true);
-  const dispatch = useDispatch();
-  const collection = useSelector((state) => state.collection);
+  const [collection, setCollection] = useState(null);
   const user = useSelector((state) => state.user);
 
-  // useEffect(() => {
-  //   setBannerImage("https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png")
-  // });
-
   useEffect(() => {
-    if (collection == null || collection == "") {
-      setLoading(true);
-      dispatch(fetchCollection(id)).catch(() => {
-        toast.error("Error getting collection");
+    getCollection();
+  }, []);
+
+  const getCollection = async () => {
+    await axios
+      .get(
+        `${process.env.REACT_APP_API_URL}/collections/get-collection?id=${id}`
+      )
+      .then(({ data }) => {
+        setCollection(data);
+        setLoading(false);
+      })
+      .catch(() => {
         setNotFound(true);
+        toast.error("Error fetching collections");
       });
-      setLoading(false);
-    }
-    setLoading(false);
-  }, [collection]);
+  };
 
   const toggleSider = () => {
     setCollapsed(!collapsed);
-  };
-
-  const handleCategoriesChange = (value) => {
-    console.log(`selected ${value}`);
-  };
-
-  const handleCategoriesSearch = (value) => {
-    console.log(`search ${value}`);
   };
 
   const onEditClick = () => {
     history.push(`/collection/edit/${id}`);
   };
 
+  if (notFound) {
+    return (
+      <Empty
+        description={
+          <span>
+            <Paragraph>
+              Sorry, we couldn't find the collection you are looking for.
+            </Paragraph>
+            <Paragraph>Please check the URL and try again.</Paragraph>
+          </span>
+        }
+      />
+    );
+  }
+
   return (
-    <Spin spinning={loading} indicator={loadingIcon}>
+    <>
       {notFound ? (
         <Empty
           description={
@@ -181,9 +166,13 @@ const Collection = () => {
             </span>
           }
         />
+      ) : loading ? (
+        <div style={{ textAlign: "center" }}>
+          <Spin indicator={loadingIcon} spinning />
+        </div>
       ) : (
         <>
-          {collection && user && user._id == collection.owner._id && (
+          {user._id == collection.owner._id && (
             <Affix>
               <OptionLayout>
                 <StyledButton
@@ -271,7 +260,7 @@ const Collection = () => {
                 </Space>
               </StyledHeader>
               <StyledContent>
-                {collection && collection.assets.length > 0 ? (
+                {collection.assets.length > 0 ? (
                   collection.assets.map((asset) => (
                     <AssetCard asset={asset} key={asset._id} />
                   ))
@@ -285,7 +274,7 @@ const Collection = () => {
           </StyledLayout>
         </>
       )}
-    </Spin>
+    </>
   );
 };
 

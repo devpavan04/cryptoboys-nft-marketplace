@@ -10,6 +10,7 @@ import {
   Modal,
   Switch,
   Spin,
+  Empty,
 } from "antd";
 import { toast } from "react-toastify";
 import {
@@ -22,7 +23,7 @@ import { useParams } from "react-router-dom";
 import { fetchAsset } from "../../state/action/assetAction";
 import { useForm, Controller } from "react-hook-form";
 
-const { Title } = Typography;
+const { Title, Paragraph } = Typography;
 const { Option } = Select;
 const { TextArea } = Input;
 
@@ -95,6 +96,7 @@ const EditAsset = () => {
   const user = useSelector((state) => state.user);
   const asset = useSelector((state) => state.asset);
   const [newCollection, setNewCollection] = useState();
+  const [notFound, setNotFound] = useState(false);
   const {
     register,
     formState: { errors },
@@ -110,6 +112,7 @@ const EditAsset = () => {
           setLoading(false);
         })
         .catch(() => {
+          setNotFound(true);
           toast.error("Cannot found the asset");
         });
     } else {
@@ -128,6 +131,21 @@ const EditAsset = () => {
     setNewCollection(value);
   };
 
+  if (notFound) {
+    return (
+      <Empty
+        description={
+          <span>
+            <Paragraph>
+              Sorry, we couldn't find the collection you are looking for.
+            </Paragraph>
+            <Paragraph>Please check the URL and try again.</Paragraph>
+          </span>
+        }
+      />
+    );
+  }
+
   return (
     <>
       {loading ? (
@@ -139,10 +157,7 @@ const EditAsset = () => {
           <form>
             <Title>Edit Your Asset</Title>
             <StyledLabel>Images, GIFs, Videos</StyledLabel>
-            <StyledImage
-              width={200}
-              src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png"
-            />
+            <StyledImage width={200} src={asset.uriID} />
             <StyledLabel>Name</StyledLabel>
             <Controller
               name="name"

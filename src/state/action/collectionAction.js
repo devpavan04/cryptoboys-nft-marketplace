@@ -18,7 +18,6 @@ export const fetchCollection = (id) => {
           type: "FETCH_COLLECTION",
           payload: res.data,
         });
-        console.log(res.data);
         return res.data;
       })
       .catch((e) => {

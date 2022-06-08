@@ -107,7 +107,7 @@ const AssetCard = (props) => {
     <StyledCard
       className={props.className}
       onClick={() => {
-        // dispatch(setAsset(asset));
+        // console.log(asset);
         history.push(`/assets/${asset._id}`);
       }}
       hoverable={true}
@@ -135,7 +135,7 @@ const AssetCard = (props) => {
           style={{ marginRight: "5px", textAlign: "right" }}
         >
           <p style={{ marginBottom: "0px", color: "gray" }}>
-            {asset.status == "On Auction" ? "Bid" : "Price"}
+            {asset.status == "On Auction" ? "Starting Bid" : "Price"}
           </p>
           <Space direction="horizontal" size={0}>
             <EthereumIcon
@@ -160,7 +160,7 @@ const AssetCard = (props) => {
           <HeartOutlined style={HeartStyle} onClick={() => addToFavorite()} />
         )}
       </Tooltip>
-      <StyledCardInfo style={{ left: props.isFixedPrice ? "230px" : "180px" }}>
+      <StyledCardInfo style={{ left: asset.status == "Sale" ? "225px" : "180px" }}>
         {asset.status}
       </StyledCardInfo>
     </StyledCard>
