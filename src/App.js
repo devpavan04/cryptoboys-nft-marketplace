@@ -82,6 +82,7 @@ const App = () => {
         toast.error(err);
       });
       toast.success("Account changed successfully", { toastId: customToastID });
+      window.location.reload();
     }
   };
 
