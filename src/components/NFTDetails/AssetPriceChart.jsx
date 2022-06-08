@@ -53,13 +53,13 @@ const AssetPriceChart = () => {
   useEffect(() => {
     if (asset) {
       const data = {
-        labels: asset.prevPrice.map((price) =>
+        labels: (asset.prevPrice || []).map((price) =>
           moment(price.updatedAt).format("M/D")
         ),
         datasets: [
           {
             label: "Price in ETH",
-            data: asset.prevPrice.map((price) => price.price),
+            data: (asset.prevPrice || []).map((price) => price.price),
             backgroundColor: "rgba(255, 99, 132, 0.2)",
             borderColor: "rgba(255, 99, 132, 1)",
             cubicInterpolationMode: "monotone",
@@ -93,7 +93,7 @@ const AssetPriceChart = () => {
         expandIconPosition="right"
       >
         <Panel header="Price History" key="1">
-          {asset.prevPrice.length !== 0 ? (
+          {(asset.prevPrice || []).length !== 0 ? (
             chartData && <Line data={chartData} options={options} />
           ) : (
             <p>There is no price history yet</p>

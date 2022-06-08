@@ -1,19 +1,24 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
-import { Avatar, message, Upload } from 'antd';
-import Icon, { LoadingOutlined, PictureOutlined, PlusOutlined } from '@ant-design/icons';
-import generateGrad from "../../utils/gradientGenerator.js"
+import { Avatar, message, Upload } from "antd";
+import Icon, {
+  LoadingOutlined,
+  PictureOutlined,
+  PlusOutlined,
+} from "@ant-design/icons";
+import generateGrad from "../../utils/gradientGenerator.js";
 import Urls from "../../utils/curls.js";
 import * as Func from "../../utils/functions";
 import UploadService from "../../service/upload.service";
 import ENV_CONFIG from "../../environment/index.js";
 import axios from "axios";
+import { useSelector } from "react-redux";
 
 const ThumbnailStyled = styled.img`
   object-fit: contain;
   width: 100%;
-  height: 100%
-`
+  height: 100%;
+`;
 
 const StyledProfileLayout = styled.div`
   padding: 0.5rem 1rem;
@@ -29,57 +34,65 @@ const ImageSetting = () => {
   const [randomGrad, setRandomGrad] = useState(null);
   const [isShownHoverContent, setIsShownHoverContent] = useState(false);
   const [imageUrl, setImageUrl] = useState(""),
-    [loading, setLoading] = useState(false);
+    [loading, setLoading] = useState(false),
+    user = useSelector((state) => state.user);
 
   useEffect(() => {
     setRandomGrad(generateGrad());
   }, []);
 
-  const handleChange = info => {
-    if (info.file.status === 'uploading') {
-      message.loading({ content: 'Loading...', key: "upload" });
-      setLoading(true)
+  useEffect(() => {
+    setImageUrl(user.profileImg && user.profileImg.trim())
+  }, [user])
+
+  const handleChange = (info) => {
+    if (info.file.status === "uploading") {
+      message.loading({ content: "Loading...", key: "upload" });
+      setLoading(true);
       return;
     }
-    if (info.file.status === 'done') {
+    if (info.file.status === "done") {
       // Get this url from response in real world.
-      Func.getBase64(info.file.originFileObj, imageUrl => {
+      Func.getBase64(info.file.originFileObj, (imageUrl) => {
         setImageUrl(imageUrl);
         setLoading(false);
         message.success({
           content: "Upload success",
-          key: "upload"
-        })
+          key: "upload",
+        });
       });
     }
     if (info.file.status === "error") {
       message.error({
         content: "Upload failed",
-        key: "upload"
-      })
+        key: "upload",
+      });
     }
   };
 
-  const customRequest = async options => {
+  const customRequest = async (options) => {
     const { onSuccess, onError, file, onProgress } = options;
     const config = {
       headers: { "content-type": "multipart/form-data" },
-      onUploadProgress: event => {
+      onUploadProgress: (event) => {
         const percent = Math.floor((event.loaded / event.total) * 100);
         // setProgress(percent);
-        console.log(percent)
         // if (percent === 100) {
         //   setTimeout(() => setProgress(0), 1000);
         // }
         onProgress({ percent: (event.loaded / event.total) * 100 });
-      }
-    }
+      },
+    };
     try {
-      UploadService.UploadImageService({ file })
-        .then(res => {
-          onSuccess("Ok");
-          console.log("server res: ", res);
-        })
+      UploadService.UploadImageAndSaveService({
+        file,
+        collection_name: "users",
+        field_name: "profileImg",
+        id: user._id
+      }).then((res) => {
+        onSuccess("Ok");
+        console.log("server res: ", res);
+      });
     } catch (err) {
       const error = new Error("Some error");
       onError({ err });
@@ -95,8 +108,10 @@ const ImageSetting = () => {
   return (
     <StyledProfileLayout>
       <div className="label">Profile Image</div>
-      <div onMouseEnter={() => setIsShownHoverContent(true)}
-        onMouseLeave={() => setIsShownHoverContent(false)}>
+      <div
+        onMouseEnter={() => setIsShownHoverContent(true)}
+        onMouseLeave={() => setIsShownHoverContent(false)}
+      >
         {/* <Avatar size={120} style={{backgroundImage:`${randomGrad}`}}>
         {isShownHoverContent && (
         <div>
@@ -114,9 +129,7 @@ const ImageSetting = () => {
           onChange={handleChange}
           showUploadList={false}
         >
-          {
-            imageUrl ? <ThumbnailStyled src={imageUrl} /> : uploadButton
-          }
+          {imageUrl ? <ThumbnailStyled src={imageUrl} /> : uploadButton}
         </Upload>
       </div>
     </StyledProfileLayout>

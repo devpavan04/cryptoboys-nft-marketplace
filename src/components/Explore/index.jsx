@@ -1,6 +1,14 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useLayoutEffect, useState } from "react";
 import styled from "styled-components";
-import { Menu } from "antd";
+import {
+  Checkbox,
+  Collapse,
+  Empty,
+  List,
+  Menu,
+  Pagination,
+  Slider,
+} from "antd";
 import CollectionCard from "../Common/CollectionCard";
 import axios from "axios";
 import AssetCard from "../Common/AssetCard";
@@ -53,13 +61,17 @@ const StyledMenu = styled(Menu)`
 
 const StyledContainer = styled.div`
   margin-top: 1rem;
-  display: flex;
+  // display: flex;
   gap: 2rem;
-  flex-wrap: wrap;
+  // flex-wrap: wrap;
 
   @media (min-width: 600px) {
     padding: 0px 20px;
   }
+`;
+
+const SideBar = styled.div`
+  border: #f0f0f0 solid 1px;
 `;
 
 const optionItems = [
@@ -77,6 +89,10 @@ const Explore = () => {
     total: 0,
     totalAll: 0,
   });
+  const [categories, setCategories] = useState([]);
+  const [filterParams, setFilterParams] = useState({
+    price: { min: 0, max: 0 },
+  });
 
   const getListAsset = async () => {
     const result = await axios.get(
@@ -84,6 +100,7 @@ const Explore = () => {
       {
         params: {
           thumb_type: currentTab,
+          status: "Sale",
         },
       }
     );
@@ -94,14 +111,23 @@ const Explore = () => {
   useEffect(() => {
     getListAsset();
   }, [currentTab]);
-  
+
+  useEffect(() => {
+    axios
+      .get(process.env.REACT_APP_API_URL + "/categories/list")
+      .then((res) => {
+        setCategories(res.data);
+      });
+  }, []);
+
   const changeTab = (e) => {
     setCurrentTab(e.key);
   };
   return (
     <StyledLayout>
       <StyledHeader>Explore Collections</StyledHeader>
-      <StyledMenu
+      {/* <StyledMenu
+        className={"mb-5"}
         onClick={changeTab}
         selectedKeys={[currentTab]}
         mode="horizontal"
@@ -109,10 +135,69 @@ const Explore = () => {
         {optionItems.map((item) => (
           <Menu.Item key={item.key}>{item.title}</Menu.Item>
         ))}
-      </StyledMenu>
-      <StyledContainer>
-        {resultList.result.length > 0 &&
-          resultList.result.map((item) => <AssetCard asset={item} />)}
+      </StyledMenu> */}
+      <StyledContainer className="row">
+        <SideBar className="col-3 p-3 pt-5">
+          <div className="border-bottom mb-4">
+            <span className="h2">Filter</span>
+          </div>
+          <div className="filter-body">
+            <Collapse ghost className="">
+              <Collapse.Panel header="Price">
+                <div className="mb-2">
+                  <span className="h5">
+                    {`${filterParams.price.min} - ${filterParams.price.max}`}{" "}
+                    ETH
+                  </span>
+                </div>
+                <Slider
+                  range
+                  value={[filterParams.price.min, filterParams.price.max]}
+                  onChange={(value) =>
+                    setFilterParams({
+                      ...filterParams,
+                      price: { min: value[0], max: value[1] },
+                    })
+                  }
+                />
+              </Collapse.Panel>
+            </Collapse>
+            <Collapse ghost>
+              <Collapse.Panel header="Categories">
+                {categories.length > 0 ? (
+                  <Checkbox.Group>
+                    {categories.map((category) => (
+                      <div key={category._id}>
+                        <Checkbox value={category._id}>
+                          {category.name || ""}
+                        </Checkbox><br/>
+                      </div>
+                    ))}
+                  </Checkbox.Group>
+                ) : (
+                  <Empty />
+                )}
+              </Collapse.Panel>
+            </Collapse>
+          </div>
+        </SideBar>
+        <div className="col-8">
+          <div className="mb-5">{resultList.total} item</div>
+          <List
+            dataSource={resultList.result}
+            renderItem={(item) => <AssetCard className="mb-5" asset={item} />}
+            grid={{ column: 3, gutter: 0 }}
+            itemLayout="horizontal"
+          />
+        </div>
+        {/* <div>
+          {resultList.result.length > 0 &&
+            resultList.result.map((item) => <AssetCard asset={item} />)}
+        </div> */}
+        <Pagination
+          className="col-12"
+          total={resultList.total / resultList.page_size}
+        />
       </StyledContainer>
     </StyledLayout>
   );

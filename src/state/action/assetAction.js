@@ -14,9 +14,9 @@ export const fetchAsset = (id) => {
       .then((res) => {
         dispatch({
           type: "FETCH_ASSET",
-          payload: res.data,
+          payload: res.data || [],
         });
-        return res.data;
+        return res.data || [];
       })
       .catch((e) => {
         throw e;
