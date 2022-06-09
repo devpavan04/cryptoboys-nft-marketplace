@@ -78,6 +78,11 @@ const Navbar = (props) => {
             ) : (
               <Fragment>
                 <li className="mr-3">
+                  <Link to={`/collection/create`} className="">
+                    Create Collection
+                  </Link>
+                </li>
+                <li className="mr-3">
                   <Link to={`/account/${user.walletAddress}`} className="">
                     Account
                   </Link>

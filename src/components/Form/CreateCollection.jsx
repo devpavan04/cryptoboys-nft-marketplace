@@ -85,9 +85,23 @@ const CreateCollection = () => {
   } = useForm();
 
   //will comeback to this later
-  const onUpdateSubmit = (data) => {
-    console.log(data);
-    console.log(category);
+  const onCreateSubmit = async (data) => {
+    const { name, description } = data;
+    const collection = {
+      name,
+      description,
+      userId: user._id,
+      categoryId: category,
+    };
+    try {
+      await axios
+        .post(`${process.env.REACT_APP_API_URL}/collections/create`, collection)
+        .then(() => {
+          toast.success("Create successfully");
+        });
+    } catch {
+      toast.error("Error creating collection");
+    }
   };
 
   const fetchCategoryData = async () => {
@@ -174,13 +188,13 @@ const CreateCollection = () => {
         >
           {fetchCategory.length > 0 &&
             fetchCategory.map((item) => (
-              <Option key={item.id} value={item.id}>
+              <Option key={item._id} value={item._id}>
                 {item.name}
               </Option>
             ))}
         </StyledSelect>
         <br />
-        <StyledButton type="primary" onClick={handleSubmit(onUpdateSubmit)}>
+        <StyledButton type="primary" onClick={handleSubmit(onCreateSubmit)}>
           Create
         </StyledButton>
       </form>

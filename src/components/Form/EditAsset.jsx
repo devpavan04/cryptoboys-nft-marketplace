@@ -22,6 +22,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { useParams } from "react-router-dom";
 import { fetchAsset } from "../../state/action/assetAction";
 import { useForm, Controller } from "react-hook-form";
+import axios from "axios";
 
 const { Title, Paragraph } = Typography;
 const { Option } = Select;
@@ -121,10 +122,27 @@ const EditAsset = () => {
     }
   }, [asset]);
 
-  //will comeback to this later
   const onUpdateSubmit = (data) => {
-    console.log(data);
-    console.log(newCollection);
+    const url = process.env.REACT_APP_API_URL;
+    const { name, description } = data;
+    if (asset.currentCollection._id != newCollection) {
+      axios
+        .patch(`${url}/assets/change-collection`, {
+          id,
+          collectionId: newCollection,
+        })
+        .then(toast.success("Successfully update collection"))
+        .catch(() => {
+          toast.error("Cannot update collection");
+        });
+    }
+
+    axios
+      .patch(`${url}/assets/update`, { id, name, description })
+      .then(() => toast.success("Successfully update asset"))
+      .catch(() => {
+        toast.error("Cannot update asset");
+      });
   };
 
   const onCollectionChange = (value) => {

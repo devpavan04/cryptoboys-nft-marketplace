@@ -57,10 +57,8 @@ const EthereumIcon = (props) => <Icon component={Ethereum} {...props} />;
 
 const FilterSider = (props) => {
   const [status, setStatus] = useState(null);
-  const [sort, setSort] = useState("");
   const [fetchCategory, setFetchCategory] = useState([]);
   const [category, setCategory] = useState(null);
-  const [confirm, setConfirm] = useState(false);
   const [apply, setApply] = useState(false);
   const {
     handleSubmit,
@@ -104,11 +102,6 @@ const FilterSider = (props) => {
     props.filterStatus(null);
   };
 
-  const handleConfirm = () => {
-    props.filter({ status: status, category: category });
-    setConfirm(true);
-  };
-
   const onSubmitPriceRange = (data) => {
     if (data.minPrice > data.maxPrice) {
       toast.error("Min price can't be greater than max price");
@@ -135,21 +128,6 @@ const FilterSider = (props) => {
           ))}
         </StyledButtonContainer>
       </SubMenu>
-      {/* <SubMenu title="Sort By">
-        <StyledButtonContainer>
-         {sortOptions.map((option) => (
-            <Radio
-              key={option.value}
-              value={option.value}
-              onChange={handleSortChange}
-              checked={sort === option.value}
-              style={{ fontSize:"15px" }}
-            >
-              {option.label}
-            </Radio>
-          ))}
-        </StyledButtonContainer>
-      </SubMenu> */}
       <SubMenu title="Price" disabled={props.disabledTab}>
         <form>
           <Space style={{ marginRight: "5px" }}>

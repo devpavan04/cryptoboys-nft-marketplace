@@ -65,16 +65,17 @@ const StyledDesc = styled.div`
 `;
 
 const CollectionCard = (props) => {
-  const {collection} = props;
+  const { collection } = props;
   const dispatch = useDispatch();
   const history = useHistory();
 
   return (
-    <StyledCard onClick={()=>{
-      console.log(collection._id);
-      dispatch(setCollection(collection));
-      history.push(`/collection/${collection._id}`);
-    }}>
+    <StyledCard
+      onClick={() => {
+        dispatch(setCollection(collection));
+        history.push(`/collection/${collection._id}`);
+      }}
+    >
       <StyledBanner>
         <StyledBannerImage
           src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png"
@@ -83,9 +84,11 @@ const CollectionCard = (props) => {
       </StyledBanner>
 
       <StyledHeader>{collection.name}</StyledHeader>
-      <StyledSubHeader>By <strong>{collection.owner.name}</strong></StyledSubHeader>
+      <StyledSubHeader>
+        By <strong>{collection.owner.name}</strong>
+      </StyledSubHeader>
       <StyledDesc>
-        {collection.description? collection.description : ""}
+        {collection.description ? collection.description : ""}
       </StyledDesc>
     </StyledCard>
   );
