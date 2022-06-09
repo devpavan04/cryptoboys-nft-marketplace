@@ -1,10 +1,8 @@
 import React, { useState } from "react";
 import { Card, Space, Tooltip } from "antd";
 import styled from "styled-components";
-import Icon, { HeartOutlined, HeartTwoTone } from "@ant-design/icons";
+import Icon, { HeartOutlined } from "@ant-design/icons";
 import { ReactComponent as Ethereum } from "../../assets/icons/ethereum.svg";
-import { setAsset } from "../../state/action/assetAction";
-import { useDispatch } from "react-redux";
 import { useHistory } from "react-router-dom";
 
 const StyledCard = styled(Card)`
@@ -29,7 +27,7 @@ const StyledSpace = styled(Space)`
 
 const HeartStyle = {
   marginLeft: "10px",
-  fontSize: "20px",
+  fontSize: "18px",
 };
 
 const StyledCardInfo = styled.span`
@@ -46,21 +44,22 @@ const ThumbStyle = styled.iframe`
   }
 `;
 
+const StyledCountNumber = styled.span`
+  font-size: 13px;
+  font-weight: bold;
+  color: gray;
+  margin-left: 5px;
+  position: relative;
+  top: 3px;
+`;
+
 const EthereumIcon = (props) => <Icon component={Ethereum} {...props} />;
 
 const AssetCard = (props) => {
   const { asset } = props;
-  const dispatch = useDispatch();
   const history = useHistory();
-  // const title = props.title;
-  // const desc = props.desc;
-  // const image = props.image;
   const collapsed = props.collapsed;
   const [favorited, setFavorited] = useState(false);
-
-  const addToFavorite = () => {
-    setFavorited(!favorited);
-  };
 
   const getFrameByTypeThumb = () => {
     switch (asset.thumb_type) {
@@ -153,14 +152,13 @@ const AssetCard = (props) => {
         </StyledSpace>
       </StyledCardContent>
       <hr style={{ marginTop: "5px", marginBottom: "2px" }} />
-      <Tooltip placement="right" title="Favorite">
-        {favorited ? (
-          <HeartTwoTone style={HeartStyle} onClick={() => addToFavorite()} />
-        ) : (
-          <HeartOutlined style={HeartStyle} onClick={() => addToFavorite()} />
-        )}
-      </Tooltip>
-      <StyledCardInfo style={{ left: asset.status == "Sale" ? "225px" : "180px" }}>
+
+      <HeartOutlined style={HeartStyle} />
+      <StyledCountNumber>{asset.favoriteCount}</StyledCountNumber>
+
+      <StyledCardInfo
+        style={{ left: asset.status == "Sale" ? "225px" : "180px" }}
+      >
         {asset.status}
       </StyledCardInfo>
     </StyledCard>
