@@ -455,7 +455,12 @@ const App = () => {
     // <ProvideAuth>
     <BrowserRouter basename="/">
       <Container auth={loggedIn}>
-        <ToastContainer limit={1} autoClose={3000} />
+        <ToastContainer
+          limit={1}
+          autoClose={2000}
+          position="bottom-right"
+          theme="dark"
+        />
         <Switch>
           <Route path="/" exact render={() => <LayoutIndex.Homepage />} />
           {/* <Route
