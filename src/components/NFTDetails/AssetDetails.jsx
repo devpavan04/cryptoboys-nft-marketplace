@@ -122,9 +122,12 @@ const StyledSpinningLayout = styled.div`
   height: 100%;
 `;
 
-const StyledLink = styled.a`
+const StyledLink = styled(Link)`
   color: #00a8ff;
-  text-decoration: none;
+  &:hover {
+    text-decoration: none;
+    color: #00a8ff;
+  }
 `;
 
 const EthereumIcon = (props) => <Icon component={Ethereum} {...props} />;
@@ -415,6 +418,7 @@ const AssetDetails = () => {
   };
 
   const onSubmitUpdatedPrice = async (data) => {
+    setLoading(true);
     if (window.ethereum) {
       await window.ethereum.enable();
       const marketplace = getMarketplaceContract();
@@ -440,6 +444,7 @@ const AssetDetails = () => {
         toast.error("Update price failed");
       }
     }
+    setLoading(false);
   };
 
   const onSubmitBuy = async (data) => {
@@ -466,7 +471,9 @@ const AssetDetails = () => {
             status: "Sale",
           })
           .then((res) => {
-            toast.success("Asset sold successfully!");
+            toast.success(
+              "Congratulations! You have successfully bought the item!"
+            );
             setTimeout(() => {
               window.location.reload();
             }, 2000);
@@ -751,6 +758,8 @@ const AssetDetails = () => {
     );
   };
 
+  console.log(auctionDetails);
+
   const renderConfirmSale = () => {
     const confirmSale = async () => {
       try {
@@ -826,14 +835,14 @@ const AssetDetails = () => {
         </StyledSpinningLayout>
       ) : (
         <StyledLayout>
-          <Link to={`/collection/${asset.currentCollection._id}`}>
-            <StyledLink>{asset.currentCollection.name}</StyledLink>
-          </Link>
+          <StyledLink to={`/collection/${asset.currentCollection._id}`}>
+            {asset.currentCollection.name}
+          </StyledLink>
           <StyledHeader>{asset.name}</StyledHeader>
           <span>Currently owned by: </span>
-          <Link to={`/account/${asset.currentOwner._id}`}>
-            <StyledLink>{asset.currentOwner.name}</StyledLink>
-          </Link>
+          <StyledLink to={`/account/${asset.currentOwner.walletAddress}`}>
+            {asset.currentOwner.name}
+          </StyledLink>
           {asset.status !== "Not Listing" && (
             <Spin spinning={cardLoading} indicator={loadingIcon}>
               <StyledCard title={onAuction ? <CardTitleLayout /> : null}>

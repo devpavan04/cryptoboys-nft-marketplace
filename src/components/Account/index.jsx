@@ -123,7 +123,7 @@ const StyledTag = styled(Tag)`
 
 const loadingIcon = <LoadingOutlined style={{ fontSize: 70 }} spin />;
 
-const MyAccount = () => {
+const Account = () => {
   const { id } = useParams();
   const [bannerImage, setBannerImage] = useState(null);
   const [profileImage, setProfileImage] = useState(null);
@@ -480,4 +480,4 @@ const MyAccount = () => {
   );
 };
 
-export default MyAccount;
+export default Account;

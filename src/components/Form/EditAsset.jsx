@@ -245,7 +245,7 @@ const EditAsset = () => {
             <StyledLabel>Collection</StyledLabel>
             <StyledSelect
               showSearch
-              placeholder="Select a collection"
+              placeholder="Select a new collection"
               optionFilterProp="children"
               filterOption={(input, option) =>
                 option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
@@ -254,7 +254,6 @@ const EditAsset = () => {
                 width: "100%",
                 borderRadius: "5px",
               }}
-              defaultValue={asset.currentCollection._id}
               onChange={onCollectionChange}
             >
               {user &&

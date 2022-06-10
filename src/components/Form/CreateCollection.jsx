@@ -6,6 +6,7 @@ import { toast } from "react-toastify";
 import { useSelector, useDispatch } from "react-redux";
 import { useForm, Controller } from "react-hook-form";
 import axios from "axios";
+import { useHistory } from "react-router-dom";
 
 const { Title } = Typography;
 const { Option } = Select;
@@ -73,9 +74,9 @@ const StyledFallback = styled.div`
 
 const CreateCollection = () => {
   const user = useSelector((state) => state.user);
+  const history = useHistory();
   const [image, setImage] = useState(null);
   const [category, setCategory] = useState(null);
-
   const [fetchCategory, setFetchCategory] = useState([]);
   const {
     register,
@@ -98,6 +99,7 @@ const CreateCollection = () => {
         .post(`${process.env.REACT_APP_API_URL}/collections/create`, collection)
         .then(() => {
           toast.success("Create successfully");
+          history.push("/my-account");
         });
     } catch {
       toast.error("Error creating collection");
@@ -128,7 +130,6 @@ const CreateCollection = () => {
       <form>
         <Title>Create New Collection</Title>
         <StyledLabel>Banner Image</StyledLabel>
-
         <StyledLabel>Collection's Name</StyledLabel>
         <Controller
           name="name"

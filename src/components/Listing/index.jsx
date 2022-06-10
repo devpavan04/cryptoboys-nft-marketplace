@@ -137,11 +137,7 @@ const EthereumIcon = (props) => <Icon component={Ethereum} {...props} />;
 
 const Listing = () => {
   const [isFixedPrice, setIsFixedPrice] = useState(true);
-  const [dateRangeValue, setDateRangeValue] = useState(1);
   const [loading, setLoading] = useState(false);
-  const [dates, setDates] = useState([]);
-  const [hackValue, setHackValue] = useState();
-  const [isOwner, setIsOwner] = useState(false);
   const [value, setValue] = useState();
   const [priceState, setPriceState] = useState(0);
   const [componentState, setComponentState] = useState("FETCHING");
@@ -243,6 +239,7 @@ const Listing = () => {
       await updateToServer(asset._id, data.amount);
 
       setComponentState("COMPLETED");
+      toast.success("Listing Successful");
     } catch (err) {
       console.log(err);
       toast.error("Lisiting failed");
