@@ -18,6 +18,7 @@ import "./style/index.css";
 import Login from "./components/Login/index";
 import AccountSettings from "./components/AccountSettings/index";
 import Account from "./components/Account/index";
+import MyAccount from "./components/Account/MyAccount";
 import PrivateRoute from "./PrivateRoute";
 import { ethers } from "ethers";
 import "react-toastify/dist/ReactToastify.css";
@@ -33,7 +34,6 @@ import SuccessPage from "./components/Common/SuccessPage";
 import Collection from "./components/Collection";
 import CreateCollection from "./components/Form/CreateCollection";
 import EditCollection from "./components/Form/EditCollection";
-import UsersAccount from "./components/Account/UsersAccount";
 import { useDispatch, useSelector } from "react-redux";
 import { login } from "./state/action/userAction";
 
@@ -508,6 +508,7 @@ const App = () => {
             /> */}
           <Route path="/login" render={() => <Login />} />
           <Route path="/account/:id" exact render={() => <Account />} />
+          <Route path="/my-account" exact render={() => <MyAccount />} />
           <Route path="/settings" render={() => <AccountSettings />} />
           <Route path="/mint" render={() => <MintAsset />} />
           <Route path="/assets/:id" exact render={() => <NFTDetails />} />

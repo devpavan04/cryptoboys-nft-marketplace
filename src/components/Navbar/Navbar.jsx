@@ -83,7 +83,7 @@ const Navbar = (props) => {
                   </Link>
                 </li>
                 <li className="mr-3">
-                  <Link to={`/account/${user.walletAddress}`} className="">
+                  <Link to={`/my-account`} className="">
                     Account
                   </Link>
                 </li>

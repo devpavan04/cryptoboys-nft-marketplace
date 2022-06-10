@@ -91,9 +91,11 @@ const columns = [
     render: (text) => (
       <>
         {text == null ? (
-          "Null Address"
+          <i>Null Address</i>
         ) : (
-          <StyledLink>{text.walletAddress}</StyledLink>
+          <Link to={`/account/${text.walletAddress}`}>
+            <StyledLink>{text.walletAddress}</StyledLink>
+          </Link>
         )}
       </>
     ),

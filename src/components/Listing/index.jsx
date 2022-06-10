@@ -269,8 +269,6 @@ const Listing = () => {
     setPriceState(e.target.value);
   };
 
-  console.log(componentState);
-
   const renderComponentState = () => {
     switch (componentState) {
       case "FETCHING":

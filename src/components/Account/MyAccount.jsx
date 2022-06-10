@@ -11,6 +11,7 @@ import {
   Typography,
   Spin,
   Empty,
+  Tag,
 } from "antd";
 import {
   HeartOutlined,
@@ -27,11 +28,12 @@ import CollectionCard from "../Common/CollectionCard";
 import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
 import { toast } from "react-toastify";
+import { useParams } from "react-router-dom";
 
 const { Header, Sider, Content } = Layout;
 const { Search } = Input;
 const { Option } = Select;
-const { Title, Paragraph } = Typography;
+const { Title, Paragraph, Text } = Typography;
 
 const StyledLayout = styled(Layout)`
   height: 100vh;
@@ -99,19 +101,41 @@ const StyledContent = styled(Content)`
   }
 `;
 
+const StyledWalletAddress = styled(Text)`
+  font-size: 17px;
+  font-weight: bold;
+  color: #000;
+
+  .ant-typography-copy {
+    position: relative;
+    top: -5px;
+    left: 5px;
+  }
+`;
+
+const StyledTag = styled(Tag)`
+  font-size: 14px;
+  font-weight: bold;
+  color: #000;
+  margin-right: 5px;
+  width: 50px;
+`;
+
 const loadingIcon = <LoadingOutlined style={{ fontSize: 70 }} spin />;
 
 const MyAccount = () => {
+  const { id } = useParams();
   const [bannerImage, setBannerImage] = useState(null);
   const [profileImage, setProfileImage] = useState(null);
   const [collapsed, setCollapsed] = useState(false);
   const [ellipsis, setEllipsis] = useState(true);
   const [loading, setLoading] = useState(true);
   const [menuSelected, setMenuSelected] = useState("1");
-  const user = useSelector((state) => state.user);
   const [ownedAssets, setOwnedAssets] = useState([]);
   const [ownedCollections, setOwnedCollections] = useState([]);
   const [favoriteAssets, setFavoriteAssets] = useState([]);
+  const [notFound, setNotFound] = useState(false);
+  const user = useSelector((state) => state.user);
   let assets = useRef([]);
   let collections = useRef([]);
   let favorAssets = useRef([]);
@@ -136,6 +160,23 @@ const MyAccount = () => {
     }
   }, [user]);
 
+  // const getUser = async () => {
+  //   await axios
+  //     .get(
+  //       `${process.env.REACT_APP_API_URL}/users/get-user?walletAddress=${id}`
+  //     )
+  //     .then((res) => {
+  //       setUser(res.data);
+  //       getAssetsAndCollections(res.data._id);
+  //       setImg();
+  //       setLoading(false);
+  //     })
+  //     .catch(() => {
+  //       setNotFound(true);
+  //       setLoading(false);
+  //     });
+  // };
+
   const setImg = () => {
     if (user.bannerImg) {
       setBannerImage(user.bannerImage);
@@ -152,6 +193,58 @@ const MyAccount = () => {
 
   const handleMenuSelect = (e) => {
     setMenuSelected(e.key);
+  };
+
+  const handleFilterStatus = (status) => {
+    if (status === null) {
+      setOwnedAssets(assets.current);
+      setFavoriteAssets(favorAssets.current);
+    } else {
+      const filteredAssets = assets.current.filter((asset) => {
+        return asset.status === status;
+      });
+      const filteredFavorAssets = favorAssets.current.filter((asset) => {
+        return asset.status === status;
+      });
+
+      setOwnedAssets(filteredAssets);
+      setFavoriteAssets(filteredFavorAssets);
+    }
+  };
+
+  const handleFilterPriceRange = (priceRange) => {
+    if (priceRange === null) {
+      setOwnedAssets(assets.current);
+      setFavoriteAssets(favorAssets.current);
+    } else {
+      const filteredAssets = assets.current.filter((asset) => {
+        return (
+          asset.currentPrice >= priceRange.minPrice &&
+          asset.currentPrice <= priceRange.maxPrice
+        );
+      });
+      const filteredFavorAssets = favorAssets.current.filter((asset) => {
+        return (
+          asset.currentPrice >= priceRange.minPrice &&
+          asset.currentPrice <= priceRange.maxPrice
+        );
+      });
+
+      setOwnedAssets(filteredAssets);
+      setFavoriteAssets(filteredFavorAssets);
+    }
+  };
+
+  const handleFilterCategory = (category) => {
+    if (category === null) {
+      setOwnedCollections(collections.current);
+    } else {
+      const filteredCollections = collections.current.filter((collection) => {
+        return collection.category === category;
+      });
+
+      setOwnedCollections(filteredCollections);
+    }
   };
 
   const getAssetsAndCollections = async (id) => {
@@ -274,6 +367,21 @@ const MyAccount = () => {
     }
   };
 
+  if (notFound) {
+    return (
+      <Empty
+        description={
+          <span>
+            <Paragraph>
+              Sorry, we couldn't find the user you are looking for.
+            </Paragraph>
+            <Paragraph>Please check the URL and try again.</Paragraph>
+          </span>
+        }
+      />
+    );
+  }
+
   return (
     <Spin spinning={loading} indicator={loadingIcon}>
       <div>
@@ -291,9 +399,9 @@ const MyAccount = () => {
           <div style={{ width: "50%", wordBreak: "break-all" }}>
             <Space direction="vertical" size={0} style={{ marginLeft: "10px" }}>
               <Title level={3}>{user.name ? user.name : "No Name"}</Title>
-              <Title level={5}>
+              <StyledWalletAddress level={5} copyable ellipsis>
                 {user.walletAddress ? user.walletAddress : "0x0000"}
-              </Title>
+              </StyledWalletAddress>
               <Paragraph
                 ellipsis={
                   ellipsis
@@ -333,7 +441,12 @@ const MyAccount = () => {
             <Menu.Item key="3" icon={<PictureOutlined />}>
               Owned Collection
             </Menu.Item>
-            <FilterSider />
+            <FilterSider
+              filterStatus={handleFilterStatus}
+              filterPriceRange={handleFilterPriceRange}
+              filterCategory={handleFilterCategory}
+              disabledTab={menuSelected === "3"}
+            />
           </Menu>
         </Sider>
         <Layout className="site-layout">
