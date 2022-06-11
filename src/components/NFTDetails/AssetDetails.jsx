@@ -264,7 +264,7 @@ const AssetDetails = () => {
               id: asset._id,
               price: price,
               newOwnerId: newOwner.data._id,
-              status: "Auction",
+              type: "Auction",
             })
             .then(() => {
               setLoading(false);
@@ -391,6 +391,7 @@ const AssetDetails = () => {
   };
 
   const onSubmitBid = async (data) => {
+    setLoading(true);
     if (window.ethereum) {
       await window.ethereum.enable();
       const bid = ethers.utils.parseEther(data.bid);
@@ -415,6 +416,7 @@ const AssetDetails = () => {
         return toast.error("Bid failed");
       }
     }
+    setLoading(false);
   };
 
   const onSubmitUpdatedPrice = async (data) => {
@@ -468,7 +470,7 @@ const AssetDetails = () => {
             id: asset._id,
             price: asset.currentPrice,
             newOwnerId: user._id,
-            status: "Sale",
+            type: "Sale",
           })
           .then((res) => {
             toast.success(
@@ -564,7 +566,7 @@ const AssetDetails = () => {
                 type="primary"
                 key="enter"
                 onClick={handleSubmit(onSubmitBid)}
-                disabled={errors.bid}
+                disabled={errors.bid || loading}
               >
                 Bid
               </StyledButtonModal>,
@@ -776,7 +778,7 @@ const AssetDetails = () => {
             id: asset._id,
             price: price,
             newOwnerId: newOwner.data._id,
-            status: "Auction",
+            type: "Auction",
           })
           .then(() => {
             window.location.reload();

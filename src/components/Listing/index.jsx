@@ -155,6 +155,7 @@ const Listing = () => {
   const auction = getAuctionContract();
   const nft = getNFTContract();
   const marketplace = getMarketplaceContract();
+  const ZERO_ADDRESS = "0x0000000000000000000000000000000000000000";
 
   useEffect(() => {
     dispatch(fetchAsset(id)).catch(() => {
@@ -165,15 +166,15 @@ const Listing = () => {
 
   useEffect(() => {
     if (asset && user) {
+      if (asset.currentOwner._id != user._id){
+        return setComponentState("NOT_OWNER");
+      }
+
       if (asset.status != "Not Listing") {
         return setComponentState("ALREADY_LISTED");
       }
 
-      if (asset.currentOwner._id == user._id) {
-        setComponentState("FETCHED");
-      } else {
-        setComponentState("NOT_OWNER");
-      }
+      setComponentState("FETCHED");
     }
   }, [asset, user]);
 
@@ -195,8 +196,12 @@ const Listing = () => {
       if (isFixedPrice) {
         let listingPrice = await marketplace.getListingPrice();
         listingPrice = listingPrice.toString();
+        const itemExisted = await marketplace.getMarketplaceItem(asset.tokenId);
+        console.log(itemExisted);
+        await nft.giveResaleApproval(asset.tokenId);
 
-        if (asset.currentPrice == 0 || asset.currentPrice == undefined) {
+        if (itemExisted.seller == ZERO_ADDRESS) {
+          console.log("item not existed");
           await marketplace.createMarketplaceItem(
             `${process.env.REACT_APP_NFT_CONTRACT_ADDRESS}`,
             asset.tokenId,
@@ -206,7 +211,7 @@ const Listing = () => {
             }
           );
         } else {
-          await nft.giveResaleApproval(asset.tokenId);
+          console.log("item existed");
           await marketplace.resellToken(
             `${process.env.REACT_APP_NFT_CONTRACT_ADDRESS}`,
             asset.tokenId,
@@ -218,7 +223,11 @@ const Listing = () => {
         }
       } else {
         const duration = moment().unix() + value * 60;
-        if (asset.currentPrice == 0 || asset.currentPrice == undefined) {
+        const itemExisted = await auction.getTokenAuctionDetails(nft.address, asset.tokenId);
+        await nft.giveResaleApproval(asset.tokenId);
+
+        if (itemExisted.seller == ZERO_ADDRESS) {
+          console.log("item not existed");
           await auction.createTokenAuction(
             `${process.env.REACT_APP_NFT_CONTRACT_ADDRESS}`,
             asset.tokenId,
@@ -226,7 +235,7 @@ const Listing = () => {
             duration
           );
         } else {
-          await nft.giveResaleApproval(asset.tokenId);
+          console.log("item existed");
           await auction.recreateTokenAuction(
             `${process.env.REACT_APP_NFT_CONTRACT_ADDRESS}`,
             asset.tokenId,
@@ -315,12 +324,13 @@ const Listing = () => {
           <Result
             title="Your token is already listed on the marketplace"
             extra={
-              <StyledButton
+              <Button
+                style={{ borderRadius: "5px", fontWeight: "bold" }}
                 type="primary"
                 onClick={() => history.push(`/assets/${id}`)}
               >
                 Go to your token
-              </StyledButton>
+              </Button>
             }
           />
         );

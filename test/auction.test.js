@@ -39,6 +39,14 @@ contract("Auction", async (accounts) => {
       console.log(owner);
     });
 
+    it("get auction details", async () => {
+      const auctionDetails = await auction.getTokenAuctionDetails(
+        nft.address,
+        tokenId
+      );
+      console.log(auctionDetails);
+    });
+
     it("create auction", async () => {
       await auction.createTokenAuction(nft.address, tokenId, price, duration, {
         from: accounts[0],
