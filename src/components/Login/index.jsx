@@ -60,10 +60,13 @@ const Login = () => {
       try {
         const address = await signer.getAddress();
         if (address != null) {
-          dispatch(login(address)).catch((err) => {
+          dispatch(login(address))
+          .then(res => {
+            console.log(res)
+          })
+          .catch((err) => {
             return toast.error(err);
           });
-          history.push(`/my-account`);
         }
         // UserService.loginService(address).then(res => {
         //   history.push("/account/" + res._id || "")

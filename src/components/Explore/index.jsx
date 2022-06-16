@@ -91,19 +91,38 @@ const Explore = () => {
   });
   const [categories, setCategories] = useState([]);
   const [filterParams, setFilterParams] = useState({
-    price: { min: 0, max: 0 },
+    price: { startPrice: 0, endPrice: 0 },
   });
+  const listNFTType = [
+    {
+      value: 0,
+      label: "Image",
+    },
+    {
+      value: 1,
+      label: "Video",
+    },
+    {
+      value: 2,
+      label: "GIF",
+    },
+  ];
+  const [isLoading, setIsLoading] = useState(false);
 
-  const getListAsset = async () => {
-    const result = await axios.get(
-      `${process.env.REACT_APP_API_URL}/assets/assets-nft`,
-      {
+  const getListAsset = async (params) => {
+    setIsLoading(true);
+    const result = await axios
+      .get(`${process.env.REACT_APP_API_URL}/assets/assets-nft`, {
         params: {
           thumb_type: currentTab,
           status: "Sale",
+          ...params,
         },
-      }
-    );
+      })
+      .then((res) => {
+        setIsLoading(false);
+        return res;
+      });
     if (result.data) {
       setResultList(result.data);
     }
@@ -123,6 +142,7 @@ const Explore = () => {
   const changeTab = (e) => {
     setCurrentTab(e.key);
   };
+
   return (
     <StyledLayout>
       <StyledHeader>Explore Collections</StyledHeader>
@@ -146,37 +166,59 @@ const Explore = () => {
               <Collapse.Panel header="Price">
                 <div className="mb-2">
                   <span className="h5">
-                    {`${filterParams.price.min} - ${filterParams.price.max}`}{" "}
+                    {`${filterParams.price.startPrice} - ${filterParams.price.endPrice}`}{" "}
                     ETH
                   </span>
                 </div>
                 <Slider
                   range
-                  value={[filterParams.price.min, filterParams.price.max]}
-                  onChange={(value) =>
+                  value={[
+                    filterParams.price.startPrice,
+                    filterParams.price.endPrice,
+                  ]}
+                  onChange={(value) => {
                     setFilterParams({
                       ...filterParams,
-                      price: { min: value[0], max: value[1] },
-                    })
-                  }
+                      price: { startPrice: value[0], endPrice: value[1] },
+                    });
+                  }}
+                  onAfterChange={(value) => {
+                    getListAsset({
+                      ...filterParams,
+                      startPrice: value[0],
+                      endPrice: value[1],
+                    });
+                  }}
                 />
               </Collapse.Panel>
             </Collapse>
             <Collapse ghost>
               <Collapse.Panel header="Categories">
-                {categories.length > 0 ? (
+                {/* {categories.length > 0 ? (
                   <Checkbox.Group>
                     {categories.map((category) => (
                       <div key={category._id}>
                         <Checkbox value={category._id}>
                           {category.name || ""}
-                        </Checkbox><br/>
+                        </Checkbox>
+                        <br />
                       </div>
                     ))}
                   </Checkbox.Group>
                 ) : (
                   <Empty />
-                )}
+                )} */}
+                <Checkbox.Group onChange={value => getListAsset({
+                  ...filterParams,
+                  thumb_type: value
+                })}>
+                  {listNFTType.map((item) => (
+                    <div key={item.value}>
+                      <Checkbox value={item.value}>{item.label}</Checkbox>
+                      <br />
+                    </div>
+                  ))}
+                </Checkbox.Group>
               </Collapse.Panel>
             </Collapse>
           </div>
@@ -184,6 +226,7 @@ const Explore = () => {
         <div className="col-8">
           <div className="mb-5">{resultList.total} item</div>
           <List
+            loading={isLoading}
             dataSource={resultList.result}
             renderItem={(item) => <AssetCard className="mb-5" asset={item} />}
             grid={{ column: 3, gutter: 0 }}
@@ -194,9 +237,14 @@ const Explore = () => {
           {resultList.result.length > 0 &&
             resultList.result.map((item) => <AssetCard asset={item} />)}
         </div> */}
+        <div className="col-3 h-100"></div>
         <Pagination
-          className="col-12"
-          total={resultList.total / resultList.page_size}
+          className="col-8"
+          current={parseInt(resultList.page_index)}
+          total={Math.ceil(resultList.total / resultList.page_size) * 10}
+          onChange={(value) => {
+            getListAsset({ page_index: parseInt(value) });
+          }}
         />
       </StyledContainer>
     </StyledLayout>

@@ -1,7 +1,11 @@
-import React from "react";
+import axios from "axios";
+import React, { useState } from "react";
+import { useEffect } from "react";
+import { useHistory } from "react-router-dom";
 import Slider from "react-slick";
 
 const Homepage = (props) => {
+  const history = useHistory();
   const settings = {
     dots: true,
     infinite: true,
@@ -10,6 +14,19 @@ const Homepage = (props) => {
     slidesToScroll: 1,
     arrows: true,
   };
+  const [asset, setAsset] = useState({});
+
+  const getTopFavoriteAsset = async () => {
+    const result = await axios.get(
+      `${process.env.REACT_APP_API_URL}/assets/favorite`
+    );
+    setAsset(result.data);
+  };
+  console.log(asset);
+  useEffect(() => {
+    getTopFavoriteAsset();
+  }, []);
+
   return (
     <div>
       <div>
@@ -26,10 +43,16 @@ const Homepage = (props) => {
                 Cryptoboyz is the world's first and largest NFT marketplace
               </p>
               <div className="crypto-boyz-homepage__banner__title__submit__wrapper">
-                <button className="mr-4 crypto-boyz-homepage__banner__title__submit__button crypto-boyz-homepage__banner__title__submit__button--explore">
+                <button
+                  onClick={() => history.push("/explore")}
+                  className="mr-4 crypto-boyz-homepage__banner__title__submit__button crypto-boyz-homepage__banner__title__submit__button--explore"
+                >
                   Explore
                 </button>
-                <button className="crypto-boyz-homepage__banner__title__submit__button crypto-boyz-homepage__banner__title__submit__button--create">
+                <button
+                  onClick={() => history.push("/mint")}
+                  className="crypto-boyz-homepage__banner__title__submit__button crypto-boyz-homepage__banner__title__submit__button--create"
+                >
                   Create
                 </button>
               </div>
@@ -39,11 +62,21 @@ const Homepage = (props) => {
                 </a>
               </div>
             </div>
-            <div className="col-12 col-lg-6">
+            <div
+              className="col-12 col-lg-6"
+              onClick={(e) => {
+                history.push("/assets/" + asset._id);
+              }}
+            >
               <article className="crypto-boyz-homepage__banner__thumb">
                 <a className="crypto-boyz-homepage__banner__thumb__link">
                   <div className="crypto-boyz-homepage__banner__thumb__wrapper">
-                    <img src="https://lh3.googleusercontent.com/LwSL45hmFmoSVu5C6HuWGuxt2kxcI_xw6HS9oq4YUhpp81qnJfSibsauZSdsDyCk48eQ01EPlx6jzCld9uWt-DkukLTa-KYw6l0GaAA=s550" />
+                    <img
+                      src={asset.uriID}
+                      onError={(e) =>
+                        (e.target.src = "/Anh-avatar-bua-cute-dep-390x390.jpg")
+                      }
+                    />
                   </div>
                   <footer className="crypto-boyz-homepage__banner__thumb__footer row ml-0 mr-0">
                     <div className="col-2">
@@ -54,10 +87,10 @@ const Homepage = (props) => {
                     </div>
                     <div>
                       <p className="crypto-boyz-homepage__banner__thumb__footer--title">
-                        An Ugly Dance with the Sky
+                        {(asset.name && asset.name) || ""}
                       </p>
                       <p className="crypto-boyz-homepage__banner__thumb__footer--link">
-                        Kacii_Eleven_and_the_Toy_Wors
+                        {(asset.description && asset.description) || ""}
                       </p>
                     </div>
                     <div className="col-2"></div>
