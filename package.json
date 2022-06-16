@@ -1,9 +1,9 @@
 {
   "proxy": "http://localhost:22530",
-  "name": "cryptoboys",
+  "name": "marketplace",
   "version": "0.1.0",
-  "description": "Crypto Boys NFT Marketplace",
-  "author": "devpavan04",
+  "description": "HUFT Marketplace",
+  "author": "kennguyendev-thinhcryptoz",
   "homepage": "https://devpavan04.github.io/cryptoboys-nft-marketplace",
   "dependencies": {
     "@ant-design/icons": "^4.7.0",

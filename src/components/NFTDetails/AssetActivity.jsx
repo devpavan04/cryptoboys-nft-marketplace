@@ -1,7 +1,11 @@
 import React, { useState } from "react";
 import styled from "styled-components";
 import { Collapse, Table } from "antd";
-import Icon, { FireOutlined, DollarOutlined } from "@ant-design/icons";
+import Icon, {
+  FireOutlined,
+  DollarOutlined,
+  BankOutlined,
+} from "@ant-design/icons";
 import { ReactComponent as Ethereum } from "../../assets/icons/ethereum.svg";
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
@@ -35,9 +39,12 @@ const StyledIcon = styled(Icon)`
   top: -3px;
 `;
 
-const StyledLink = styled.a`
+const StyledLink = styled(Link)`
   color: #00a8ff;
-  text-decoration: none;
+  &:hover {
+    text-decoration: none;
+    color: #00a8ff;
+  }
 `;
 
 const EthereumIcon = (props) => <Icon component={Ethereum} {...props} />;
@@ -50,11 +57,25 @@ const columns = [
     render: (text) => {
       return (
         <span style={{ textTransform: "uppercase", fontWeight: "bold" }}>
-          {text === "transfer" ? (
-            <StyledIcon component={DollarOutlined} style={{ color: "green" }} />
-          ) : (
-            <StyledIcon component={FireOutlined} style={{ color: "red" }} />
-          )}{" "}
+          {
+            {
+              Sale: (
+                <StyledIcon
+                  component={DollarOutlined}
+                  style={{ color: "green" }}
+                />
+              ),
+              Mint: (
+                <StyledIcon component={FireOutlined} style={{ color: "red" }} />
+              ),
+              Auction: (
+                <StyledIcon
+                  component={BankOutlined}
+                  style={{ color: "blue" }}
+                />
+              ),
+            }[text]
+          }{" "}
           {text}
         </span>
       );
@@ -91,9 +112,11 @@ const columns = [
     render: (text) => (
       <>
         {text == null ? (
-          "Null Address"
+          <i>Null Address</i>
         ) : (
-          <StyledLink>{text.walletAddress}</StyledLink>
+          <StyledLink to={`/account/${text.walletAddress}`}>
+            {text.walletAddress}
+          </StyledLink>
         )}
       </>
     ),
@@ -103,9 +126,9 @@ const columns = [
     key: "to",
     dataIndex: "to",
     render: (text) => (
-      <Link to={`/account/${text.walletAddress}`}>
-        <StyledLink>{text.walletAddress}</StyledLink>
-      </Link>
+      <StyledLink to={`/account/${text.walletAddress}`}>
+        {text.walletAddress}
+      </StyledLink>
     ),
   },
   {

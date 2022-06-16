@@ -6,6 +6,7 @@ import { toast } from "react-toastify";
 import { useSelector, useDispatch } from "react-redux";
 import { useForm, Controller } from "react-hook-form";
 import axios from "axios";
+import { useHistory } from "react-router-dom";
 
 const { Title } = Typography;
 const { Option } = Select;
@@ -73,9 +74,9 @@ const StyledFallback = styled.div`
 
 const CreateCollection = () => {
   const user = useSelector((state) => state.user);
+  const history = useHistory();
   const [image, setImage] = useState(null);
   const [category, setCategory] = useState(null);
-
   const [fetchCategory, setFetchCategory] = useState([]);
   const {
     register,
@@ -85,9 +86,24 @@ const CreateCollection = () => {
   } = useForm();
 
   //will comeback to this later
-  const onUpdateSubmit = (data) => {
-    console.log(data);
-    console.log(category);
+  const onCreateSubmit = async (data) => {
+    const { name, description } = data;
+    const collection = {
+      name,
+      description,
+      userId: user._id,
+      categoryId: category,
+    };
+    try {
+      await axios
+        .post(`${process.env.REACT_APP_API_URL}/collections/create`, collection)
+        .then(() => {
+          toast.success("Create successfully");
+          history.push("/my-account");
+        });
+    } catch {
+      toast.error("Error creating collection");
+    }
   };
 
   const fetchCategoryData = async () => {
@@ -114,7 +130,6 @@ const CreateCollection = () => {
       <form>
         <Title>Create New Collection</Title>
         <StyledLabel>Banner Image</StyledLabel>
-
         <StyledLabel>Collection's Name</StyledLabel>
         <Controller
           name="name"
@@ -174,13 +189,13 @@ const CreateCollection = () => {
         >
           {fetchCategory.length > 0 &&
             fetchCategory.map((item) => (
-              <Option key={item.id} value={item.id}>
+              <Option key={item._id} value={item._id}>
                 {item.name}
               </Option>
             ))}
         </StyledSelect>
         <br />
-        <StyledButton type="primary" onClick={handleSubmit(onUpdateSubmit)}>
+        <StyledButton type="primary" onClick={handleSubmit(onCreateSubmit)}>
           Create
         </StyledButton>
       </form>

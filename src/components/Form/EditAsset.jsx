@@ -7,21 +7,18 @@ import {
   Select,
   Image,
   Upload,
-  Modal,
-  Switch,
   Spin,
   Empty,
+  Result,
 } from "antd";
 import { toast } from "react-toastify";
-import {
-  PictureFilled,
-  PlusOutlined,
-  LoadingOutlined,
-} from "@ant-design/icons";
+import { LoadingOutlined } from "@ant-design/icons";
 import { useSelector, useDispatch } from "react-redux";
 import { useParams } from "react-router-dom";
 import { fetchAsset } from "../../state/action/assetAction";
 import { useForm, Controller } from "react-hook-form";
+import { useHistory } from "react-router-dom";
+import axios from "axios";
 
 const { Title, Paragraph } = Typography;
 const { Option } = Select;
@@ -92,11 +89,13 @@ const loadingIcon = <LoadingOutlined style={{ fontSize: 70 }} spin />;
 const EditAsset = () => {
   const [loading, setLoading] = useState(true);
   const { id } = useParams();
+  const history = useHistory();
   const dispatch = useDispatch();
   const user = useSelector((state) => state.user);
   const asset = useSelector((state) => state.asset);
   const [newCollection, setNewCollection] = useState();
   const [notFound, setNotFound] = useState(false);
+  const [notOwner, setNotOwner] = useState(false);
   const {
     register,
     formState: { errors },
@@ -105,26 +104,51 @@ const EditAsset = () => {
   } = useForm();
 
   useEffect(() => {
-    if (asset == "" || asset == undefined) {
-      dispatch(fetchAsset(id))
-        .then((res) => {
-          setNewCollection(res.currentCollection._id);
-          setLoading(false);
-        })
-        .catch(() => {
-          setNotFound(true);
-          toast.error("Cannot found the asset");
-        });
-    } else {
-      setLoading(false);
-      setNewCollection(asset.currentCollection._id);
+    if (user) {
+      if (asset == "") {
+        dispatch(fetchAsset(id))
+          .then((res) => {
+            setNewCollection(res.currentCollection._id);
+            if (res.currentOwner._id !== user._id) {
+              setNotOwner(true);
+            }
+            setLoading(false);
+          })
+          .catch(() => {
+            setNotFound(true);
+            toast.error("Cannot found the asset");
+          });
+      } else {
+        setLoading(false);
+        setNewCollection(asset.currentCollection._id);
+        if (asset.currentOwner._id !== user._id) {
+          setNotOwner(true);
+        }
+      }
     }
-  }, [asset]);
+  }, [asset, user]);
 
-  //will comeback to this later
   const onUpdateSubmit = (data) => {
-    console.log(data);
-    console.log(newCollection);
+    const url = process.env.REACT_APP_API_URL;
+    const { name, description } = data;
+    if (asset.currentCollection._id != newCollection) {
+      axios
+        .patch(`${url}/assets/change-collection`, {
+          id,
+          collectionId: newCollection,
+        })
+        .then(toast.success("Successfully update collection"))
+        .catch(() => {
+          toast.error("Cannot update collection");
+        });
+    }
+
+    axios
+      .patch(`${url}/assets/update`, { id, name, description })
+      .then(() => toast.success("Successfully update asset"))
+      .catch(() => {
+        toast.error("Cannot update asset");
+      });
   };
 
   const onCollectionChange = (value) => {
@@ -141,6 +165,21 @@ const EditAsset = () => {
             </Paragraph>
             <Paragraph>Please check the URL and try again.</Paragraph>
           </span>
+        }
+      />
+    );
+  }
+
+  if (notOwner) {
+    return (
+      <Result
+        status="403"
+        title="403"
+        subTitle="Sorry, you are not authorized to access this page."
+        extra={
+          <Button type="primary" onClick={() => history.push("/")}>
+            Back Home
+          </Button>
         }
       />
     );
@@ -206,7 +245,7 @@ const EditAsset = () => {
             <StyledLabel>Collection</StyledLabel>
             <StyledSelect
               showSearch
-              placeholder="Select a collection"
+              placeholder="Select a new collection"
               optionFilterProp="children"
               filterOption={(input, option) =>
                 option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
@@ -215,7 +254,6 @@ const EditAsset = () => {
                 width: "100%",
                 borderRadius: "5px",
               }}
-              defaultValue={asset.currentCollection._id}
               onChange={onCollectionChange}
             >
               {user &&

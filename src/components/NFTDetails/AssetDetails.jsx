@@ -21,12 +21,14 @@ import {
 } from "../../contractInstances";
 import { io } from "socket.io-client";
 import moment from "moment";
+import { Link } from "react-router-dom";
 
 const { Countdown } = Statistic;
 const { confirm } = Modal;
 
 // #region Styled Components
 const StyledCard = styled(Card)`
+  margin-top: 1rem;
   width: 100% !important;
   border-radius: 10px;
   box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
@@ -118,6 +120,14 @@ const StyledSpinningLayout = styled.div`
   justify-content: center;
   align-items: center;
   height: 100%;
+`;
+
+const StyledLink = styled(Link)`
+  color: #00a8ff;
+  &:hover {
+    text-decoration: none;
+    color: #00a8ff;
+  }
 `;
 
 const EthereumIcon = (props) => <Icon component={Ethereum} {...props} />;
@@ -254,7 +264,7 @@ const AssetDetails = () => {
               id: asset._id,
               price: price,
               newOwnerId: newOwner.data._id,
-              status: "Auction",
+              type: "Auction",
             })
             .then(() => {
               setLoading(false);
@@ -381,6 +391,7 @@ const AssetDetails = () => {
   };
 
   const onSubmitBid = async (data) => {
+    setLoading(true);
     if (window.ethereum) {
       await window.ethereum.enable();
       const bid = ethers.utils.parseEther(data.bid);
@@ -405,9 +416,11 @@ const AssetDetails = () => {
         return toast.error("Bid failed");
       }
     }
+    setLoading(false);
   };
 
   const onSubmitUpdatedPrice = async (data) => {
+    setLoading(true);
     if (window.ethereum) {
       await window.ethereum.enable();
       const marketplace = getMarketplaceContract();
@@ -433,6 +446,7 @@ const AssetDetails = () => {
         toast.error("Update price failed");
       }
     }
+    setLoading(false);
   };
 
   const onSubmitBuy = async (data) => {
@@ -456,10 +470,12 @@ const AssetDetails = () => {
             id: asset._id,
             price: asset.currentPrice,
             newOwnerId: user._id,
-            status: "Sale",
+            type: "Sale",
           })
           .then((res) => {
-            toast.success("Asset sold successfully!");
+            toast.success(
+              "Congratulations! You have successfully bought the item!"
+            );
             setTimeout(() => {
               window.location.reload();
             }, 2000);
@@ -550,7 +566,7 @@ const AssetDetails = () => {
                 type="primary"
                 key="enter"
                 onClick={handleSubmit(onSubmitBid)}
-                disabled={errors.bid}
+                disabled={errors.bid || loading}
               >
                 Bid
               </StyledButtonModal>,
@@ -744,6 +760,8 @@ const AssetDetails = () => {
     );
   };
 
+  console.log(auctionDetails);
+
   const renderConfirmSale = () => {
     const confirmSale = async () => {
       try {
@@ -760,7 +778,7 @@ const AssetDetails = () => {
             id: asset._id,
             price: price,
             newOwnerId: newOwner.data._id,
-            status: "Auction",
+            type: "Auction",
           })
           .then(() => {
             window.location.reload();
@@ -819,9 +837,14 @@ const AssetDetails = () => {
         </StyledSpinningLayout>
       ) : (
         <StyledLayout>
-          <p>{asset.currentCollection.name}</p>
+          <StyledLink to={`/collection/${asset.currentCollection._id}`}>
+            {asset.currentCollection.name}
+          </StyledLink>
           <StyledHeader>{asset.name}</StyledHeader>
-          <p>Currently owned by: {asset.currentOwner.name}</p>
+          <span>Currently owned by: </span>
+          <StyledLink to={`/account/${asset.currentOwner.walletAddress}`}>
+            {asset.currentOwner.name}
+          </StyledLink>
           {asset.status !== "Not Listing" && (
             <Spin spinning={cardLoading} indicator={loadingIcon}>
               <StyledCard title={onAuction ? <CardTitleLayout /> : null}>

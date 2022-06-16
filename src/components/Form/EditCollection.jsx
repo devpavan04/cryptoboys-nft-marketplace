@@ -9,11 +9,13 @@ import {
   Upload,
   Spin,
   Empty,
+  Result,
 } from "antd";
 import { UploadOutlined, LoadingOutlined } from "@ant-design/icons";
 import { toast } from "react-toastify";
 import { useSelector, useDispatch } from "react-redux";
 import { useForm, Controller } from "react-hook-form";
+import { useHistory } from "react-router-dom";
 import {
   fetchCollection,
   setCollection,
@@ -89,12 +91,15 @@ const loadingIcon = <LoadingOutlined style={{ fontSize: 70 }} spin />;
 
 const EditCollection = () => {
   const { id } = useParams();
+  const history = useHistory();
   const [loading, setLoading] = useState(true);
   const collection = useSelector((state) => state.collection);
+  const user = useSelector((state) => state.user);
   const [image, setImage] = useState(null);
   const [category, setCategory] = useState(null);
   const [fetchCategory, setFetchCategory] = useState([]);
   const [notFound, setNotFound] = useState(false);
+  const [notOwner, setNotOwner] = useState(false);
   const dispatch = useDispatch();
   const {
     register,
@@ -143,22 +148,30 @@ const EditCollection = () => {
   }, []);
 
   useEffect(() => {
-    if (collection == "" || collection == undefined) {
-      dispatch(fetchCollection(id))
-        .then((res) => {
-          setImage(res.collectionBanner);
-          setCategory(res.category);
-          setLoading(false);
-        })
-        .catch(() => {
-          setNotFound(true);
-          toast.error("Cannot found the collection");
-        });
-    } else {
-      setLoading(false);
-      setCategory(collection.category);
+    if (user) {
+      if (collection == "") {
+        dispatch(fetchCollection(id))
+          .then((res) => {
+            if (res.owner._id !== user._id) {
+              setNotOwner(true);
+            }
+            setImage(res.collectionBanner);
+            setCategory(res.category);
+            setLoading(false);
+          })
+          .catch(() => {
+            setNotFound(true);
+            toast.error("Cannot found the collection");
+          });
+      } else {
+        setLoading(false);
+        if (collection.owner._id !== user._id) {
+          setNotOwner(true);
+        }
+        setCategory(collection.category);
+      }
     }
-  }, [collection]);
+  }, [collection, user]);
 
   const onCategoryChange = (value) => {
     setCategory(value);
@@ -174,6 +187,21 @@ const EditCollection = () => {
             </Paragraph>
             <Paragraph>Please check the URL and try again.</Paragraph>
           </span>
+        }
+      />
+    );
+  }
+
+  if (notOwner) {
+    return (
+      <Result
+        status="403"
+        title="403"
+        subTitle="Sorry, you are not authorized to access this page."
+        extra={
+          <Button type="primary" onClick={() => history.push("/")}>
+            Back Home
+          </Button>
         }
       />
     );

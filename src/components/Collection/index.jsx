@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import {
   Layout,
   Menu,
@@ -109,7 +109,9 @@ const Collection = () => {
   const [notFound, setNotFound] = useState(false);
   const [loading, setLoading] = useState(true);
   const [collection, setCollection] = useState(null);
+  const [collectionAssets, setCollectionAssets] = useState([]);
   const user = useSelector((state) => state.user);
+  const assets = useRef([]);
 
   useEffect(() => {
     getCollection();
@@ -121,13 +123,15 @@ const Collection = () => {
         `${process.env.REACT_APP_API_URL}/collections/get-collection?id=${id}`
       )
       .then(({ data }) => {
+        setCollectionAssets(data.assets);
         setCollection(data);
-        setLoading(false);
+        assets.current = [...data.assets];
       })
       .catch(() => {
         setNotFound(true);
         toast.error("Error fetching collections");
       });
+    setLoading(false);
   };
 
   const toggleSider = () => {
@@ -136,6 +140,45 @@ const Collection = () => {
 
   const onEditClick = () => {
     history.push(`/collection/edit/${id}`);
+  };
+
+  const handleFilterStatus = (status) => {
+    if (status === null) {
+      setCollectionAssets(assets.current);
+    } else {
+      const filteredAssets = assets.current.filter((asset) => {
+        return asset.status === status;
+      });
+
+      setCollectionAssets(filteredAssets);
+    }
+  };
+
+  const handleFilterPriceRange = (priceRange) => {
+    if (priceRange === null) {
+      setCollectionAssets(assets.current);
+    } else {
+      const filteredAssets = assets.current.filter((asset) => {
+        return (
+          asset.currentPrice >= priceRange.minPrice &&
+          asset.currentPrice <= priceRange.maxPrice
+        );
+      });
+
+      setCollectionAssets(filteredAssets);
+    }
+  };
+
+  const onSearch = (value) => {
+    if (value === "") {
+      setCollectionAssets(assets.current);
+    } else {
+      setCollectionAssets((collectionAssets) =>
+        collectionAssets.filter((asset) =>
+          asset.name.toLowerCase().includes(value.toLowerCase())
+        )
+      );
+    }
   };
 
   if (notFound) {
@@ -155,18 +198,7 @@ const Collection = () => {
 
   return (
     <>
-      {notFound ? (
-        <Empty
-          description={
-            <span>
-              <Paragraph>
-                Sorry, we couldn't find the collection you are looking for.
-              </Paragraph>
-              <Paragraph>Please check the URL and try again.</Paragraph>
-            </span>
-          }
-        />
-      ) : loading ? (
+      {loading ? (
         <div style={{ textAlign: "center" }}>
           <Spin indicator={loadingIcon} spinning />
         </div>
@@ -229,7 +261,10 @@ const Collection = () => {
               width="300px"
             >
               <Menu mode="inline">
-                <FilterSider />
+                <FilterSider
+                  filterStatus={handleFilterStatus}
+                  filterPriceRange={handleFilterPriceRange}
+                />
               </Menu>
             </Sider>
             <Layout className="site-layout">
@@ -255,13 +290,14 @@ const Collection = () => {
                     placeholder="Search"
                     allowClear
                     enterButton
+                    onSearch={onSearch}
                     style={{ width: "300px" }}
                   />
                 </Space>
               </StyledHeader>
               <StyledContent>
-                {collection.assets.length > 0 ? (
-                  collection.assets.map((asset) => (
+                {collectionAssets.length > 0 ? (
+                  collectionAssets.map((asset) => (
                     <AssetCard asset={asset} key={asset._id} />
                   ))
                 ) : (

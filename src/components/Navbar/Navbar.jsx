@@ -1,5 +1,4 @@
 import React, { Fragment } from "react";
-import icon from "./favicon-32x32.png";
 import { Link } from "react-router-dom";
 import { Input, Space } from "antd";
 import { useSelector } from "react-redux";
@@ -78,7 +77,12 @@ const Navbar = (props) => {
             ) : (
               <Fragment>
                 <li className="mr-3">
-                  <Link to={`/account/${user.walletAddress}`} className="">
+                  <Link to={`/collection/create`} className="">
+                    Create Collection
+                  </Link>
+                </li>
+                <li className="mr-3">
+                  <Link to={`/my-account`} className="">
                     Account
                   </Link>
                 </li>

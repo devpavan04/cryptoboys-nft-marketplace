@@ -49,8 +49,13 @@ contract("Marketplace", async (accounts) => {
       assert.equal(tokenURI, "myCBNFT");
     });
 
+    it('return marketplace item', async () => {
+      const marketplaceItem = await marketplace.getMarketplaceItem(1);
+      console.log(marketplaceItem);
+    });
+
     //Account 0 is the owner of the token and Account 1 is the buyer
-    it("creat marketplace item and create market sale", async () => {
+    it("create marketplace item and create market sale", async () => {
       const price = web3.utils.toWei("1", "Ether");
       await marketplace.createMarketplaceItem(nft.address, 1, price, {
         value: listingPrice,
@@ -60,6 +65,11 @@ contract("Marketplace", async (accounts) => {
         value: price,
         from: accounts[1],
       });
+    });
+
+    it('return marketplace item', async () => {
+      const marketplaceItem = await marketplace.getMarketplaceItem(1);
+      console.log(marketplaceItem);
     });
 
     it("returns address of the new token's owner", async () => {

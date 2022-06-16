@@ -77,12 +77,11 @@ const MainSettings = (props) => {
     dispatch(update(updatedUser))
       .then(() => {
         toast.success("Updated successfully");
-        setSubmitLoading(false);
       })
       .catch((err) => {
         toast.error(err);
-        setSubmitLoading(false);
       });
+    setSubmitLoading(false);
   };
 
   useEffect(() => {

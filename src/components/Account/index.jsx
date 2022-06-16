@@ -11,6 +11,7 @@ import {
   Typography,
   Spin,
   Empty,
+  Tag,
 } from "antd";
 import {
   HeartOutlined,
@@ -112,9 +113,17 @@ const StyledWalletAddress = styled(Text)`
   }
 `;
 
+const StyledTag = styled(Tag)`
+  font-size: 14px;
+  font-weight: bold;
+  color: #000;
+  margin-right: 5px;
+  width: 50px;
+`;
+
 const loadingIcon = <LoadingOutlined style={{ fontSize: 70 }} spin />;
 
-const MyAccount = () => {
+const Account = () => {
   const { id } = useParams();
   const [bannerImage, setBannerImage] = useState(null);
   const [profileImage, setProfileImage] = useState(null);
@@ -180,6 +189,58 @@ const MyAccount = () => {
 
   const handleMenuSelect = (e) => {
     setMenuSelected(e.key);
+  };
+
+  const handleFilterStatus = (status) => {
+    if (status === null) {
+      setOwnedAssets(assets.current);
+      setFavoriteAssets(favorAssets.current);
+    } else {
+      const filteredAssets = assets.current.filter((asset) => {
+        return asset.status === status;
+      });
+      const filteredFavorAssets = favorAssets.current.filter((asset) => {
+        return asset.status === status;
+      });
+
+      setOwnedAssets(filteredAssets);
+      setFavoriteAssets(filteredFavorAssets);
+    }
+  };
+
+  const handleFilterPriceRange = (priceRange) => {
+    if (priceRange === null) {
+      setOwnedAssets(assets.current);
+      setFavoriteAssets(favorAssets.current);
+    } else {
+      const filteredAssets = assets.current.filter((asset) => {
+        return (
+          asset.currentPrice >= priceRange.minPrice &&
+          asset.currentPrice <= priceRange.maxPrice
+        );
+      });
+      const filteredFavorAssets = favorAssets.current.filter((asset) => {
+        return (
+          asset.currentPrice >= priceRange.minPrice &&
+          asset.currentPrice <= priceRange.maxPrice
+        );
+      });
+
+      setOwnedAssets(filteredAssets);
+      setFavoriteAssets(filteredFavorAssets);
+    }
+  };
+
+  const handleFilterCategory = (category) => {
+    if (category === null) {
+      setOwnedCollections(collections.current);
+    } else {
+      const filteredCollections = collections.current.filter((collection) => {
+        return collection.category === category;
+      });
+
+      setOwnedCollections(filteredCollections);
+    }
   };
 
   const getAssetsAndCollections = async (id) => {
@@ -376,7 +437,12 @@ const MyAccount = () => {
             <Menu.Item key="3" icon={<PictureOutlined />}>
               Owned Collection
             </Menu.Item>
-            <FilterSider />
+            <FilterSider
+              filterStatus={handleFilterStatus}
+              filterPriceRange={handleFilterPriceRange}
+              filterCategory={handleFilterCategory}
+              disabledTab={menuSelected === "3"}
+            />
           </Menu>
         </Sider>
         <Layout className="site-layout">
@@ -414,4 +480,4 @@ const MyAccount = () => {
   );
 };
 
-export default MyAccount;
+export default Account;
