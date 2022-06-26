@@ -69,6 +69,8 @@ const CollectionCard = (props) => {
   const dispatch = useDispatch();
   const history = useHistory();
 
+  console.log(collection);
+
   return (
     <StyledCard
       onClick={() => {
@@ -77,10 +79,12 @@ const CollectionCard = (props) => {
       }}
     >
       <StyledBanner>
-        <StyledBannerImage
-          src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png"
-          preview={false}
-        />
+        {collection.collectionBanner && 
+          <StyledBannerImage
+            src={collection.collectionBanner}
+            preview={false}
+          />
+        }
       </StyledBanner>
 
       <StyledHeader>{collection.name}</StyledHeader>

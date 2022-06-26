@@ -157,7 +157,7 @@ const Explore = () => {
         ))}
       </StyledMenu> */}
       <StyledContainer className="row">
-        <SideBar className="col-3 p-3 pt-5">
+        <SideBar className="col-2 p-3 pt-5">
           <div className="border-bottom mb-4">
             <span className="h2">Filter</span>
           </div>
@@ -223,7 +223,7 @@ const Explore = () => {
             </Collapse>
           </div>
         </SideBar>
-        <div className="col-8">
+        <div className="col-9">
           <div className="mb-5">{resultList.total} item</div>
           <List
             loading={isLoading}

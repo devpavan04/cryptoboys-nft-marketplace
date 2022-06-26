@@ -40,7 +40,7 @@ const Homepage = (props) => {
                 Discover, collect, and sell extraordinary NFTs
               </p>
               <p className="crypto-boyz-homepage__banner__title">
-                Cryptoboyz is the world's first and largest NFT marketplace
+                HUFT Marketplace is one of the world largest NFT marketplace
               </p>
               <div className="crypto-boyz-homepage__banner__title__submit__wrapper">
                 <button

@@ -21,7 +21,7 @@ const Navbar = (props) => {
               src="/logo.png"
               alt="logo"
             />
-            <span className="h3 font-weight-bold">HUFT Marketplace</span>
+            <span className="h4 font-weight-bold">HUFT Marketplace</span>
           </Link>
         </div>
         <button
