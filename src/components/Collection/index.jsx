@@ -125,6 +125,7 @@ const Collection = () => {
       .then(({ data }) => {
         setCollectionAssets(data.assets);
         setCollection(data);
+        setBannerImage(data.collectionBanner);
         assets.current = [...data.assets];
       })
       .catch(() => {

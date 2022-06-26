@@ -40,7 +40,7 @@ const Homepage = (props) => {
                 Discover, collect, and sell extraordinary NFTs
               </p>
               <p className="crypto-boyz-homepage__banner__title">
-                Cryptoboyz is the world's first and largest NFT marketplace
+                HUFT Marketplace is one of the world largest NFT marketplace
               </p>
               <div className="crypto-boyz-homepage__banner__title__submit__wrapper">
                 <button
@@ -55,11 +55,6 @@ const Homepage = (props) => {
                 >
                   Create
                 </button>
-              </div>
-              <div className="crypto-boyz-homepage__banner__learn-more__wrapper">
-                <a className="crypto-boyz-homepage__banner__learn-more__link">
-                  Learn more about OpenSea
-                </a>
               </div>
             </div>
             <div
