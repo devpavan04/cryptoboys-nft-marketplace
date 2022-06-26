@@ -58,7 +58,7 @@ const Homepage = (props) => {
               </div>
               <div className="crypto-boyz-homepage__banner__learn-more__wrapper">
                 <a className="crypto-boyz-homepage__banner__learn-more__link">
-                  Learn more about OpenSea
+                  Learn more about HUFT
                 </a>
               </div>
             </div>

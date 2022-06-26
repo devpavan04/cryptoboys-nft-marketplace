@@ -11,6 +11,8 @@ import {
   Modal,
   Switch,
   Spin,
+  Empty,
+  Result,
 } from "antd";
 import { toast } from "react-toastify";
 import { useSelector } from "react-redux";
@@ -115,7 +117,11 @@ const MintAsset = () => {
   const nft = getNFTContract();
 
   useEffect(() => {
-    if (user) setNewCollection(user.ownedCollections[0]._id);
+    setLoading(true);
+    if (user) {
+      setNewCollection(user.ownedCollections[0]._id);
+    }
+    setLoading(false);
   }, [user]);
 
   //#region Handle Image
@@ -163,8 +169,9 @@ const MintAsset = () => {
       //create token by smart contract
       try {
         let transaction = await nft.createToken(`${url}`);
+        console.log(transaction)
         const tokenId = await getEventAndReturnId(transaction);
-
+        console.log(tokenId, url)
         //upload token to backend
         if (tokenId && url) {
           await uploadToServer(data, tokenId, url).then((res) => {
@@ -256,6 +263,7 @@ const MintAsset = () => {
   const getEventAndReturnId = async (transaction) => {
     try {
       let tx = await transaction.wait();
+      console.log(tx)
       let event = tx.events[0];
       let value = event.args[2];
       let tokenId = value.toNumber();
@@ -432,6 +440,8 @@ const MintAsset = () => {
             />
           )}
         </Spin>
+      ) : !user && !loading ? (
+        <Result status={403} title="Please connect to metamask" />
       ) : (
         <StyledLayout style={{ textAlign: "center" }}>
           <Spin indicator={loadingIcon} />

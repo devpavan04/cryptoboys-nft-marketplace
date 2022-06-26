@@ -448,22 +448,21 @@ const AssetDetails = () => {
     }
     setLoading(false);
   };
-
+  console.log(asset)
   const onSubmitBuy = async (data) => {
     setLoading(true);
     if (window.ethereum) {
       await window.ethereum.enable();
       const marketplace = getMarketplaceContract();
       const price = ethers.utils.parseEther(`${asset.currentPrice}`);
-
       try {
         await marketplace.createMarketplaceSale(
           process.env.REACT_APP_NFT_CONTRACT_ADDRESS,
-          asset.tokenId,
+          parseInt(asset.tokenId),
           {
             value: price,
           }
-        );
+        )
         await axios
           .post(`${process.env.REACT_APP_API_URL}/assets/transaction`, {
             currentOwnerId: asset.currentOwner._id,

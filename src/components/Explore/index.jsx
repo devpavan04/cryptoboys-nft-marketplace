@@ -114,7 +114,7 @@ const Explore = () => {
     const result = await axios
       .get(`${process.env.REACT_APP_API_URL}/assets/assets-nft`, {
         params: {
-          thumb_type: currentTab,
+          // thumb_type: currentTab,
           status: "Sale",
           ...params,
         },

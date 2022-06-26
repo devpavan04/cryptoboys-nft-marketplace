@@ -183,7 +183,7 @@ const MyAccount = () => {
     }
 
     if (user.profileImg) {
-      setProfileImage(user.profileImage);
+      setProfileImage(user.profileImg);
     }
   };
 
