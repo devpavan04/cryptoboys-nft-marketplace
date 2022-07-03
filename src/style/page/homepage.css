@@ -1,0 +1,215 @@
+.crypto-boyz-homepage__banner {
+    background-image: url("https://lh3.googleusercontent.com/C0K1INFhIXcsRwalRPr_3SkYpk_esO039M9veydGwcrrNFks737CZW2ZPKNNpev5oXuS68NbjTQyvw_P7J8-02Otlf5VWXSYMwYJ9w=s250");
+    background-size: cover;
+    background-color: rgb(255, 255, 255);
+    background-position: center center;
+    opacity: 0.3;
+    filter: blur(8px);
+    -webkit-mask: linear-gradient(rgb(255, 255, 255), transparent);
+}
+.crypto-boyz-homepage__banner__wrapper {
+    height: 586px;
+}
+
+.crypto-boyz-homepage__banner__title {
+    font-size: 24px;
+    text-align: left;
+    margin-top: 20px;
+}
+
+.crypto-boyz-homepage__banner__title__wrapper {
+    padding: 110px 20px 44px 30px;
+}
+
+.crypto-boyz-homepage__banner__title__submit__wrapper {
+    margin-top: 40px;
+}
+
+.crypto-boyz-homepage__banner__title__submit__button {
+    border-radius: 10px;
+    width: 167px;
+    height: 50px;
+}
+
+.crypto-boyz-homepage__banner__title__submit__button--explore {
+    font-size: 16px;
+    font-weight: 600;
+    padding: 12px 20px !important;
+    background-color: rgb(32, 129, 226);
+    border: 1px solid rgb(32, 129, 226);
+    color: rgb(255, 255, 255);
+}
+
+.crypto-boyz-homepage__banner__title__submit__button--create {
+    font-size: 16px;
+    font-weight: 600;
+    background-color: rgb(255, 255, 255);
+    border: 1px solid rgb(32, 129, 226);
+    padding: 12px 20px !important;
+    color: rgb(32, 129, 226);
+}
+
+.crypto-boyz-homepage__banner__learn-more__wrapper {
+    margin-top: 40px;
+}
+
+.crypto-boyz-homepage__banner__learn-more__link {
+    margin-left: 8px;
+    font-weight: 600;
+    color: rgb(32, 129, 226);
+}
+
+.crypto-boyz-homepage__banner__thumb {
+    max-width: 550px;
+    margin-right: 30px;
+    width: 100%;
+    background-color: rgb(251, 253, 255);
+    flex-direction: column;
+    border-radius: 10px;
+    z-index: 2;
+    box-shadow: rgb(4 17 29 / 25%) 0px 0px 10px 0px;
+}
+
+.crypto-boyz-homepage__banner__thumb__link {
+    border-radius: 10px;
+}
+
+.crypto-boyz-homepage__banner__thumb__wrapper {
+    height: 420px;
+    border-bottom-left-radius: 0px;
+    border-bottom-right-radius: 0px;
+    border-radius: inherit;
+    -webkit-box-align: center;
+    align-items: center;
+    display: flex;
+    -webkit-box-pack: center;
+    justify-content: center;
+    max-height: 100%;
+    max-width: 100%;
+    overflow: hidden;
+    position: relative;
+}
+
+.crypto-boyz-homepage__banner__thumb__wrapper img {
+    object-fit: cover;
+    width: 100%;
+    height: 100%;
+    border-top-left-radius: inherit;
+    border-top-right-radius: inherit;
+    border-bottom-left-radius: 0px !important;
+    border-bottom-right-radius: 0px !important;
+}
+
+.crypto-boyz-homepage__banner__thumb__footer {
+    border: none;
+    width: 100%;
+    font-weight: 600;
+    padding: 16px;
+    border: 1px solid rgb(229, 232, 235);
+    color: rgb(53, 56, 64);
+    text-align: left;
+}
+
+.crypto-boyz-homepage__banner__thumb__footer img {
+    object-fit: cover;
+    width: 40px;
+    height: 40px;
+}
+
+.crypto-boyz-homepage__banner__thumb__footer--title {
+    font-weight: 600;
+    text-decoration: none;
+    font-size: 14px;
+    color: rgb(4, 17, 29);
+    text-decoration: none;
+}
+
+.crypto-boyz-homepage__banner__thumb__footer--link {
+    font-weight: 500;
+    font-size: 14px;
+    color: #1890ff;
+    text-decoration: none;
+}
+
+.crypto-boyz-homepage__banner__thumb__footer--title,
+.crypto-boyz-homepage__banner__thumb__link,
+.crypto-boyz-homepage__banner__thumb__footer--link:hover {
+    text-decoration: none;
+}
+
+.crypto-boyz-homepage__notable__wrapper {
+    display: inline-block;
+    width: 100%;
+    padding: 0px 10px 10px;
+    margin-top: 48px;
+    position: relative;
+    max-height: 700px;
+}
+
+.crypto-boyz-homepage__notable__wrapper a {
+    background-image: url(https://openseauserdata.com/static/promocards/buku-promocard-min.png);
+    background-repeat: no-repeat;
+    background-position: center center;
+    background-size: cover;
+    color: white;
+    display: inline-block;
+    border: 1px solid rgb(229, 232, 235);
+    background-color: rgb(255, 255, 255);
+    border-radius: 10px;
+    cursor: pointer;
+    width: 100%;
+    height: 600px;
+}
+
+.crypto-boyz-homepage__notable__wrapper__container {
+    position: relative;
+    border-top-left-radius: inherit;
+    border-top-right-radius: inherit;
+}
+
+.crypto-boyz-homepage__notable__wrapper__container__header {
+    padding: 16px;
+    border-top-left-radius: inherit;
+    border-top-right-radius: inherit;
+    flex-direction: column;
+    display: flex;
+}
+
+.crypto-boyz-homepage__notable__wrapper__container__header__content {
+    -webkit-box-pack: end;
+    justify-content: flex-end;
+    display: flex;
+}
+
+.crypto-boyz-homepage__notable__wrapper__container__header__content--title {
+    height: 30px;
+    padding: 4px 10px;
+    border: 2px solid rgb(255, 255, 255);
+    border-radius: 10px;
+    background: rgba(0, 0, 0, 0.2);
+    backdrop-filter: blur(10px);
+    -webkit-box-pack: center;
+    justify-content: center;
+    flex-direction: column;
+    display: flex;
+} 
+
+.crypto-boyz-homepage__notable__wrapper__container__header__content--title p {
+    margin: 0px;
+    color: rgb(255, 255, 255);
+    font-weight: 500;
+}
+
+.crypto-boyz-homepage__notable--button {
+    top: 63%;
+    position: absolute;
+    right: -17px;
+    border-radius: 50%;
+}
+
+.crypto-boyz-homepage__notable--button__wrapper {
+    display: flex;
+    margin-bottom: 0px;
+    margin-left: 0px;
+    margin-right: 0px
+}
