@@ -66,3 +66,4 @@ npm start
 ```
 - Open metamask browser wallet and connect network to Localhost 7545.
 - Import accounts from ganache-cli into the metamask browser wallet to make transactions on the DApp.
+- ZeltaTechOrg Pull Request
